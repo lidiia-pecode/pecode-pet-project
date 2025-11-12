@@ -3,7 +3,6 @@
 import { Drawer, Box, Divider, Typography, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Navbar } from '@/components/navigation/Navbar';
-import { SearchBar } from './SearchBar';
 
 interface MobileMenuProps {
   open: boolean;
@@ -48,9 +47,6 @@ export const MobileMenu = ({ open, onClose }: MobileMenuProps) => {
 
         <Navbar direction='column' spacing={2} />
 
-        <Box sx={{ mt: 'auto', pt: 2 }}>
-          <SearchBar mobile />
-        </Box>
       </Box>
     </Drawer>
   );

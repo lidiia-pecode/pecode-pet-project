@@ -1,17 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Box,
   Button,
   Drawer,
   useMediaQuery,
   useTheme,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
   Pagination,
 } from '@mui/material';
 import { ProductList } from '@/components/products';
@@ -20,21 +15,48 @@ import { ProductFiltersBlock } from '@/components/products/ProductFiltersBlock';
 import { useProductFilters } from '@/hooks/useProductFilters';
 import { useProducts } from '@/hooks/useProducts';
 import { PRODUCTS_PER_PAGE } from '@/lib/constants';
+import { SortSelect } from '@/components/products/SortSelect';
+import { SORT_OPTIONS, SortOption } from '@/types/sortOptions';
+import { buildProductsQueryParams } from '@/lib/utils/buildProductsQueryParams';
+import { useRouter } from 'next/navigation';
+import { SearchBar } from '@/components/products/SearchBar';
 
 export default function ProductPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [page, setPage] = useState(1);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [sort, setSort] = useState('ratingDesc');
+  const [sort, setSort] = useState<SortOption>(SORT_OPTIONS.POPULAR_DESC);
+
+  const router = useRouter();
 
   const { filters, handleFilterChange, handleClearFilters, removeFilter } =
     useProductFilters();
 
-  const { data, isLoading, isError } = useProducts(page, PRODUCTS_PER_PAGE);
+  const { data, isLoading, isError } = useProducts({
+    page,
+    limit: PRODUCTS_PER_PAGE,
+    filters,
+    sort,
+  });
+
+  useEffect(() => {
+    const params = buildProductsQueryParams({
+      page,
+      limit: PRODUCTS_PER_PAGE,
+      filters,
+      sort,
+      forUrl: true,
+    });
+
+    const queryString = params.toString();
+    router.replace(queryString ? `/products?${queryString}` : '/products', {
+      scroll: false,
+    });
+  }, [page, sort, filters, router]);
 
   const toggleMobileFilters = () => setMobileOpen(prev => !prev);
-  const handleSortChange = (e: SelectChangeEvent) => setSort(e.target.value);
+  const handleSortChange = (value: SortOption) => setSort(value);
 
   const products = data?.data ?? [];
   const totalPages = data?.totalPages ?? 1;
@@ -52,13 +74,21 @@ export default function ProductPage() {
 
   return (
     <>
+      <Box sx={{ display: 'flex', gap: 2, px: 2 }}>
+        <SearchBar
+          searchQuery={filters.searchQuery ?? ''}
+          onChangeQuery={handleFilterChange}
+        />
+        <SortSelect sort={sort} onChange={handleSortChange} />
+      </Box>
+
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
+          alignItems: 'end',
           px: 2,
-          minHeight: 64,
+          py: 1,
+          minHeight: 56,
         }}
       >
         <Box sx={{ flex: 1, mr: 2 }}>
@@ -74,20 +104,6 @@ export default function ProductPage() {
             />
           )}
         </Box>
-
-        <FormControl size='small' sx={{ minWidth: 200 }}>
-          <InputLabel id='sort-label'>Sort by</InputLabel>
-          <Select
-            labelId='sort-label'
-            value={sort}
-            label='Sort by'
-            onChange={handleSortChange}
-          >
-            <MenuItem value='ratingDesc'>Highest rated</MenuItem>
-            <MenuItem value='priceAsc'>Price: Low to High</MenuItem>
-            <MenuItem value='priceDesc'>Price: High to Low</MenuItem>
-          </Select>
-        </FormControl>
       </Box>
 
       <Box sx={{ display: 'flex', gap: 3, p: 2 }}>
@@ -123,4 +139,3 @@ export default function ProductPage() {
     </>
   );
 }
-

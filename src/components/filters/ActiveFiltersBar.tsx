@@ -20,7 +20,7 @@ export const ActiveFiltersBar = ({
   if (!activeFilters.length) return null;
 
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, py: 2 }}>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
       <Button size='small' onClick={handleClearFilters}>
         Clear All
       </Button>

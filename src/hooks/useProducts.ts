@@ -1,18 +1,32 @@
-import {
-  createProduct,
-  deleteProduct,
-  getAllProducts,
-  getProduct,
-  updateProduct,
-} from '@/lib';
+import { getAllProducts, getProduct } from '@/lib';
 import { PRODUCTS_PER_PAGE } from '@/lib/constants';
 import { PaginatedProducts, Product } from '@/types/Product';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { ProductFilters } from '@/types/Filters';
+import { SortOption } from '@/types/sortOptions';
 
-export function useProducts(page: number = 1, limit: number = PRODUCTS_PER_PAGE) {
+interface UseProductsParams {
+  page?: number;
+  limit?: number;
+  filters: ProductFilters;
+  sort: SortOption;
+}
+
+export function useProducts({
+  page = 1,
+  limit = PRODUCTS_PER_PAGE,
+  filters,
+  sort,
+}: UseProductsParams) {
   return useQuery<PaginatedProducts>({
-    queryKey: ['products', page, limit],
-    queryFn: () => getAllProducts({ page, limit }),
+    queryKey: ['products', page, limit, filters, sort],
+    queryFn: () =>
+      getAllProducts({
+        page,
+        limit,
+        filters,
+        sort,
+      }),
   });
 }
 
@@ -21,41 +35,5 @@ export function useProduct(id: number) {
     queryKey: ['product', id],
     queryFn: () => getProduct(id),
     enabled: !!id,
-  });
-}
-
-export function useCreateProduct() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: createProduct,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
-  });
-}
-
-export function useUpdateProduct() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: ({
-      id,
-      payload,
-    }: {
-      id: number;
-      payload: Omit<Product, 'id'>;
-    }) => updateProduct(id, payload),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
-  });
-}
-
-export function useDeleteProduct() {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: (id: number) => deleteProduct(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
   });
 }

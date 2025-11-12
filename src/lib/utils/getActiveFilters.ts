@@ -18,23 +18,23 @@ export const getActiveFilters = (
   }
 
   if (
-    filters.price[0] !== defaultFilters.price[0] ||
-    filters.price[1] !== defaultFilters.price[1]
+    filters.price.min !== defaultFilters.price.min||
+    filters.price.max !== defaultFilters.price.max
   ) {
     active.push({
       type: 'price',
-      label: `₴${filters.price[0]} - ₴${filters.price[1]}`,
+      label: `$${filters.price.min} - $${filters.price.max}`,
       value: null,
     });
   }
 
   if (
-    filters.rating[0] !== defaultFilters.rating[0] ||
-    filters.rating[1] !== defaultFilters.rating[1]
+    filters.rating.min !== defaultFilters.rating.min ||
+    filters.rating.max !== defaultFilters.rating.max
   ) {
     active.push({
       type: 'rating',
-      label: `${filters.rating[0]}★ - ${filters.rating[1]}★`,
+      label: `${filters.rating.min}★ - ${filters.rating.max}★`,
       value: null,
     });
   }

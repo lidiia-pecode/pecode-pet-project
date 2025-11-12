@@ -5,14 +5,12 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Box,
   IconButton,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Navbar } from '@/components/navigation/Navbar';
-import { SearchBar } from './SearchBar';
 import { MobileMenu } from './MobileMenu';
 
 export const Header = () => {
@@ -36,12 +34,6 @@ export const Header = () => {
         <Typography variant='h6' sx={{ fontWeight: 600 }}>
           Pecode Store
         </Typography>
-
-        {!isMobile && (
-          <Box sx={{ flex: 1, maxWidth: 500 }}>
-            <SearchBar />
-          </Box>
-        )}
 
         {isMobile ? (
           <IconButton color='inherit' onClick={toggleDrawer}>

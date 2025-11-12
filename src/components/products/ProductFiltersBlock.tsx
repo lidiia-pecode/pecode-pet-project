@@ -35,11 +35,13 @@ export const ProductFiltersBlock = ({
   const isActiveFiltersBarShown = getActiveFilters(filters).length > 0;
 
   const handlePriceChange = (_: Event, newValue: number | number[]) => {
-    onChange({ price: newValue as [number, number] });
+    const [min, max] = newValue as [number, number];
+    onChange({ price: { min, max } });
   };
 
   const handleRatingChange = (_: Event, newValue: number | number[]) => {
-    onChange({ rating: newValue as [number, number] });
+    const [min, max] = newValue as [number, number];
+    onChange({ rating: { min, max } });
   };
 
   const handleCategoryChange = (category: string) => {
@@ -64,7 +66,8 @@ export const ProductFiltersBlock = ({
           boxShadow: isMobile ? 'none' : '',
           width: isMobile ? 300 : 260,
           p: isMobile ? 2 : 3,
-          position: 'sticky',
+          pt : 3,
+          position : 'sticky',
           top: isMobile ? 0 : 80,
         }}
       >
@@ -93,13 +96,13 @@ export const ProductFiltersBlock = ({
               color: 'text.secondary',
             }}
           >
-            <span>₴{filters.price[0]}</span>
-            <span>₴{filters.price[1]}</span>
+            <span>₴{filters.price.min}</span>
+            <span>₴{filters.price.max}</span>
           </Box>
 
           <Box sx={{ px: 1 }}>
             <Slider
-              value={filters.price}
+              value={[filters.price.min, filters.price.max]}
               onChange={handlePriceChange}
               valueLabelDisplay='auto'
               min={0}
@@ -124,12 +127,12 @@ export const ProductFiltersBlock = ({
               color: 'text.secondary',
             }}
           >
-            <span>{filters.rating[0]}★</span>
-            <span>{filters.rating[1]}★</span>
+            <span>{filters.rating.min}★</span>
+            <span>{filters.rating.max}★</span>
           </Box>
           <Box sx={{ px: 1 }}>
             <Slider
-              value={filters.rating}
+              value={[filters.rating.min, filters.rating.max]}
               onChange={handleRatingChange}
               valueLabelDisplay='auto'
               min={0}
