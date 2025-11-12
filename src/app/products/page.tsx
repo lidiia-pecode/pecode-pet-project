@@ -12,27 +12,32 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  Pagination,
 } from '@mui/material';
 import { ProductList } from '@/components/products';
 import { ActiveFiltersBar } from '@/components/filters/ActiveFiltersBar';
 import { ProductFiltersBlock } from '@/components/products/ProductFiltersBlock';
 import { useProductFilters } from '@/hooks/useProductFilters';
+import { useProducts } from '@/hooks/useProducts';
+import { PRODUCTS_PER_PAGE } from '@/lib/constants';
 
 export default function ProductPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [page, setPage] = useState(1);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [sort, setSort] = useState('ratingDesc');
 
   const { filters, handleFilterChange, handleClearFilters, removeFilter } =
     useProductFilters();
 
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [sort, setSort] = useState('ratingDesc');
+  const { data, isLoading, isError } = useProducts(page, PRODUCTS_PER_PAGE);
 
   const toggleMobileFilters = () => setMobileOpen(prev => !prev);
+  const handleSortChange = (e: SelectChangeEvent) => setSort(e.target.value);
 
-  const handleSortChange = (e: SelectChangeEvent) => {
-    setSort(e.target.value);
-  };
+  const products = data?.data ?? [];
+  const totalPages = data?.totalPages ?? 1;
 
   const filtersBlock = (
     <ProductFiltersBlock
@@ -91,11 +96,7 @@ export default function ProductPage() {
             open={mobileOpen}
             onClose={toggleMobileFilters}
             anchor='left'
-            slotProps={{
-              paper: {
-                sx: { width: 300 },
-              },
-            }}
+            slotProps={{ paper: { sx: { width: 300 } } }}
           >
             {filtersBlock}
           </Drawer>
@@ -104,9 +105,22 @@ export default function ProductPage() {
         )}
 
         <Box sx={{ flexGrow: 1 }}>
-          <ProductList />
+          <ProductList
+            products={products}
+            isLoading={isLoading}
+            isError={isError}
+          />
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={(_, value) => setPage(value)}
+            color='primary'
+            shape='rounded'
+            sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}
+          />
         </Box>
       </Box>
     </>
   );
 }
+

@@ -5,13 +5,14 @@ import {
   getProduct,
   updateProduct,
 } from '@/lib';
-import { Product } from '@/types/Product';
+import { PRODUCTS_PER_PAGE } from '@/lib/constants';
+import { PaginatedProducts, Product } from '@/types/Product';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-export function useProducts() {
-  return useQuery<Product[]>({
-    queryKey: ['products'],
-    queryFn: () => getAllProducts(),
+export function useProducts(page: number = 1, limit: number = PRODUCTS_PER_PAGE) {
+  return useQuery<PaginatedProducts>({
+    queryKey: ['products', page, limit],
+    queryFn: () => getAllProducts({ page, limit }),
   });
 }
 

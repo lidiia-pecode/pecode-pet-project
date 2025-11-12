@@ -6,3 +6,10 @@ export interface Product {
   category: string;
   image: string;
 }
+
+export interface PaginatedProducts {
+  data: Product[];
+  total: number;
+  page: number;
+  totalPages: number;
+}

@@ -2,13 +2,22 @@
 
 import { Box, Typography } from '@mui/material';
 import { ProductCard } from './ProductCard';
-import { useProducts } from '@/hooks/useProducts';
+import { Product } from '@/types/Product';
 
-export const ProductList = () => {
-  const { data: products, isLoading, isError } = useProducts();
+interface ProductListProps {
+  products: Product[];
+  isLoading: boolean;
+  isError: boolean;
+}
 
+export const ProductList = ({
+  products,
+  isLoading,
+  isError,
+}: ProductListProps) => {
   if (isLoading) return <Typography>Loading...</Typography>;
   if (isError) return <Typography>Error loading products</Typography>;
+  if (!products.length) return <Typography>No products found</Typography>;
 
   return (
     <Box
@@ -22,7 +31,7 @@ export const ProductList = () => {
         gap: 3,
       }}
     >
-      {products?.map(product => (
+      {products.map(product => (
         <ProductCard key={product.id} product={product} />
       ))}
     </Box>
