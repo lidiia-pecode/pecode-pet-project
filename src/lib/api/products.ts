@@ -1,24 +1,37 @@
 import { PaginatedProducts, Product } from '@/types/Product';
 import { api } from './axiosInstanse';
 import { API_PRODUCTS_URL } from '../constants';
-import { buildProductsQueryParams } from '../utils/buildProductsQueryParams';
-import { ProductFilters } from '@/types/Filters';
-import { SortOption } from '@/types/sortOptions';
+import { ProductFilters, defaultFilters } from '@/types/Filters';
+import { SortOption, SORT_OPTIONS } from '@/types/sortOptions';
+import { PRODUCTS_PER_PAGE } from '@/lib/constants';
+import { buildQuery } from '../utils/productQuery';
 
 interface GetAllProductsParams {
-  page: number;
-  limit: number;
-  filters: ProductFilters;
-  sort: SortOption;
+  page?: number;
+  limit?: number;
+  filters?: ProductFilters;
+  sort?: SortOption;
 }
 
 export const getAllProducts = async ({
-  page,
-  limit,
-  filters,
-  sort,
+  page = 1,
+  limit = PRODUCTS_PER_PAGE,
+  filters = defaultFilters,
+  sort = SORT_OPTIONS.POPULAR_DESC,
 }: GetAllProductsParams): Promise<PaginatedProducts> => {
-  const params = buildProductsQueryParams({ page, limit, filters, sort });
+  const productQuery = {
+    page,
+    limit,
+    sort,
+    minPrice: filters.price.min,
+    maxPrice: filters.price.max,
+    minRating: filters.rating.min,
+    maxRating: filters.rating.max,
+    categories: filters.categories,
+    searchQuery: filters.searchQuery || '',
+  };
+
+  const params = buildQuery(productQuery);
 
   const res = await fetch(`${API_PRODUCTS_URL}?${params.toString()}`, {
     cache: 'no-store',
@@ -30,7 +43,6 @@ export const getAllProducts = async ({
 
   return res.json();
 };
-
 
 export const getProduct = async (id: number): Promise<Product> => {
   const res = await api.get<Product>(`/products/${id}`);

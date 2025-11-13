@@ -1,12 +1,12 @@
 'use client';
 
 import { Box, Button, Chip } from '@mui/material';
-import { FilterKey, ProductFilters } from '@/types/Filters';
+import { Category, FilterKey, ProductFilters } from '@/types/Filters';
 import { getActiveFilters } from '@/lib/utils/getActiveFilters';
 
 interface ActiveFiltersBarProps {
   filters: ProductFilters;
-  removeFilter: (type: FilterKey, value: unknown) => void;
+  removeFilter: (type: FilterKey, value?: Category) => void;
   handleClearFilters: () => void;
 }
 
@@ -30,7 +30,7 @@ export const ActiveFiltersBar = ({
           sx={{ color: 'text.secondary' }}
           key={`${filter.type}-${filter.label}`}
           label={filter.label}
-          onDelete={() => removeFilter(filter.type, filter.value)}
+          onDelete={() => removeFilter(filter.type, filter.value as Category)}
         />
       ))}
     </Box>

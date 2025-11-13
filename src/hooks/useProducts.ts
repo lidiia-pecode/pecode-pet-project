@@ -1,7 +1,7 @@
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getAllProducts, getProduct } from '@/lib';
 import { PRODUCTS_PER_PAGE } from '@/lib/constants';
 import { PaginatedProducts, Product } from '@/types/Product';
-import { useQuery } from '@tanstack/react-query';
 import { ProductFilters } from '@/types/Filters';
 import { SortOption } from '@/types/sortOptions';
 
@@ -18,15 +18,24 @@ export function useProducts({
   filters,
   sort,
 }: UseProductsParams) {
+  const { categories, price, rating, searchQuery } = filters;
+
   return useQuery<PaginatedProducts>({
-    queryKey: ['products', page, limit, filters, sort],
-    queryFn: () =>
-      getAllProducts({
-        page,
-        limit,
-        filters,
-        sort,
-      }),
+    queryKey: [
+      'products',
+      page,
+      limit,
+      sort,
+      searchQuery,
+      price.min,
+      price.max,
+      rating.min,
+      rating.max,
+      categories.join(','),
+    ],
+    queryFn: () => getAllProducts({ page, limit, filters, sort }),
+    staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
   });
 }
 

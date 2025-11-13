@@ -12,7 +12,7 @@ import {
   Button,
 } from '@mui/material';
 import { ActiveFiltersBar } from '../filters/ActiveFiltersBar';
-import { CATEGORIES, FilterKey, ProductFilters } from '@/types/Filters';
+import { CATEGORIES, Category, FilterKey, ProductFilters } from '@/types/Filters';
 import { getActiveFilters } from '@/lib/utils/getActiveFilters';
 
 interface ProductFiltersBlockProps {
@@ -20,7 +20,7 @@ interface ProductFiltersBlockProps {
   isMobile: boolean;
   onChange: (updated: Partial<ProductFiltersBlockProps['filters']>) => void;
   onClose: () => void;
-  removeFilter: (type: FilterKey, value: unknown) => void;
+  removeFilter: (type: FilterKey, value?: Category) => void;
   handleClearFilters: () => void;
 }
 
@@ -44,7 +44,7 @@ export const ProductFiltersBlock = ({
     onChange({ rating: { min, max } });
   };
 
-  const handleCategoryChange = (category: string) => {
+  const handleCategoryChange = (category: Category) => {
     const isSelected = filters.categories.includes(category);
     const updated = isSelected
       ? filters.categories.filter(c => c !== category)

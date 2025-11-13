@@ -1,6 +1,5 @@
 'use client';
-
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -10,65 +9,44 @@ import {
   Pagination,
 } from '@mui/material';
 import { ProductList } from '@/components/products';
-import { ActiveFiltersBar } from '@/components/filters/ActiveFiltersBar';
 import { ProductFiltersBlock } from '@/components/products/ProductFiltersBlock';
-import { useProductFilters } from '@/hooks/useProductFilters';
-import { useProducts } from '@/hooks/useProducts';
-import { PRODUCTS_PER_PAGE } from '@/lib/constants';
+import { ActiveFiltersBar } from '@/components/filters/ActiveFiltersBar';
 import { SortSelect } from '@/components/products/SortSelect';
-import { SORT_OPTIONS, SortOption } from '@/types/sortOptions';
-import { buildProductsQueryParams } from '@/lib/utils/buildProductsQueryParams';
-import { useRouter } from 'next/navigation';
 import { SearchBar } from '@/components/products/SearchBar';
+import { useProductQuery } from '@/hooks/useProductQuery';
+import { useProducts } from '@/hooks/useProducts';
+import { useProductHandlers } from '@/hooks/useProductHandlers';
+import { queryToFilters } from '@/lib/utils/productQuery';
 
 export default function ProductPage() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [page, setPage] = useState(1);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [sort, setSort] = useState<SortOption>(SORT_OPTIONS.POPULAR_DESC);
 
-  const router = useRouter();
+  const { query, updateQuery } = useProductQuery();
+  const handlers = useProductHandlers(query, updateQuery);
+  const filters = useMemo(() => queryToFilters(query), [query]);
 
-  const { filters, handleFilterChange, handleClearFilters, removeFilter } =
-    useProductFilters();
-
-  const { data, isLoading, isError } = useProducts({
-    page,
-    limit: PRODUCTS_PER_PAGE,
+  const { data, isError, isFetching } = useProducts({
+    page: query.page,
+    limit: query.limit,
     filters,
-    sort,
+    sort: query.sort,
   });
-
-  useEffect(() => {
-    const params = buildProductsQueryParams({
-      page,
-      limit: PRODUCTS_PER_PAGE,
-      filters,
-      sort,
-      forUrl: true,
-    });
-
-    const queryString = params.toString();
-    router.replace(queryString ? `/products?${queryString}` : '/products', {
-      scroll: false,
-    });
-  }, [page, sort, filters, router]);
-
-  const toggleMobileFilters = () => setMobileOpen(prev => !prev);
-  const handleSortChange = (value: SortOption) => setSort(value);
-
+  const isLoadingInitial = isFetching && !data;
   const products = data?.data ?? [];
   const totalPages = data?.totalPages ?? 1;
+
+  const toggleMobileFilters = () => setMobileOpen(prev => !prev);
 
   const filtersBlock = (
     <ProductFiltersBlock
       filters={filters}
       isMobile={isMobile}
-      onChange={handleFilterChange}
+      onChange={handlers.handleFilterChange}
       onClose={toggleMobileFilters}
-      removeFilter={removeFilter}
-      handleClearFilters={handleClearFilters}
+      removeFilter={handlers.removeFilter}
+      handleClearFilters={handlers.handleClearFilters}
     />
   );
 
@@ -77,19 +55,13 @@ export default function ProductPage() {
       <Box sx={{ display: 'flex', gap: 2, px: 2 }}>
         <SearchBar
           searchQuery={filters.searchQuery ?? ''}
-          onChangeQuery={handleFilterChange}
+          onChangeQuery={handlers.handleFilterChange}
         />
-        <SortSelect sort={sort} onChange={handleSortChange} />
+        <SortSelect sort={query.sort} onChange={handlers.handleSortChange} />
       </Box>
 
       <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'end',
-          px: 2,
-          py: 1,
-          minHeight: 56,
-        }}
+        sx={{ display: 'flex', alignItems: 'end', px: 2, py: 1, minHeight: 56 }}
       >
         <Box sx={{ flex: 1, mr: 2 }}>
           {isMobile ? (
@@ -99,8 +71,8 @@ export default function ProductPage() {
           ) : (
             <ActiveFiltersBar
               filters={filters}
-              removeFilter={removeFilter}
-              handleClearFilters={handleClearFilters}
+              removeFilter={handlers.removeFilter}
+              handleClearFilters={handlers.handleClearFilters}
             />
           )}
         </Box>
@@ -123,17 +95,20 @@ export default function ProductPage() {
         <Box sx={{ flexGrow: 1 }}>
           <ProductList
             products={products}
-            isLoading={isLoading}
+            isLoading={isLoadingInitial}
+            isUpdating={isFetching}
             isError={isError}
           />
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={(_, value) => setPage(value)}
-            color='primary'
-            shape='rounded'
-            sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}
-          />
+          {!isLoadingInitial && !!products.length && totalPages > 1 && (
+            <Pagination
+              count={totalPages}
+              page={query.page}
+              onChange={handlers.handlePageChange}
+              color='primary'
+              shape='rounded'
+              sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}
+            />
+          )}
         </Box>
       </Box>
     </>
