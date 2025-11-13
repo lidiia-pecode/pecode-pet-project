@@ -10,6 +10,7 @@ interface ProductListProps {
   isLoading: boolean;
   isUpdating: boolean;
   isError: boolean;
+  onOpenProduct: (product: Product) => void;
 }
 
 export const ProductList = ({
@@ -17,6 +18,7 @@ export const ProductList = ({
   isLoading,
   isUpdating,
   isError,
+  onOpenProduct,
 }: ProductListProps) => {
   if (isError)
     return (
@@ -76,7 +78,11 @@ export const ProductList = ({
         }}
       >
         {products.map(product => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+            onClick={() => onOpenProduct(product)}
+          />
         ))}
       </Box>
     </Box>

@@ -17,6 +17,8 @@ import { useProductQuery } from '@/hooks/useProductQuery';
 import { useProducts } from '@/hooks/useProducts';
 import { useProductHandlers } from '@/hooks/useProductHandlers';
 import { queryToFilters } from '@/lib/utils/productQuery';
+import { Product } from '@/types/Product';
+import { ProductDetailsDrawer } from '@/components/products/ProductDetailsDrawer';
 
 export default function ProductPage() {
   const theme = useTheme();
@@ -26,6 +28,19 @@ export default function ProductPage() {
   const { query, updateQuery } = useProductQuery();
   const handlers = useProductHandlers(query, updateQuery);
   const filters = useMemo(() => queryToFilters(query), [query]);
+
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+
+  const handleOpenProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setDrawerOpen(true);
+  };
+
+  const handleCloseDrawer = () => {
+    setDrawerOpen(false);
+    setSelectedProduct(null);
+  };
 
   const { data, isError, isFetching } = useProducts({
     page: query.page,
@@ -98,6 +113,7 @@ export default function ProductPage() {
             isLoading={isLoadingInitial}
             isUpdating={isFetching}
             isError={isError}
+            onOpenProduct={handleOpenProduct}
           />
           {!isLoadingInitial && !!products.length && totalPages > 1 && (
             <Pagination
@@ -111,6 +127,12 @@ export default function ProductPage() {
           )}
         </Box>
       </Box>
+
+      <ProductDetailsDrawer
+        open={isDrawerOpen}
+        product={selectedProduct}
+        onClose={handleCloseDrawer}
+      />
     </>
   );
 }
