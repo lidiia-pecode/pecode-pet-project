@@ -1,5 +1,5 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -17,12 +17,14 @@ import { useProductQuery } from '@/hooks/useProductQuery';
 import { useProducts } from '@/hooks/useProducts';
 import { useProductHandlers } from '@/hooks/useProductHandlers';
 import { queryToFilters } from '@/lib/utils/productQuery';
-import { Product } from '@/types/Product';
+import { Product, ViewMode } from '@/types/Product';
 import { ProductDetailsDrawer } from '@/components/products/ProductDetailsDrawer';
+import { ViewModeSwitcher } from '@/components/products/ViewModeSwitcher';
 
 export default function ProductPage() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const { query, updateQuery } = useProductQuery();
@@ -31,6 +33,21 @@ export default function ProductPage() {
 
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<ViewMode>(() => {
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('productViewMode') as ViewMode) || 'grid';
+    }
+    return 'grid';
+  });
+
+    useEffect(() => {
+      if (!isMobile) {
+        localStorage.setItem('productViewMode', selectedMode);
+      }
+    }, [isMobile, selectedMode]);
+
+    /** Derive effective mode */
+    const currentMode: ViewMode = isMobile ? 'grid' : selectedMode;
 
   const handleOpenProduct = (product: Product) => {
     setSelectedProduct(product);
@@ -57,7 +74,7 @@ export default function ProductPage() {
   const filtersBlock = (
     <ProductFiltersBlock
       filters={filters}
-      isMobile={isMobile}
+      isTablet={isTablet}
       onChange={handlers.handleFilterChange}
       onClose={toggleMobileFilters}
       removeFilter={handlers.removeFilter}
@@ -78,7 +95,7 @@ export default function ProductPage() {
       <Box
         sx={{ display: 'flex', alignItems: 'end', px: 2, py: 1, minHeight: 56 }}
       >
-        <Box sx={{ flex: 1, mr: 2 }}>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
           {isMobile ? (
             <Button variant='outlined' onClick={toggleMobileFilters}>
               Filters
@@ -90,11 +107,23 @@ export default function ProductPage() {
               handleClearFilters={handlers.handleClearFilters}
             />
           )}
+
+          <Box
+            sx={{
+              ml: 'auto',
+              display: { xs: 'none', sm: 'block' },
+            }}
+          >
+            <ViewModeSwitcher
+              mode={selectedMode}
+              onSwitchMode={setSelectedMode}
+            />
+          </Box>
         </Box>
       </Box>
 
       <Box sx={{ display: 'flex', gap: 3, p: 2 }}>
-        {isMobile ? (
+        {isTablet ? (
           <Drawer
             open={mobileOpen}
             onClose={toggleMobileFilters}
@@ -107,13 +136,22 @@ export default function ProductPage() {
           <Box sx={{ width: 260, flexShrink: 0 }}>{filtersBlock}</Box>
         )}
 
-        <Box sx={{ flexGrow: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 4,
+            flexGrow: 1,
+            minHeight: 520,
+          }}
+        >
           <ProductList
             products={products}
             isLoading={isLoadingInitial}
             isUpdating={isFetching}
             isError={isError}
             onOpenProduct={handleOpenProduct}
+            mode={currentMode}
           />
           {!isLoadingInitial && !!products.length && totalPages > 1 && (
             <Pagination
@@ -122,7 +160,7 @@ export default function ProductPage() {
               onChange={handlers.handlePageChange}
               color='primary'
               shape='rounded'
-              sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}
+              sx={{ mt: 'auto', display: 'flex', justifyContent: 'center' }}
             />
           )}
         </Box>

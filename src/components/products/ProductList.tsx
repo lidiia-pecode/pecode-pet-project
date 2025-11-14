@@ -1,15 +1,17 @@
 'use client';
 
 import { Box, Typography, CircularProgress } from '@mui/material';
+import { Product, ViewMode } from '@/types/Product';
 import { ProductCard } from './ProductCard';
-import { Product } from '@/types/Product';
 import { theme } from '@/styles/theme';
+import { ProductGridTable } from './ProductGridTable';
 
 interface ProductListProps {
   products: Product[];
   isLoading: boolean;
   isUpdating: boolean;
   isError: boolean;
+  mode: ViewMode;
   onOpenProduct: (product: Product) => void;
 }
 
@@ -18,6 +20,7 @@ export const ProductList = ({
   isLoading,
   isUpdating,
   isError,
+  mode,
   onOpenProduct,
 }: ProductListProps) => {
   if (isError)
@@ -31,10 +34,17 @@ export const ProductList = ({
 
   if (isLoading && !products.length)
     return (
-      <Box sx={{ height: '80%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+      <Box
+        sx={{
+          height: '80%',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <CircularProgress size={40} color='primary' />
       </Box>
-    ); 
+    );
 
   if (!isUpdating && !products.length)
     return (
@@ -66,25 +76,29 @@ export const ProductList = ({
         </Box>
       )}
 
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: {
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(2, 1fr)',
-            lg: 'repeat(3, 1fr)',
-          },
-          gap: 3,
-        }}
-      >
-        {products.map(product => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onClick={() => onOpenProduct(product)}
-          />
-        ))}
-      </Box>
+      {mode === 'grid' ? (
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(2, 1fr)',
+              lg: 'repeat(3, 1fr)',
+            },
+            gap: 3,
+          }}
+        >
+          {products.map(product => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onClick={() => onOpenProduct(product)}
+            />
+          ))}
+        </Box>
+      ) : (
+        <ProductGridTable products={products} onOpenProduct={onOpenProduct} />
+      )}
     </Box>
   );
 };

@@ -17,7 +17,7 @@ import { getActiveFilters } from '@/lib/utils/getActiveFilters';
 
 interface ProductFiltersBlockProps {
   filters: ProductFilters;
-  isMobile: boolean;
+  isTablet: boolean;
   onChange: (updated: Partial<ProductFiltersBlockProps['filters']>) => void;
   onClose: () => void;
   removeFilter: (type: FilterKey, value?: Category) => void;
@@ -26,7 +26,7 @@ interface ProductFiltersBlockProps {
 
 export const ProductFiltersBlock = ({
   filters,
-  isMobile,
+  isTablet,
   onChange,
   onClose,
   removeFilter,
@@ -62,16 +62,16 @@ export const ProductFiltersBlock = ({
           gap: 3,
           flexShrink: 0,
           height: 'fit-content',
-          borderRadius: isMobile ? 0 : 3,
-          boxShadow: isMobile ? 'none' : '',
-          width: isMobile ? 300 : 260,
-          p: isMobile ? 2 : 3,
+          borderRadius: isTablet? 0 : 3,
+          boxShadow: isTablet? 'none' : '',
+          width: isTablet? 300 : 260,
+          p: isTablet? 2 : 3,
           pt : 3,
           position : 'sticky',
-          top: isMobile ? 0 : 80,
+          top: isTablet? 0 : 80,
         }}
       >
-        {isMobile && isActiveFiltersBarShown && (
+        {isTablet&& isActiveFiltersBarShown && (
           <>
             <ActiveFiltersBar
               filters={filters}
@@ -166,7 +166,7 @@ export const ProductFiltersBlock = ({
           </FormGroup>
         </Box>
 
-        {isMobile && (
+        {isTablet&& (
           <Button variant='outlined' onClick={onClose}>
             Close
           </Button>

@@ -19,3 +19,5 @@ export interface PaginatedProducts {
   page: number;
   totalPages: number;
 }
+
+export type ViewMode = 'grid' | 'list';

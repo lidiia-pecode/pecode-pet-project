@@ -37,7 +37,7 @@ export const ProductDetailsDrawer = ({
         },
       }}
     >
-      <Box display='flex' justifyContent='space-between' alignItems='center'>
+      <Box display='flex' justifyContent='space-between' alignItems='start' gap={1}>
         <Typography variant='h5' sx={{ fontWeight: 600 }}>
           {product.title}
         </Typography>
@@ -51,7 +51,7 @@ export const ProductDetailsDrawer = ({
       <ProductPreviewLayout
         product={product}
         imageSx={{ height: 300, borderRadius: 2 }}
-        titleSx={{ visibility: 'hidden' }}
+        titleSx={{ visibility: 'hidden', maxHeight: 16 }}
         priceSx={{ fontSize: 22, fontWeight: 600, mt: 0 }}
         ratingSize='medium'
         showBuyButton
