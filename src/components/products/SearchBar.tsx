@@ -1,6 +1,12 @@
 'use client';
 
-import { TextField, InputAdornment, IconButton } from '@mui/material';
+import {
+  TextField,
+  InputAdornment,
+  IconButton,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
@@ -13,10 +19,12 @@ interface SearchBarProps {
 
 export const SearchBar = ({ searchQuery, onChangeQuery }: SearchBarProps) => {
   const [query, setQuery] = useState(searchQuery);
+  const theme = useTheme();
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
   useEffect(() => {
     const handler = setTimeout(() => {
-        onChangeQuery({ searchQuery: query.trim() });
+      onChangeQuery({ searchQuery: query.trim() });
     }, 500);
 
     return () => clearTimeout(handler);
@@ -26,7 +34,7 @@ export const SearchBar = ({ searchQuery, onChangeQuery }: SearchBarProps) => {
     <TextField
       fullWidth
       size='small'
-      placeholder='Search products...'
+      placeholder={isSmUp ? 'Search products...' : 'Search...'}
       value={query}
       onChange={e => setQuery(e.target.value.trimStart())}
       slotProps={{

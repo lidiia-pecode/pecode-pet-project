@@ -11,9 +11,8 @@ interface SwitcherProps {
 }
 
 export const ViewModeSwitcher = ({ mode, onSwitchMode }: SwitcherProps) => {
-  const handleChange = (_: unknown, newMode: ViewMode) => {
-    onSwitchMode(newMode);
-    localStorage.setItem('productViewMode', newMode);
+  const handleChange = (_: unknown, newMode: ViewMode | null) => {
+    if (newMode) onSwitchMode(newMode);
   };
 
   return (
@@ -23,12 +22,12 @@ export const ViewModeSwitcher = ({ mode, onSwitchMode }: SwitcherProps) => {
       onChange={handleChange}
       size='small'
       color='primary'
+      aria-label='view mode'
     >
-      <ToggleButton value='grid'>
+      <ToggleButton value='grid' aria-label='grid view'>
         <GridViewIcon />
       </ToggleButton>
-
-      <ToggleButton value='list'>
+      <ToggleButton value='list' aria-label='list view'>
         <ViewListIcon />
       </ToggleButton>
     </ToggleButtonGroup>

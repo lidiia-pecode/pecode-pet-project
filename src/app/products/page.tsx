@@ -1,13 +1,7 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
-import {
-  Box,
-  Button,
-  Drawer,
-  useMediaQuery,
-  useTheme,
-  Pagination,
-} from '@mui/material';
+
+import { useMemo, useState } from 'react';
+import { Box, Button, Drawer, Pagination } from '@mui/material';
 import { ProductList } from '@/components/products';
 import { ProductFiltersBlock } from '@/components/products/ProductFiltersBlock';
 import { ActiveFiltersBar } from '@/components/filters/ActiveFiltersBar';
@@ -17,47 +11,27 @@ import { useProductQuery } from '@/hooks/useProductQuery';
 import { useProducts } from '@/hooks/useProducts';
 import { useProductHandlers } from '@/hooks/useProductHandlers';
 import { queryToFilters } from '@/lib/utils/productQuery';
-import { Product, ViewMode } from '@/types/Product';
-import { ProductDetailsDrawer } from '@/components/products/ProductDetailsDrawer';
+import { useResponsive } from '@/hooks/useResponsive';
 import { ViewModeSwitcher } from '@/components/products/ViewModeSwitcher';
+import { ProductDetailsDrawer } from '@/components/products/ProductDetailsDrawer';
+import { useProductPageStore } from '@/store/useProductPageStore';
+import { useInitViewMode } from '@/hooks/useInitViewMode';
 
 export default function ProductPage() {
-  const theme = useTheme();
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const { isTablet, isMobile } = useResponsive();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const { query, updateQuery } = useProductQuery();
   const handlers = useProductHandlers(query, updateQuery);
   const filters = useMemo(() => queryToFilters(query), [query]);
 
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [selectedMode, setSelectedMode] = useState<ViewMode>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('productViewMode') as ViewMode) || 'grid';
-    }
-    return 'grid';
-  });
+  const { selectedProduct, openProduct, closeProduct, setViewMode } =
+    useProductPageStore();
 
-    useEffect(() => {
-      if (!isMobile) {
-        localStorage.setItem('productViewMode', selectedMode);
-      }
-    }, [isMobile, selectedMode]);
+  const viewMode = useInitViewMode();
+  const currentMode = isMobile ? 'grid' : viewMode;
 
-    /** Derive effective mode */
-    const currentMode: ViewMode = isMobile ? 'grid' : selectedMode;
-
-  const handleOpenProduct = (product: Product) => {
-    setSelectedProduct(product);
-    setDrawerOpen(true);
-  };
-
-  const handleCloseDrawer = () => {
-    setDrawerOpen(false);
-    setSelectedProduct(null);
-  };
+  const toggleMobileFilters = () => setMobileOpen(prev => !prev);
 
   const { data, isError, isFetching } = useProducts({
     page: query.page,
@@ -65,11 +39,10 @@ export default function ProductPage() {
     filters,
     sort: query.sort,
   });
+
   const isLoadingInitial = isFetching && !data;
   const products = data?.data ?? [];
   const totalPages = data?.totalPages ?? 1;
-
-  const toggleMobileFilters = () => setMobileOpen(prev => !prev);
 
   const filtersBlock = (
     <ProductFiltersBlock
@@ -108,16 +81,8 @@ export default function ProductPage() {
             />
           )}
 
-          <Box
-            sx={{
-              ml: 'auto',
-              display: { xs: 'none', sm: 'block' },
-            }}
-          >
-            <ViewModeSwitcher
-              mode={selectedMode}
-              onSwitchMode={setSelectedMode}
-            />
+          <Box sx={{ ml: 'auto', display: { xs: 'none', sm: 'block' } }}>
+            <ViewModeSwitcher mode={currentMode} onSwitchMode={setViewMode} />
           </Box>
         </Box>
       </Box>
@@ -150,9 +115,10 @@ export default function ProductPage() {
             isLoading={isLoadingInitial}
             isUpdating={isFetching}
             isError={isError}
-            onOpenProduct={handleOpenProduct}
+            onOpenProduct={openProduct}
             mode={currentMode}
           />
+
           {!isLoadingInitial && !!products.length && totalPages > 1 && (
             <Pagination
               count={totalPages}
@@ -167,9 +133,9 @@ export default function ProductPage() {
       </Box>
 
       <ProductDetailsDrawer
-        open={isDrawerOpen}
+        open={!!selectedProduct}
         product={selectedProduct}
-        onClose={handleCloseDrawer}
+        onClose={closeProduct}
       />
     </>
   );

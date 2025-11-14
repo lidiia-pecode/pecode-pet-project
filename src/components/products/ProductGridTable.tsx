@@ -54,7 +54,6 @@ export const ProductGridTable = ({
 
   return (
     <Box>
-      {/* Header */}
       <Box
         sx={{
           ...gridBaseStyles,
@@ -79,7 +78,6 @@ export const ProductGridTable = ({
         ))}
       </Box>
 
-      {/* Rows */}
       {products.map(product => (
         <Box
           key={product.id}
@@ -92,7 +90,6 @@ export const ProductGridTable = ({
             '&:hover': { bgcolor: 'action.hover' },
           }}
         >
-          {/* Image */}
           <Box
             component='img'
             src={product.image}
@@ -105,13 +102,10 @@ export const ProductGridTable = ({
             }}
           />
 
-          {/* Title */}
           <Typography noWrap>{product.title}</Typography>
 
-          {/* Price */}
           <Typography align='center'>${product.price}</Typography>
 
-          {/* Rating */}
           <Box
             sx={{
               display: 'flex',
@@ -127,7 +121,6 @@ export const ProductGridTable = ({
             />
           </Box>
 
-          {/* Action */}
           <Button
             variant='contained'
             size='small'

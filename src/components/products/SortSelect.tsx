@@ -1,5 +1,6 @@
 'use client';
 
+import { theme } from '@/styles/theme';
 import { SORT_LABELS, SortOption } from '@/types/sortOptions';
 import {
   FormControl,
@@ -21,7 +22,15 @@ export const SortSelect = ({ sort, onChange }: SortSelectProps) => {
   };
 
   return (
-    <FormControl size='small' sx={{ minWidth: 200 }}>
+    <FormControl
+      size='small'
+      sx={{
+        minWidth: 160,
+        [theme.breakpoints.up('sm')]: {
+          minWidth: 200, 
+        },
+      }}
+    >
       <InputLabel id='sort-label'>Sort by</InputLabel>
       <Select
         labelId='sort-label'
