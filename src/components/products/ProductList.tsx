@@ -1,10 +1,9 @@
 'use client';
-
 import { Box, Typography, CircularProgress } from '@mui/material';
 import { Product, ViewMode } from '@/types/Product';
 import { ProductCard } from './ProductCard';
-import { theme } from '@/styles/theme';
 import { ProductGridTable } from './ProductGridTable';
+import * as styles from './styles/ProductList.styles';
 
 interface ProductListProps {
   products: Product[];
@@ -23,71 +22,44 @@ export const ProductList = ({
   mode,
   onOpenProduct,
 }: ProductListProps) => {
-  if (isError)
+  if (isError) {
     return (
-      <Box sx={{ p: 4, textAlign: 'center' }}>
+      <Box sx={styles.errorBoxStyles}>
         <Typography variant='h5' color='error'>
           Error loading products. Please try again.
         </Typography>
       </Box>
     );
+  }
 
-  if (isLoading && !products.length)
+  if (isLoading && !products.length) {
     return (
-      <Box
-        sx={{
-          height: '80%',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={styles.loadingBoxStyles}>
         <CircularProgress size={40} color='primary' />
       </Box>
     );
+  }
 
-  if (!isUpdating && !products.length)
+  if (!isUpdating && !products.length) {
     return (
-      <Box sx={{ p: 4, textAlign: 'center' }}>
+      <Box sx={styles.emptyBoxStyles}>
         <Typography variant='h6' color='text.secondary'>
           No products found matching your criteria.
         </Typography>
       </Box>
     );
+  }
 
   return (
-    <Box sx={{ position: 'relative' }}>
+    <Box sx={styles.containerStyles}>
       {isUpdating && (
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            bgcolor: `${theme.palette.background.default}d0`,
-            zIndex: 10,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
+        <Box sx={styles.loadingOverlayStyles}>
           <CircularProgress size={40} color='primary' />
         </Box>
       )}
 
       {mode === 'grid' ? (
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              lg: 'repeat(3, 1fr)',
-            },
-            gap: 3,
-          }}
-        >
+        <Box sx={styles.gridStyles}>
           {products.map(product => (
             <ProductCard
               key={product.id}

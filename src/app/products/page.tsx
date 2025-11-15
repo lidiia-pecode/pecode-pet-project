@@ -1,55 +1,43 @@
 'use client';
-
-import { useMemo, useState } from 'react';
 import { Box, Button, Drawer, Pagination } from '@mui/material';
 import { ProductList } from '@/components/products';
 import { ProductFiltersBlock } from '@/components/products/ProductFiltersBlock';
-import { ActiveFiltersBar } from '@/components/filters/ActiveFiltersBar';
+import { ActiveFiltersBar } from '@/components/products/filters/ActiveFiltersBar';
 import { SortSelect } from '@/components/products/SortSelect';
 import { SearchBar } from '@/components/products/SearchBar';
-import { useProductQuery } from '@/hooks/useProductQuery';
-import { useProducts } from '@/hooks/useProducts';
-import { useProductHandlers } from '@/hooks/useProductHandlers';
-import { queryToFilters } from '@/lib/utils/productQuery';
-import { useResponsive } from '@/hooks/useResponsive';
 import { ViewModeSwitcher } from '@/components/products/ViewModeSwitcher';
 import { ProductDetailsDrawer } from '@/components/products/ProductDetailsDrawer';
-import { useProductPageStore } from '@/store/useProductPageStore';
-import { useInitViewMode } from '@/hooks/useInitViewMode';
+import { useProductPage } from '@/hooks/useProductPage';
+import * as styles from '../../components/products/styles/ProductPage.styles';
 
 export default function ProductPage() {
-  const { isTablet, isMobile } = useResponsive();
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  const { query, updateQuery } = useProductQuery();
-  const handlers = useProductHandlers(query, updateQuery);
-  const filters = useMemo(() => queryToFilters(query), [query]);
-
-  const { selectedProduct, openProduct, closeProduct, setViewMode } =
-    useProductPageStore();
-
-  const viewMode = useInitViewMode();
-  const currentMode = isMobile ? 'grid' : viewMode;
-
-  const toggleMobileFilters = () => setMobileOpen(prev => !prev);
-
-  const { data, isError, isFetching } = useProducts({
-    page: query.page,
-    limit: query.limit,
+  const {
+    isTablet,
+    isMobile,
+    currentMode,
+    isMobileFiltersOpen,
+    products,
+    totalPages,
     filters,
-    sort: query.sort,
-  });
-
-  const isLoadingInitial = isFetching && !data;
-  const products = data?.data ?? [];
-  const totalPages = data?.totalPages ?? 1;
+    query,
+    isLoadingInitial,
+    isFetching,
+    isError,
+    selectedProduct,
+    handlers,
+    setViewMode,
+    toggleMobileFilters,
+    closeMobileFilters,
+    openProduct,
+    closeProduct,
+  } = useProductPage();
 
   const filtersBlock = (
     <ProductFiltersBlock
       filters={filters}
       isTablet={isTablet}
       onChange={handlers.handleFilterChange}
-      onClose={toggleMobileFilters}
+      onClose={closeMobileFilters}
       removeFilter={handlers.removeFilter}
       handleClearFilters={handlers.handleClearFilters}
     />
@@ -57,7 +45,7 @@ export default function ProductPage() {
 
   return (
     <>
-      <Box sx={{ display: 'flex', gap: 2, px: 2 }}>
+      <Box sx={styles.searchBarContainerStyles}>
         <SearchBar
           searchQuery={filters.searchQuery ?? ''}
           onChangeQuery={handlers.handleFilterChange}
@@ -65,10 +53,8 @@ export default function ProductPage() {
         <SortSelect sort={query.sort} onChange={handlers.handleSortChange} />
       </Box>
 
-      <Box
-        sx={{ display: 'flex', alignItems: 'end', px: 2, py: 1, minHeight: 56 }}
-      >
-        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={styles.filtersBarContainerStyles}>
+        <Box sx={styles.filtersBarInnerStyles}>
           {isMobile ? (
             <Button variant='outlined' onClick={toggleMobileFilters}>
               Filters
@@ -80,36 +66,30 @@ export default function ProductPage() {
               handleClearFilters={handlers.handleClearFilters}
             />
           )}
-
-          <Box sx={{ ml: 'auto', display: { xs: 'none', sm: 'block' } }}>
-            <ViewModeSwitcher mode={currentMode} onSwitchMode={setViewMode} />
+          <Box sx={styles.viewModeSwitcherContainerStyles}>
+            <ViewModeSwitcher
+              mode={currentMode}
+              onSwitchMode={setViewMode}
+            />
           </Box>
         </Box>
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 3, p: 2 }}>
+      <Box sx={styles.mainContentStyles}>
         {isTablet ? (
           <Drawer
-            open={mobileOpen}
-            onClose={toggleMobileFilters}
+            open={isMobileFiltersOpen}
+            onClose={closeMobileFilters}
             anchor='left'
-            slotProps={{ paper: { sx: { width: 300 } } }}
+            slotProps={{ paper: { sx: styles.drawerPaperStyles } }}
           >
             {filtersBlock}
           </Drawer>
         ) : (
-          <Box sx={{ width: 260, flexShrink: 0 }}>{filtersBlock}</Box>
+          <Box sx={styles.filtersSidebarStyles}>{filtersBlock}</Box>
         )}
 
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 4,
-            flexGrow: 1,
-            minHeight: 520,
-          }}
-        >
+        <Box sx={styles.productsContainerStyles}>
           <ProductList
             products={products}
             isLoading={isLoadingInitial}
@@ -126,7 +106,7 @@ export default function ProductPage() {
               onChange={handlers.handlePageChange}
               color='primary'
               shape='rounded'
-              sx={{ mt: 'auto', display: 'flex', justifyContent: 'center' }}
+              sx={styles.paginationStyles}
             />
           )}
         </Box>

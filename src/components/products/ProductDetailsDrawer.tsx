@@ -1,15 +1,9 @@
 'use client';
-
-import {
-  Drawer,
-  Box,
-  Typography,
-  Divider,
-  IconButton
-} from '@mui/material';
+import { Drawer, Box, Typography, Divider, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Product } from '@/types/Product';
 import { ProductPreviewLayout } from './ProductPreviewLayout';
+import * as styles from './styles/ProductDetailsDrawer.styles';
 
 interface ProductDetailsDrawerProps {
   open: boolean;
@@ -24,7 +18,9 @@ export const ProductDetailsDrawer = ({
 }: ProductDetailsDrawerProps) => {
   if (!product) return null;
 
-  const onBuy = () => { console.log('add to cart')};
+  const handleBuy = () => {
+    console.log('add to cart', product.id);
+  };
 
   return (
     <Drawer
@@ -33,12 +29,12 @@ export const ProductDetailsDrawer = ({
       onClose={onClose}
       slotProps={{
         paper: {
-          sx: { width: { xs: '100%', sm: 500 }, p: 3 },
+          sx: styles.drawerPaperStyles,
         },
       }}
     >
-      <Box display='flex' justifyContent='space-between' alignItems='start' gap={1}>
-        <Typography variant='h5' sx={{ fontWeight: 600 }}>
+      <Box sx={styles.headerStyles}>
+        <Typography variant='h5' sx={styles.titleStyles}>
           {product.title}
         </Typography>
         <IconButton onClick={onClose}>
@@ -46,19 +42,21 @@ export const ProductDetailsDrawer = ({
         </IconButton>
       </Box>
 
-      <Divider sx={{ my: 2 }} />
+      <Divider sx={styles.dividerStyles} />
 
       <ProductPreviewLayout
         product={product}
-        imageSx={{ height: 300, borderRadius: 2 }}
-        titleSx={{ visibility: 'hidden', maxHeight: 16 }}
-        priceSx={{ fontSize: 22, fontWeight: 600, mt: 0 }}
+        imageSx={styles.previewImageStyles}
+        titleSx={styles.previewTitleStyles}
+        priceSx={styles.previewPriceStyles}
         ratingSize='medium'
         showBuyButton
-        onBuy={onBuy}
+        onBuy={handleBuy}
       />
 
-      <Typography sx={{ mt: 2 }}>{product.description}</Typography>
+      <Typography sx={styles.descriptionStyles}>
+        {product.description}
+      </Typography>
     </Drawer>
   );
 };

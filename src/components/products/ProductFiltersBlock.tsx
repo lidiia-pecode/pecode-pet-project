@@ -1,24 +1,16 @@
 'use client';
-
-import {
-  Box,
-  Typography,
-  Slider,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-  Divider,
-  Paper,
-  Button,
-} from '@mui/material';
-import { ActiveFiltersBar } from '../filters/ActiveFiltersBar';
-import { CATEGORIES, Category, FilterKey, ProductFilters } from '@/types/Filters';
+import { Box, Divider, Paper, Button } from '@mui/material';
+import { ActiveFiltersBar } from './filters/ActiveFiltersBar';
+import { PriceFilter } from './filters/PriceFilter';
+import { RatingFilter } from './filters/RatingFilter';
+import { CategoryFilter } from './filters/CategoryFilter';
+import { Category, FilterKey, ProductFilters } from '@/types/Filters';
 import { getActiveFilters } from '@/lib/utils/getActiveFilters';
 
 interface ProductFiltersBlockProps {
   filters: ProductFilters;
   isTablet: boolean;
-  onChange: (updated: Partial<ProductFiltersBlockProps['filters']>) => void;
+  onChange: (updated: Partial<ProductFilters>) => void;
   onClose: () => void;
   removeFilter: (type: FilterKey, value?: Category) => void;
   handleClearFilters: () => void;
@@ -34,13 +26,11 @@ export const ProductFiltersBlock = ({
 }: ProductFiltersBlockProps) => {
   const isActiveFiltersBarShown = getActiveFilters(filters).length > 0;
 
-  const handlePriceChange = (_: Event, newValue: number | number[]) => {
-    const [min, max] = newValue as [number, number];
+  const handlePriceChange = (min: number, max: number) => {
     onChange({ price: { min, max } });
   };
 
-  const handleRatingChange = (_: Event, newValue: number | number[]) => {
-    const [min, max] = newValue as [number, number];
+  const handleRatingChange = (min: number, max: number) => {
     onChange({ rating: { min, max } });
   };
 
@@ -62,16 +52,16 @@ export const ProductFiltersBlock = ({
           gap: 3,
           flexShrink: 0,
           height: 'fit-content',
-          borderRadius: isTablet? 0 : 3,
-          boxShadow: isTablet? 'none' : '',
-          width: isTablet? 300 : 260,
-          p: isTablet? 2 : 3,
-          pt : 3,
-          position : 'sticky',
-          top: isTablet? 0 : 80,
+          borderRadius: isTablet ? 0 : 3,
+          boxShadow: isTablet ? 'none' : '',
+          width: isTablet ? 300 : 260,
+          p: isTablet ? 2 : 3,
+          pt: 3,
+          position: 'sticky',
+          top: isTablet ? 0 : 80,
         }}
       >
-        {isTablet&& isActiveFiltersBarShown && (
+        {isTablet && isActiveFiltersBarShown && (
           <>
             <ActiveFiltersBar
               filters={filters}
@@ -82,91 +72,28 @@ export const ProductFiltersBlock = ({
           </>
         )}
 
-        <Box>
-          <Typography variant='subtitle1' fontWeight={600} gutterBottom>
-            Price
-          </Typography>
-
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              fontSize: 13,
-              mb: 0.5,
-              color: 'text.secondary',
-            }}
-          >
-            <span>₴{filters.price.min}</span>
-            <span>₴{filters.price.max}</span>
-          </Box>
-
-          <Box sx={{ px: 1 }}>
-            <Slider
-              value={[filters.price.min, filters.price.max]}
-              onChange={handlePriceChange}
-              valueLabelDisplay='auto'
-              min={0}
-              max={1000}
-            />
-          </Box>
-        </Box>
+        <PriceFilter
+          min={filters.price.min}
+          max={filters.price.max}
+          onChange={handlePriceChange}
+        />
 
         <Divider />
 
-        <Box>
-          <Typography variant='subtitle1' fontWeight={600} gutterBottom>
-            Rating
-          </Typography>
-
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              fontSize: 13,
-              mb: 0.5,
-              color: 'text.secondary',
-            }}
-          >
-            <span>{filters.rating.min}★</span>
-            <span>{filters.rating.max}★</span>
-          </Box>
-          <Box sx={{ px: 1 }}>
-            <Slider
-              value={[filters.rating.min, filters.rating.max]}
-              onChange={handleRatingChange}
-              valueLabelDisplay='auto'
-              min={0}
-              max={5}
-              step={0.1}
-            />
-          </Box>
-        </Box>
+        <RatingFilter
+          min={filters.rating.min}
+          max={filters.rating.max}
+          onChange={handleRatingChange}
+        />
 
         <Divider />
 
-        <Box>
-          <Typography variant='subtitle1' fontWeight={600} gutterBottom>
-            Categories
-          </Typography>
+        <CategoryFilter
+          selected={filters.categories}
+          onChange={handleCategoryChange}
+        />
 
-          <FormGroup>
-            {CATEGORIES.map(category => (
-              <FormControlLabel
-                key={category}
-                control={
-                  <Checkbox
-                    size='small'
-                    checked={filters.categories.includes(category)}
-                    onChange={() => handleCategoryChange(category)}
-                  />
-                }
-                label={category}
-              />
-            ))}
-          </FormGroup>
-        </Box>
-
-        {isTablet&& (
+        {isTablet && (
           <Button variant='outlined' onClick={onClose}>
             Close
           </Button>

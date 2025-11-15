@@ -6,16 +6,14 @@ import {
   Toolbar,
   Typography,
   IconButton,
-  useMediaQuery,
-  useTheme,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Navbar } from '@/components/navigation/Navbar';
 import { MobileMenu } from './MobileMenu';
+import { useResponsive } from '@/hooks/useResponsive';
 
 export const Header = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const { isMobile } = useResponsive();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const toggleDrawer = () => setDrawerOpen(prev => !prev);

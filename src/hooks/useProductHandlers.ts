@@ -7,13 +7,14 @@ import {
 } from '@/types/Filters';
 import { SortOption } from '@/types/sortOptions';
 import { ProductQuery } from '@/types/Query';
+import { ProductHandlers } from '@/types/Handlers';
 
 type UpdateQueryFn = (updates: Partial<ProductQuery>) => void;
 
 export function useProductHandlers(
   query: ProductQuery,
   updateQuery: UpdateQueryFn
-) {
+): ProductHandlers {
   const handleFilterChange = useCallback(
     (updates: Partial<ProductFilters>) => {
       const { searchQuery, price, rating, categories } = updates;
@@ -93,6 +94,7 @@ export function useProductHandlers(
         default:
           break;
       }
+
       updateQuery(updates);
     },
     [query.categories, updateQuery]
