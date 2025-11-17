@@ -33,7 +33,7 @@ export function buildQuery(query: ProductQuery) {
   query.categories.forEach(cat => params.append('category', cat));
   if (query.searchQuery) params.set('searchQuery', query.searchQuery);
 
-  return params;
+  return params.toString();
 }
 
 export function queryToFilters(query: ProductQuery): ProductFilters {
@@ -43,4 +43,14 @@ export function queryToFilters(query: ProductQuery): ProductFilters {
     categories: query.categories,
     searchQuery: query.searchQuery,
   };
+}
+
+
+export function buildProductsQueryKey(
+  page: number,
+  limit: number,
+  sort: SortOption,
+  filters: ProductFilters
+) {
+  return ['products', page, limit, sort, JSON.stringify(filters)];
 }

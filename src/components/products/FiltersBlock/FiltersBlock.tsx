@@ -1,13 +1,13 @@
 'use client';
 import { Box, Divider, Paper, Button } from '@mui/material';
-import { ActiveFiltersBar } from './filters/ActiveFiltersBar';
-import { PriceFilter } from './filters/PriceFilter';
-import { RatingFilter } from './filters/RatingFilter';
-import { CategoryFilter } from './filters/CategoryFilter';
+import { ActiveFiltersBar } from '../../ui/ActiveFiltersBar';
+import { PriceFilter } from './components/PriceFilter';
+import { RatingFilter } from './components/RatingFilter';
+import { CategoryFilter } from './components/CategoryFilter';
 import { Category, FilterKey, ProductFilters } from '@/types/Filters';
 import { getActiveFilters } from '@/lib/utils/getActiveFilters';
 
-interface ProductFiltersBlockProps {
+interface FiltersBlockProps {
   filters: ProductFilters;
   isTablet: boolean;
   onChange: (updated: Partial<ProductFilters>) => void;
@@ -16,14 +16,14 @@ interface ProductFiltersBlockProps {
   handleClearFilters: () => void;
 }
 
-export const ProductFiltersBlock = ({
+export const FiltersBlock = ({
   filters,
   isTablet,
   onChange,
   onClose,
   removeFilter,
   handleClearFilters,
-}: ProductFiltersBlockProps) => {
+}: FiltersBlockProps) => {
   const isActiveFiltersBarShown = getActiveFilters(filters).length > 0;
 
   const handlePriceChange = (min: number, max: number) => {

@@ -1,10 +1,9 @@
-import { PaginatedProducts, Product } from '@/types/Product';
-import { api } from './axiosInstanse';
-import { API_PRODUCTS_URL } from '../constants';
+import { PaginatedProducts } from '@/types/Product';
 import { ProductFilters, defaultFilters } from '@/types/Filters';
 import { SortOption, SORT_OPTIONS } from '@/types/sortOptions';
 import { PRODUCTS_PER_PAGE } from '@/lib/constants';
 import { buildQuery } from '../utils/productQuery';
+import { internalApi } from './axiosInstanse';
 
 interface GetAllProductsParams {
   page?: number;
@@ -19,7 +18,7 @@ export const getAllProducts = async ({
   filters = defaultFilters,
   sort = SORT_OPTIONS.POPULAR_DESC,
 }: GetAllProductsParams): Promise<PaginatedProducts> => {
-  const productQuery = {
+  const queryObj = {
     page,
     limit,
     sort,
@@ -31,40 +30,10 @@ export const getAllProducts = async ({
     searchQuery: filters.searchQuery || '',
   };
 
-  const params = buildQuery(productQuery);
+  const queryString = buildQuery(queryObj);
 
-  const res = await fetch(`${API_PRODUCTS_URL}?${params.toString()}`, {
-    cache: 'no-store',
-  });
-
-  if (!res.ok) {
-    throw new Error('Failed to fetch products');
-  }
-
-  return res.json();
-};
-
-export const getProduct = async (id: number): Promise<Product> => {
-  const res = await api.get<Product>(`/products/${id}`);
+  const res = await internalApi.get<PaginatedProducts>(
+    `/api/products?${queryString}`
+  );
   return res.data;
 };
-
-// export const createProduct = async (
-//   payload: Omit<Product, 'id'>
-// ): Promise<Product> => {
-//   const res = await api.post<Product>('/products', payload);
-//   return res.data;
-// };
-
-// export const updateProduct = async (
-//   id: number,
-//   payload: Omit<Product, 'id'>
-// ): Promise<Product> => {
-//   const res = await api.put<Product>(`/products/${id}`, payload);
-//   return res.data;
-// };
-
-// export const deleteProduct = async (id: number): Promise<Product> => {
-//   const res = await api.delete<Product>(`/products/${id}`);
-//   return res.data;
-// };

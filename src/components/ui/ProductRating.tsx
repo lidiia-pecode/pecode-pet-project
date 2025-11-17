@@ -1,12 +1,10 @@
-'use client';
-
 import { Box, Rating, Typography } from '@mui/material';
 
 interface ProductRatingProps {
-  value: number; 
+  value: number;
   count?: number;
-  size?: 'small' | 'medium' | 'large'; 
-  showCount?: boolean; 
+  size?: 'small' | 'medium' | 'large';
+  showCount?: boolean;
   align?: 'left' | 'center' | 'right';
 }
 

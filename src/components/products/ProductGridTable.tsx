@@ -1,5 +1,3 @@
-'use client';
-
 import { Box, Typography, Button, SxProps, Theme } from '@mui/material';
 import { Product } from '@/types/Product';
 import { ProductRating } from '../ui/ProductRating';

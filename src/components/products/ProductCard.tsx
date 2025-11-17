@@ -1,4 +1,3 @@
-'use client';
 import { Card, CardContent, CardActions, Button } from '@mui/material';
 import { Product } from '@/types/Product';
 import { ProductPreviewLayout } from './ProductPreviewLayout';
