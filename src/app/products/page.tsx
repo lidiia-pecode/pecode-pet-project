@@ -6,11 +6,11 @@ import {
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient,
 } from '@tanstack/react-query';
 import { getAllProducts } from '@/lib';
 import ProductClientWrapper from '@/components/products/ProductClientWrapper';
 import { toUrlSearchParams } from '@/lib/utils/toUrlSearchParams';
+import { getQueryClient } from '@/lib/utils/getQueryClient';
 
 interface ProductsPageProps {
   searchParams?:
@@ -35,7 +35,8 @@ export default async function ProductsPage({
     sort: query.sort,
   });
 
-  const queryClient = new QueryClient();
+  const queryClient = getQueryClient();
+
   await queryClient.prefetchQuery({
     queryKey: buildProductsQueryKey(
       query.page,
@@ -45,8 +46,6 @@ export default async function ProductsPage({
     ),
     queryFn: () => Promise.resolve(productsData),
   });
-
-  console.log('rendering');
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

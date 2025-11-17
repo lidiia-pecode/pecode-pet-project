@@ -20,6 +20,5 @@ export function useProducts({ page, limit, filters, sort }: UseProductsParams) {
       products: res.data,
       totalPages: res.totalPages,
     }),
-    staleTime: 60_000,
   });
 }
