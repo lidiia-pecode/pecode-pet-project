@@ -1,23 +1,8 @@
-'use client';
-
-import { useState } from 'react';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-} from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import { AppBar, Toolbar, Typography } from '@mui/material';
 import { Navbar } from '@/components/navigation/Navbar';
-import { MobileMenu } from './MobileMenu';
-import { useResponsive } from '@/hooks/useResponsive';
+import { MobileMenuButton } from './MobileMenuButton';
 
 export const Header = () => {
-  const { isMobile } = useResponsive();
-  const [drawerOpen, setDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => setDrawerOpen(prev => !prev);
-
   return (
     <AppBar
       position='sticky'
@@ -33,16 +18,10 @@ export const Header = () => {
           Pecode Store
         </Typography>
 
-        {isMobile ? (
-          <IconButton color='inherit' onClick={toggleDrawer}>
-            <MenuIcon />
-          </IconButton>
-        ) : (
-          <Navbar />
-        )}
-      </Toolbar>
+        <Navbar />
 
-      <MobileMenu open={drawerOpen} onClose={toggleDrawer} />
+        <MobileMenuButton />
+      </Toolbar>
     </AppBar>
   );
 };

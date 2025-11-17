@@ -1,7 +1,4 @@
-'use client';
-
 import { Stack } from '@mui/material';
-import { usePathname } from 'next/navigation';
 import { NavLink } from './NavLink';
 
 interface NavbarProps {
@@ -16,16 +13,16 @@ const navLinks = [
 ];
 
 export const Navbar = ({ direction = 'row', spacing = 3 }: NavbarProps) => {
-  const pathname = usePathname();
-
   return (
-    <Stack direction={direction} spacing={spacing}>
+    <Stack
+      direction={direction}
+      spacing={spacing}
+      sx={{
+        display: direction === 'row' ? { xs: 'none', md: 'flex' } : 'flex',
+      }}
+    >
       {navLinks.map(link => (
-        <NavLink
-          key={link.href}
-          href={link.href}
-          isActive={pathname === link.href}
-        >
+        <NavLink key={link.href} href={link.href}>
           {link.label}
         </NavLink>
       ))}
