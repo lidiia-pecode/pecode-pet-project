@@ -1,6 +1,6 @@
 'use client';
 import { Box, Divider, Paper, Button } from '@mui/material';
-import { ActiveFiltersBar } from '../../ui/ActiveFiltersBar';
+import { ActiveFiltersBar } from '../ui/ActiveFiltersBar';
 import { PriceFilter } from './components/PriceFilter';
 import { RatingFilter } from './components/RatingFilter';
 import { CategoryFilter } from './components/CategoryFilter';

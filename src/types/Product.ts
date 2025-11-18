@@ -1,23 +1,28 @@
-export interface ProductRating {
-  rate: number;
-  count: number;
+export interface PaginatedResponse {
+  products: Product[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  image: string;
+  creationAt: string;
+  updatedAt: string;
 }
 
 export interface Product {
   id: number;
   title: string;
+  slug: string;
   price: number;
   description: string;
-  category: string;
-  image: string;
-  rating: ProductRating;
+  category: Category;
+  images: string[];
+  creationAt: string;
+  updatedAt: string;
 }
-
-export interface PaginatedProducts {
-  data: Product[];
-  total: number;
-  page: number;
-  totalPages: number;
-}
-
-export type ViewMode = 'grid' | 'list';

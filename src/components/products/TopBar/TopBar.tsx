@@ -7,7 +7,7 @@ import { ProductQuery } from '@/types/Query';
 import { ProductHandlers } from '@/types/Handlers';
 import { ViewMode } from '@/types/Product';
 
-import { ActiveFiltersBar } from '../../ui/ActiveFiltersBar';
+import { ActiveFiltersBar } from '../ui/ActiveFiltersBar';
 import { SearchBar } from './components/SearchBar';
 import { SortSelect } from './components/SortSelect';
 import { ViewModeSwitcher } from './components/ViewModeSwitcher';

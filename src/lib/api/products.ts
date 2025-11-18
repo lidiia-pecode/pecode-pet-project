@@ -1,39 +1,41 @@
-import { PaginatedProducts } from '@/types/Product';
-import { ProductFilters, defaultFilters } from '@/types/Filters';
-import { SortOption, SORT_OPTIONS } from '@/types/sortOptions';
-import { PRODUCTS_PER_PAGE } from '@/lib/constants';
-import { buildQuery } from '../utils/productQuery';
-import { internalApi } from './axiosInstanse';
+// lib/api/products.ts
+import { Product } from '@/types/Product';
 
-interface GetAllProductsParams {
-  page?: number;
-  limit?: number;
-  filters?: ProductFilters;
-  sort?: SortOption;
+interface PaginatedProductsResponse {
+  products: Product[];
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  limit: number;
 }
 
-export const getAllProducts = async ({
-  page = 1,
-  limit = PRODUCTS_PER_PAGE,
-  filters = defaultFilters,
-  sort = SORT_OPTIONS.POPULAR_DESC,
-}: GetAllProductsParams): Promise<PaginatedProducts> => {
-  const queryObj = {
-    page,
-    limit,
-    sort,
-    minPrice: filters.price.min,
-    maxPrice: filters.price.max,
-    minRating: filters.rating.min,
-    maxRating: filters.rating.max,
-    categories: filters.categories,
-    searchQuery: filters.searchQuery || '',
-  };
+interface GetProductsParams {
+  page: number;
+  limit: number;
+}
 
-  const queryString = buildQuery(queryObj);
+export async function getProducts(
+  params: GetProductsParams
+): Promise<PaginatedProductsResponse> {
+  const { page, limit } = params;
 
-  const res = await internalApi.get<PaginatedProducts>(
-    `/api/products?${queryString}`
-  );
-  return res.data;
-};
+  const res = await fetch(`/api/products?page=${page}&limit=${limit}`, {
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch products');
+  }
+
+  return res.json();
+}
+
+export async function getProductById(id: number): Promise<Product> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${id}`);
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch product');
+  }
+
+  return res.json();
+}

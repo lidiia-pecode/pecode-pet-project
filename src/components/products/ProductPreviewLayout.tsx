@@ -2,7 +2,7 @@
 
 import { Box, SxProps, Typography, Button } from '@mui/material';
 import { Product } from '@/types/Product';
-import { ProductRating } from '../ui/ProductRating';
+import { ProductRating } from './ui/ProductRating';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Theme } from '@mui/material/styles';
 
