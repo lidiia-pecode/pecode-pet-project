@@ -1,4 +1,3 @@
-// app/products/page.tsx
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/utils/getQueryClient';
 import { getProducts } from '@/lib/api/products';
@@ -14,10 +13,10 @@ export default async function ProductsPage({
   searchParams,
 }: ProductsPageProps) {
   const queryClient = getQueryClient();
+  const awaited = searchParams instanceof Promise ? await searchParams : searchParams;
+  const params = toUrlSearchParams(awaited);
 
-  const { page, filters, sortOption } = parseFiltersFromSearchParams(
-    toUrlSearchParams(searchParams)
-  );
+  const { page, filters, sortOption } = parseFiltersFromSearchParams(params);
 
   await queryClient.prefetchQuery({
     queryKey: ['products', page, filters, sortOption],

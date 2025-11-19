@@ -5,11 +5,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
 import { useResponsive } from '@/hooks/useResponsive';
-import { useProductsParams } from '@/hooks/useProductsParams';
+import { useProductsStore } from '@/store/productsStore';
 
 export const SearchBar = () => {
   const { isMobile } = useResponsive();
-  const { filters, updateFilters } = useProductsParams();
+  const { filters, updateFilters } = useProductsStore();
 
   const [query, setQuery] = useState(filters.searchQuery || '');
 

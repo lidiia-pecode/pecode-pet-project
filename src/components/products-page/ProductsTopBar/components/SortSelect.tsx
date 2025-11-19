@@ -1,6 +1,6 @@
 'use client';
 
-import { useProductsParams } from '@/hooks/useProductsParams';
+import { useProductsStore } from '@/store/productsStore';
 import { theme } from '@/styles/theme';
 import { SORT_LABELS, SortOption } from '@/types/Sort';
 import {
@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 
 export const SortSelect = () => {
-  const { sortOption, setSortOption } = useProductsParams();
+  const { sortOption, setSortOption } = useProductsStore();
 
   const handleChange = (e: SelectChangeEvent<SortOption>) => {
     setSortOption(e.target.value as SortOption);

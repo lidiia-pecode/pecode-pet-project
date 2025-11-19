@@ -1,4 +1,3 @@
-// lib/api/products.ts
 import { Product } from '@/types/Product';
 import { ProductFilters } from '@/types/Filters';
 import { SortOption } from '@/types/Sort';

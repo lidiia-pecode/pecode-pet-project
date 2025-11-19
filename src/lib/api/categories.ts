@@ -1,4 +1,3 @@
-// lib/api/categories.ts
 import { Category } from '@/types/Product';
 import { apiGet } from './fetcher';
 

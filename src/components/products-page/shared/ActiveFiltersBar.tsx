@@ -1,11 +1,11 @@
 'use client';
 
-import { useProductsParams } from '@/hooks/useProductsParams';
 import { getActiveFilters } from '@/lib/utils/getActiveFilters';
+import { useProductsStore } from '@/store/productsStore';
 import { Box, Button, Chip } from '@mui/material';
 
 export const ActiveFiltersBar = () => {
-  const { filters, removeFilter, clearFilters } = useProductsParams();
+  const { filters, removeFilter, clearFilters } = useProductsStore();
   const activeFilters = getActiveFilters(filters);
 
   if (!activeFilters.length) return null;

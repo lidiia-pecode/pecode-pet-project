@@ -1,4 +1,3 @@
-// lib/filters/parseFiltersFromSearchParams.ts
 import { ProductFilters, defaultFilters, CategorySlug } from '@/types/Filters';
 import { SortOption, SORT_OPTIONS } from '@/types/Sort';
 

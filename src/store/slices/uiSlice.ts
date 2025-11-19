@@ -9,10 +9,11 @@ export interface UIState {
   closeMobileFilters: () => void;
 }
 
-export const createUISlice: StateCreator<UIState> = (set, get, store) => ({
-  viewMode: 'list',
+export const createUISlice: StateCreator<UIState> = set => ({
+  viewMode: 'grid',
   isMobileFiltersOpen: false,
-  setViewMode: (mode: ViewMode) => set({ viewMode: mode }),
+
+  setViewMode: mode => set({ viewMode: mode }),
   openMobileFilters: () => set({ isMobileFiltersOpen: true }),
   closeMobileFilters: () => set({ isMobileFiltersOpen: false }),
 });

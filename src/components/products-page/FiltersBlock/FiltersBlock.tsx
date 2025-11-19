@@ -8,12 +8,12 @@ import { CategorySlug } from '@/types/Filters';
 import { getActiveFilters } from '@/lib/utils/getActiveFilters';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useProductsStore } from '@/store/productsStore';
-import { useProductsParams } from '@/hooks/useProductsParams';
+
+import { paperStyles, containerStyles } from './FiltersBlock.styles';
 
 export const FiltersBlock = () => {
   const { isTablet } = useResponsive();
-  const { filters, updateFilters } = useProductsParams();
-  const { closeMobileFilters } = useProductsStore()
+  const {filters, updateFilters, closeMobileFilters } = useProductsStore()
 
   const isActiveFiltersBarShown = getActiveFilters(filters).length > 0;
 
@@ -34,23 +34,10 @@ export const FiltersBlock = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box sx={containerStyles}>
       <Paper
         elevation={3}
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 3,
-          flexShrink: 0,
-          height: 'fit-content',
-          borderRadius: isTablet ? 0 : 3,
-          boxShadow: isTablet ? 'none' : '',
-          width: isTablet ? 300 : 260,
-          p: isTablet ? 2 : 3,
-          pt: 3,
-          position: 'sticky',
-          top: isTablet ? 0 : 80,
-        }}
+        sx={paperStyles(isTablet)}
       >
         {isTablet && isActiveFiltersBarShown && (
           <>

@@ -1,5 +1,10 @@
-// components/products-page/ProductsClientWrapper/ProductsClientWrapper.tsx
 'use client';
+
+import {
+  filtersSidebarStyles,
+  mainContentStyles,
+  productsContainerStyles,
+} from './ProductsClientWrapper.styles';
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getProducts } from '@/lib/api/products';
@@ -9,29 +14,19 @@ import { ProductsTopBar } from '../ProductsTopBar';
 import { FiltersBlock } from '../FiltersBlock';
 import { useProductsStore } from '@/store/productsStore';
 import { useResponsive } from '@/hooks/useResponsive';
-import { Drawer, Box, SxProps } from '@mui/material';
-import { Theme } from '@emotion/react';
-import { useProductsParams } from '@/hooks/useProductsParams';
-
-const productsContainerStyles: SxProps<Theme> = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 4,
-  flexGrow: 1,
-  minHeight: 520,
-};
-const mainContentStyles: SxProps<Theme> = { display: 'flex', gap: 3 };
-const filtersSidebarStyles: SxProps<Theme> = { width: 260, flexShrink: 0 };
-const drawerPaperStyles: SxProps<Theme> = {
-  width: { xs: '100%', sm: 500 },
-  p: 3,
-};
+import { Drawer, Box } from '@mui/material';
 
 export default function ProductClientWrapper() {
   const { isTablet, isMobile } = useResponsive();
-  const { viewMode, isMobileFiltersOpen, closeMobileFilters } =
-    useProductsStore();
-  const { currentPage, filters, sortOption, setPage } = useProductsParams();
+  const {
+    viewMode,
+    isMobileFiltersOpen,
+    closeMobileFilters,
+    currentPage,
+    filters,
+    sortOption,
+    setPage,
+  } = useProductsStore();
 
   const { data, isLoading } = useQuery({
     queryKey: ['products', currentPage, filters, sortOption],
@@ -58,7 +53,7 @@ export default function ProductClientWrapper() {
             open={isMobileFiltersOpen}
             onClose={closeMobileFilters}
             anchor='left'
-            slotProps={{ paper: { sx: drawerPaperStyles } }}
+            slotProps={{ paper: { sx: { p: 2 } } }}
           >
             <FiltersBlock />
           </Drawer>

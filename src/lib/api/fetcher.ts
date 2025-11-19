@@ -1,13 +1,11 @@
-
-// lib/api/fetcher.ts
-import { FAKE_STORE_API_URL } from "./api-constants";
+import { EXTERNAL_API } from "../constants";
 
 export async function apiGet<T>(
   path: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   params?: Record<string, any>
 ): Promise<T> {
-  const url = new URL(`${FAKE_STORE_API_URL}${path}`);
+  const url = new URL(`${EXTERNAL_API}${path}`);
 
   if (params) {
     Object.entries(params).forEach(([key, value]) => {

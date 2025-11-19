@@ -199,7 +199,6 @@ export const ProductsListTable = ({
 
   return (
     <Box>
-      {/* HEADER */}
       <Box sx={{ ...listTableStyles.header, gridTemplateColumns }}>
         {columns.map(col => (
           <Typography
@@ -212,7 +211,6 @@ export const ProductsListTable = ({
         ))}
       </Box>
 
-      {/* ROWS */}
       {products.map(product => (
         <Box
           key={product.id}
