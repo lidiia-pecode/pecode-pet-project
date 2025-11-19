@@ -1,32 +1,25 @@
 'use client';
 
-import {
-  TextField,
-  InputAdornment,
-  IconButton,
-} from '@mui/material';
+import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEffect, useState } from 'react';
-import { ProductFilters } from '@/types/Filters';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useProductsParams } from '@/hooks/useProductsParams';
 
-interface SearchBarProps {
-  searchQuery: string;
-  onChangeQuery: (updated: Partial<ProductFilters>) => void;
-}
-
-export const SearchBar = ({ searchQuery, onChangeQuery }: SearchBarProps) => {
-  const [query, setQuery] = useState(searchQuery);
+export const SearchBar = () => {
   const { isMobile } = useResponsive();
+  const { filters, updateFilters } = useProductsParams();
+
+  const [query, setQuery] = useState(filters.searchQuery || '');
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      onChangeQuery({ searchQuery: query.trim() });
+      updateFilters({ searchQuery: query.trim() });
     }, 500);
 
     return () => clearTimeout(handler);
-  }, [query, onChangeQuery]);
+  }, [query, updateFilters]);
 
   return (
     <TextField

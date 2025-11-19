@@ -1,39 +1,40 @@
 // app/api/products/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { FAKE_STORE_API_URL } from '@/lib/api/api-constants';
-import { PaginatedResponse, Product } from '@/types/Product';
+import { Product } from '@/types/Product';
+import { generateRandomRating } from '@/lib/utils/generateRandomRating';
+import { getPreparedProducts } from '@/lib/utils/getPreparedProducts';
+import { parseFiltersFromSearchParams } from '@/lib/utils/parseFilters';
+
+const DEFAULT_LIMIT = 6;
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const page = parseInt(searchParams.get('page') || '1');
-  const limit = parseInt(searchParams.get('limit') || '10');
-
   try {
+    const { page, filters, sortOption } = parseFiltersFromSearchParams(
+      request.nextUrl.searchParams
+    );
+
     const response = await fetch(`${FAKE_STORE_API_URL}/products`);
+    if (!response.ok) throw new Error('Failed to fetch products');
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch products');
-    }
+    let products: Product[] = await response.json();
 
-    const allProducts: Product[] = await response.json();
-    const total = allProducts.length;
-    const totalPages = Math.ceil(total / limit);
+    products = products.map(product => ({
+      ...product,
+      rating: generateRandomRating(),
+    }));
 
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + limit;
-    const paginatedProducts = allProducts.slice(startIndex, endIndex);
-
-    const result: PaginatedResponse = {
-      products: paginatedProducts,
-      total,
-      totalPages,
-      currentPage: page,
-      limit,
-    };
+    const result = getPreparedProducts({
+      products,
+      filters,
+      sortOption,
+      page,
+      limit: DEFAULT_LIMIT,
+    });
 
     return NextResponse.json(result);
-  } catch (error) {
-    console.error('Error fetching products:', error);
+  } catch (err) {
+    console.error(err);
     return NextResponse.json(
       { error: 'Failed to fetch products' },
       { status: 500 }

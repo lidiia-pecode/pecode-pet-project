@@ -1,34 +1,19 @@
-import { Theme } from "@emotion/react";
-import { SxProps } from "@mui/material";
+import { Theme } from '@emotion/react';
+import { SxProps } from '@mui/material';
 
 export const baseStyles: Record<string, SxProps<Theme>> = {
-  card: {
+  cardGrid: {
     cursor: 'pointer',
     '&:hover': { boxShadow: 6 },
-  },
-  cardGrid: {
     display: 'flex',
     flexDirection: 'column',
-  },
-  cardList: {
-    display: 'grid',
-    gridTemplateColumns: '60px 1fr 120px 100px',
-    gap: 2,
-    alignItems: 'center',
-    borderBottom: '1px solid',
-    borderColor: 'divider',
+    height: '100%',
   },
   imageGrid: {
     width: '100%',
     height: 180,
     objectFit: 'contain',
     backgroundColor: 'background.paper',
-  },
-  imageList: {
-    width: 60,
-    height: 60,
-    objectFit: 'contain',
-    justifySelf: 'center',
   },
   title: {
     fontWeight: 600,
@@ -47,5 +32,12 @@ export const baseStyles: Record<string, SxProps<Theme>> = {
   },
   price: {
     fontWeight: 700,
+  },
+  priceRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 1,
+    mt: 1,
   },
 };

@@ -1,45 +1,36 @@
 'use client';
 import { Box, Divider, Paper, Button } from '@mui/material';
-import { ActiveFiltersBar } from '../ui/ActiveFiltersBar';
+import { ActiveFiltersBar } from '../shared/ActiveFiltersBar';
 import { PriceFilter } from './components/PriceFilter';
 import { RatingFilter } from './components/RatingFilter';
 import { CategoryFilter } from './components/CategoryFilter';
-import { Category, FilterKey, ProductFilters } from '@/types/Filters';
+import { CategorySlug } from '@/types/Filters';
 import { getActiveFilters } from '@/lib/utils/getActiveFilters';
+import { useResponsive } from '@/hooks/useResponsive';
+import { useProductsStore } from '@/store/productsStore';
+import { useProductsParams } from '@/hooks/useProductsParams';
 
-interface FiltersBlockProps {
-  filters: ProductFilters;
-  isTablet: boolean;
-  onChange: (updated: Partial<ProductFilters>) => void;
-  onClose: () => void;
-  removeFilter: (type: FilterKey, value?: Category) => void;
-  handleClearFilters: () => void;
-}
+export const FiltersBlock = () => {
+  const { isTablet } = useResponsive();
+  const { filters, updateFilters } = useProductsParams();
+  const { closeMobileFilters } = useProductsStore()
 
-export const FiltersBlock = ({
-  filters,
-  isTablet,
-  onChange,
-  onClose,
-  removeFilter,
-  handleClearFilters,
-}: FiltersBlockProps) => {
   const isActiveFiltersBarShown = getActiveFilters(filters).length > 0;
 
   const handlePriceChange = (min: number, max: number) => {
-    onChange({ price: { min, max } });
+    updateFilters({ price: { min, max } });
   };
 
   const handleRatingChange = (min: number, max: number) => {
-    onChange({ rating: { min, max } });
+    updateFilters({ rating: { min, max } });
   };
 
-  const handleCategoryChange = (category: Category) => {
+  const handleCategoryChange = (category: CategorySlug) => {
     const isSelected = filters.categories.includes(category);
     const updated = isSelected
       ? filters.categories.filter(c => c !== category)
       : [...filters.categories, category];
-    onChange({ categories: updated });
+    updateFilters({ categories: updated });
   };
 
   return (
@@ -63,11 +54,7 @@ export const FiltersBlock = ({
       >
         {isTablet && isActiveFiltersBarShown && (
           <>
-            <ActiveFiltersBar
-              filters={filters}
-              removeFilter={removeFilter}
-              handleClearFilters={handleClearFilters}
-            />
+            <ActiveFiltersBar />
             <Divider />
           </>
         )}
@@ -94,7 +81,7 @@ export const FiltersBlock = ({
         />
 
         {isTablet && (
-          <Button variant='outlined' onClick={onClose}>
+          <Button variant='outlined' onClick={closeMobileFilters}>
             Close
           </Button>
         )}

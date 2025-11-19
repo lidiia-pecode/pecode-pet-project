@@ -1,4 +1,9 @@
-import { FilterKey, ProductFilters, defaultFilters } from '@/types/Filters';
+import {
+  FilterKey,
+  ProductFilters,
+  defaultFilters,
+  CATEGORIES,
+} from '@/types/Filters';
 
 interface ActiveFilterItem {
   type: FilterKey;
@@ -11,14 +16,15 @@ export const getActiveFilters = (
 ): ActiveFilterItem[] => {
   const active: ActiveFilterItem[] = [];
 
-  if (filters.categories.length > 0) {
-    filters.categories.forEach(cat => {
-      active.push({ type: 'categories', label: cat, value: cat });
-    });
-  }
+  const validCategories = filters.categories.filter(cat =>
+    CATEGORIES.includes(cat)
+  );
+  validCategories.forEach(cat => {
+    active.push({ type: 'categories', label: cat, value: cat });
+  });
 
   if (
-    filters.price.min !== defaultFilters.price.min||
+    filters.price.min !== defaultFilters.price.min ||
     filters.price.max !== defaultFilters.price.max
   ) {
     active.push({
@@ -27,7 +33,7 @@ export const getActiveFilters = (
       value: null,
     });
   }
-
+  
   if (
     filters.rating.min !== defaultFilters.rating.min ||
     filters.rating.max !== defaultFilters.rating.max

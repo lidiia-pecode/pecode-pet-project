@@ -1,35 +1,39 @@
 import { Product } from '@/types/Product';
-import { ProductQuery } from '@/types/Query';
-import { SORT_OPTIONS } from '@/types/sortOptions';
-import { Category } from '@/types/Filters';
+import { SORT_OPTIONS, SortOption } from '@/types/Sort';
+import { ProductFilters } from '@/types/Filters';
 
-function filterProducts(products: Product[], query: ProductQuery): Product[] {
+interface PrepareProductsParams {
+  products: Product[];
+  filters: ProductFilters;
+  sortOption: SortOption;
+  page: number;
+  limit: number;
+}
+
+function filterProducts(products: Product[], filters: ProductFilters) {
   return products.filter(product => {
     const matchesPrice =
-      product.price >= query.minPrice && product.price <= query.maxPrice;
+      product.price >= filters.price.min && product.price <= filters.price.max;
 
     const matchesRating =
-      product.rating.rate >= query.minRating &&
-      product.rating.rate <= query.maxRating;
+      product.rating.rate >= filters.rating.min &&
+      product.rating.rate <= filters.rating.max;
 
     const matchesCategory =
-      query.categories.length === 0 ||
-      query.categories.includes(product.category as Category);
+      filters.categories.length === 0 ||
+      filters.categories.includes(product.category.slug);
 
     const matchesSearch =
-      !query.searchQuery ||
-      product.title.toLowerCase().includes(query.searchQuery.toLowerCase());
+      !filters.searchQuery ||
+      product.title.toLowerCase().includes(filters.searchQuery.toLowerCase());
 
     return matchesPrice && matchesRating && matchesCategory && matchesSearch;
   });
 }
 
-function sortProducts(
-  products: Product[],
-  sort: ProductQuery['sort']
-): Product[] {
+function sortProducts(products: Product[], sortOption: SortOption) {
   return [...products].sort((a, b) => {
-    switch (sort) {
+    switch (sortOption) {
       case SORT_OPTIONS.PRICE_ASC:
         return a.price - b.price;
       case SORT_OPTIONS.PRICE_DESC:
@@ -49,15 +53,21 @@ function paginateProducts(products: Product[], page: number, limit: number) {
   return products.slice(start, start + limit);
 }
 
-export function getPreparedProducts(products: Product[], query: ProductQuery) {
-  const filtered = filterProducts(products, query);
-  const sorted = sortProducts(filtered, query.sort);
-  const paginated = paginateProducts(sorted, query.page, query.limit);
+export function getPreparedProducts({
+  products,
+  filters,
+  sortOption,
+  page,
+  limit,
+}: PrepareProductsParams) {
+  const filtered = filterProducts(products, filters);
+  const sorted = sortProducts(filtered, sortOption);
+  const paginated = paginateProducts(sorted, page, limit);
 
   return {
-    data: paginated,
+    products: paginated,
     total: sorted.length,
-    page: query.page,
-    totalPages: Math.ceil(sorted.length / query.limit),
+    page,
+    totalPages: Math.ceil(sorted.length / limit),
   };
 }

@@ -1,7 +1,8 @@
 'use client';
 
+import { useProductsParams } from '@/hooks/useProductsParams';
 import { theme } from '@/styles/theme';
-import { SORT_LABELS, SortOption } from '@/types/sortOptions';
+import { SORT_LABELS, SortOption } from '@/types/Sort';
 import {
   FormControl,
   InputLabel,
@@ -10,15 +11,11 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 
+export const SortSelect = () => {
+  const { sortOption, setSortOption } = useProductsParams();
 
-interface SortSelectProps {
-  sort: SortOption;
-  onChange: (value: SortOption) => void;
-}
-
-export const SortSelect = ({ sort, onChange }: SortSelectProps) => {
   const handleChange = (e: SelectChangeEvent<SortOption>) => {
-    onChange(e.target.value as SortOption);
+    setSortOption(e.target.value as SortOption);
   };
 
   return (
@@ -27,14 +24,14 @@ export const SortSelect = ({ sort, onChange }: SortSelectProps) => {
       sx={{
         minWidth: 160,
         [theme.breakpoints.up('sm')]: {
-          minWidth: 200, 
+          minWidth: 200,
         },
       }}
     >
       <InputLabel id='sort-label'>Sort by</InputLabel>
       <Select
         labelId='sort-label'
-        value={sort}
+        value={sortOption}
         label='Sort by'
         onChange={handleChange}
       >

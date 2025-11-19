@@ -3,14 +3,25 @@ import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/utils/getQueryClient';
 import { getProducts } from '@/lib/api/products';
 import ProductClientWrapper from '@/components/products-page/ProductsClientWrapper/ProductsClientWrapper';
+import { parseFiltersFromSearchParams } from '@/lib/utils/parseFilters';
+import { toUrlSearchParams } from '@/lib/utils/toUrlSearchParams';
 
-export default async function ProductsPage() {
+interface ProductsPageProps {
+  searchParams: Record<string, string | string[] | undefined>;
+}
+
+export default async function ProductsPage({
+  searchParams,
+}: ProductsPageProps) {
   const queryClient = getQueryClient();
 
-  // Prefetch з новим API
+  const { page, filters, sortOption } = parseFiltersFromSearchParams(
+    toUrlSearchParams(searchParams)
+  );
+
   await queryClient.prefetchQuery({
-    queryKey: ['products', 1],
-    queryFn: () => getProducts({ page: 1, limit: 10 }),
+    queryKey: ['products', page, filters, sortOption],
+    queryFn: () => getProducts({ page, filters, sortOption }),
   });
 
   return (

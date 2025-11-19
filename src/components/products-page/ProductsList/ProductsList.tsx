@@ -1,46 +1,34 @@
 'use client';
 
-import React from 'react';
-import { Box, Typography } from '@mui/material';
-import { Product } from '@/types/Product';
+import { Box } from '@mui/material';
+import { Product, ViewMode } from '@/types/Product';
 import { ProductsCard } from '../ProductsCard/ProductsCard';
 import { listStyles } from './ProductsList.styles';
-
-type Variant = 'grid' | 'list';
+import { ProductsListTable } from '../ProductsListTable';
 
 interface ProductsListProps {
   products: Product[];
-  variant?: Variant;
+  mode: ViewMode;
   onOpenProduct?: (product: Product) => void;
 }
 
-export const ProductsList: React.FC<ProductsListProps> = ({
-  products,
-  variant = 'grid',
-  onOpenProduct,
-}) => {
-  if (!products.length) {
+export const ProductsList = ({ products, mode, onOpenProduct }: ProductsListProps) => {
+  if (mode === 'list') {
     return (
-      <Box sx={listStyles.emptyBox}>
-        <Typography variant='h6' color='text.secondary'>
-          No products found.
-        </Typography>
-      </Box>
+      <ProductsListTable products={products} onOpenProduct={onOpenProduct} />
     );
   }
 
   return (
-    <Box
-      sx={variant === 'grid' ? listStyles.gridContainer : listStyles.container}
-    >
+    <Box sx={listStyles.gridContainer}>
       {products.map(product => (
         <ProductsCard
           key={product.id}
           product={product}
-          variant={variant}
           onClick={onOpenProduct}
         />
       ))}
     </Box>
   );
 };
+

@@ -1,27 +1,29 @@
 'use client';
 
 import React from 'react';
-import { Card, CardContent, Box, Typography, Button, SxProps } from '@mui/material';
+import {
+  Card,
+  CardContent,
+  Box,
+  Typography,
+  Button,
+} from '@mui/material';
 import type { Product } from '@/types/Product';
 import { baseStyles } from './ProductsCard.styles';
-import { Theme } from '@emotion/react';
-
-type Variant = 'grid' | 'list';
+import { ProductRating } from '../shared/ProductRating';
 
 interface ProductsCardProps {
   product: Product;
-  variant?: Variant;
   onClick?: (product: Product) => void;
   onView?: (product: Product) => void;
 }
 
 export const ProductsCard: React.FC<ProductsCardProps> = ({
   product,
-  variant = 'grid',
   onClick,
   onView,
 }) => {
-  const image = product.images?.[0] ?? '/placeholder.png'; //   should add this fallback image !!!
+  const image = product.images?.[0] ?? '/placeholder.png';
 
   const handleCardClick = () => onClick?.(product);
   const handleView = (e: React.MouseEvent) => {
@@ -29,48 +31,45 @@ export const ProductsCard: React.FC<ProductsCardProps> = ({
     onView?.(product);
   };
 
-  // --- Об'єднані стилі ---
-  const cardStyles: SxProps<Theme> = Object.assign(
-    {},
-    baseStyles.card,
-    variant === 'grid' ? baseStyles.cardGrid : baseStyles.cardList,
-    { py: variant === 'list' ? 1.5 : 0, px: variant === 'list' ? 1 : 0 }
-  );
-
-  const imageStyles =
-    variant === 'grid' ? baseStyles.imageGrid : baseStyles.imageList;
-
   return (
     <Card
-      sx={cardStyles}
+      sx={baseStyles.cardGrid}
       onClick={handleCardClick}
       role='button'
       tabIndex={0}
-      onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
+      onKeyDown={e => {
         if (e.key === 'Enter') handleCardClick();
       }}
     >
-      <Box component='img' src={image} alt={product.title} sx={imageStyles} />
+      <Box
+        component='img'
+        src={image}
+        alt={product.title}
+        sx={baseStyles.imageGrid}
+      />
 
-      <CardContent sx={{ flexGrow: 1, p: variant === 'grid' ? 2 : 0 }}>
+      <CardContent sx={{ flexGrow: 1, p: 2 }}>
         <Typography sx={baseStyles.title}>{product.title}</Typography>
+
         <Typography sx={baseStyles.description}>
           {product.description}
         </Typography>
-        <Typography sx={baseStyles.price}>${product.price}</Typography>
-        {variant === 'list' && (
-          <Typography variant='caption' color='text.secondary'>
-            {product.category?.name}
-          </Typography>
-        )}
+
+        <Box sx={baseStyles.priceRow}>
+          <Typography sx={baseStyles.price}>${product.price}</Typography>
+
+          <Box sx={{ ml: 1 }}>
+            <ProductRating
+              value={product.rating?.rate ?? 0}
+              count={product.rating?.count}
+              size='small'
+              showCount={true}
+            />
+          </Box>
+        </Box>
       </CardContent>
 
-      <Button
-        fullWidth={variant === 'grid'}
-        size='small'
-        variant='contained'
-        onClick={handleView}
-      >
+      <Button fullWidth size='small' variant='contained' onClick={handleView}>
         View
       </Button>
     </Card>

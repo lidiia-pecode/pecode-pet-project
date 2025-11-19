@@ -8,7 +8,11 @@ export const listStyles: Record<string, SxProps<Theme>> = {
   },
   gridContainer: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateColumns: {
+      xs: 'repeat(1, 1fr)', 
+      sm: 'repeat(2, 1fr)', 
+      lg: 'repeat(3, 1fr)',
+    },
     gap: 2,
   },
   emptyBox: {

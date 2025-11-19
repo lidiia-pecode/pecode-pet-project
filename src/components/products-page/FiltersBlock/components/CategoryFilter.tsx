@@ -6,11 +6,11 @@ import {
   FormGroup,
   FormControlLabel,
 } from '@mui/material';
-import { CATEGORIES, Category } from '@/types/Filters';
+import { CATEGORIES, CategorySlug } from '@/types/Filters';
 
 interface CategoryFilterProps {
-  selected: Category[];
-  onChange: (category: Category) => void;
+  selected: CategorySlug[];
+  onChange: (category: CategorySlug) => void;
 }
 
 export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
