@@ -7,10 +7,9 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { useProductsStore } from '@/store/productsStore';
 import { topBarStyles } from './ProductsTopBar.styles';
 
-
 export const ProductsTopBar = () => {
   const { isTablet } = useResponsive();
-  const {openMobileFilters} = useProductsStore();
+  const { openMobileFilters } = useProductsStore();
 
   return (
     <>
@@ -19,7 +18,7 @@ export const ProductsTopBar = () => {
         <SortSelect />
       </Box>
 
-      <Box sx={topBarStyles.filtersSidebarStyles}>
+      <Box sx={{ mb: 2 }}>
         <Box sx={topBarStyles.filtersBarInner}>
           {isTablet ? (
             <Button variant='outlined' onClick={openMobileFilters}>

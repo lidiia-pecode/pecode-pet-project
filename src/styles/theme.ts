@@ -21,9 +21,6 @@ export const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
-        html: {
-          scrollBehavior: 'smooth',
-        },
         body: {
           margin: 0,
           padding: 0,

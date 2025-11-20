@@ -16,7 +16,7 @@ export interface Category {
   updatedAt: string;
 }
 
-export interface ProductRating {
+export interface IProductRating {
   rate: number;
   count: number
 }
@@ -31,7 +31,7 @@ export interface Product {
   images: string[];
   creationAt: string;
   updatedAt: string;
-  rating: ProductRating
+  rating: IProductRating
 }
 
 export type ViewMode = 'list' | 'grid';

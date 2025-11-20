@@ -11,14 +11,14 @@ export const ActiveFiltersBar = () => {
   if (!activeFilters.length) return null;
 
   return (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-      <Button size='small' onClick={clearFilters}>
+    <Box sx={{ display: 'flex', alignContent: 'center', flexWrap: 'wrap', gap: 1 }}>
+      <Button size='small' variant='outlined' onClick={clearFilters}>
         Clear All
       </Button>
 
       {activeFilters.map(filter => (
         <Chip
-          sx={{ color: 'text.secondary' }}
+          color='primary'
           key={`${filter.type}-${filter.label}`}
           label={filter.label}
           onDelete={() => removeFilter(filter.type)}

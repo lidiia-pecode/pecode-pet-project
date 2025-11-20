@@ -5,6 +5,7 @@ export const topBarStyles: Record<string, SxProps<Theme>> = {
   searchBarContainer: {
     display: 'flex',
     gap: 2,
+    mb: 1,
   },
 
   filtersBarContainer: {

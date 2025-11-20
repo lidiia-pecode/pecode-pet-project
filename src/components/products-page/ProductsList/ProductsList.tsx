@@ -9,13 +9,12 @@ import { ProductsListTable } from '../ProductsListTable';
 interface ProductsListProps {
   products: Product[];
   mode: ViewMode;
-  onOpenProduct?: (product: Product) => void;
 }
 
-export const ProductsList = ({ products, mode, onOpenProduct }: ProductsListProps) => {
+export const ProductsList = ({ products, mode}: ProductsListProps) => {
   if (mode === 'list') {
     return (
-      <ProductsListTable products={products} onOpenProduct={onOpenProduct} />
+      <ProductsListTable products={products}/>
     );
   }
 
@@ -25,7 +24,6 @@ export const ProductsList = ({ products, mode, onOpenProduct }: ProductsListProp
         <ProductsCard
           key={product.id}
           product={product}
-          onClick={onOpenProduct}
         />
       ))}
     </Box>

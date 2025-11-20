@@ -1,45 +1,30 @@
 'use client';
 
 import React from 'react';
-import {
-  Card,
-  CardContent,
-  Box,
-  Typography,
-  Button,
-} from '@mui/material';
+import { Card, CardContent, Box, Typography, Button } from '@mui/material';
 import type { Product } from '@/types/Product';
 import { baseStyles } from './ProductsCard.styles';
 import { ProductRating } from '../shared/ProductRating';
+import { useRouter } from 'next/navigation';
 
 interface ProductsCardProps {
   product: Product;
-  onClick?: (product: Product) => void;
-  onView?: (product: Product) => void;
 }
 
-export const ProductsCard: React.FC<ProductsCardProps> = ({
-  product,
-  onClick,
-  onView,
-}) => {
+export const ProductsCard: React.FC<ProductsCardProps> = ({ product }) => {
   const image = product.images?.[0] ?? '/placeholder.png';
 
-  const handleCardClick = () => onClick?.(product);
-  const handleView = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onView?.(product);
+  const router = useRouter();
+  const handleOpenProduct = () => {
+    router.replace(`/products/${product.id}`);
   };
 
   return (
     <Card
       sx={baseStyles.cardGrid}
-      onClick={handleCardClick}
+      onClick={handleOpenProduct}
       role='button'
       tabIndex={0}
-      onKeyDown={e => {
-        if (e.key === 'Enter') handleCardClick();
-      }}
     >
       <Box
         component='img'
@@ -69,7 +54,7 @@ export const ProductsCard: React.FC<ProductsCardProps> = ({
         </Box>
       </CardContent>
 
-      <Button fullWidth size='small' variant='contained' onClick={handleView}>
+      <Button fullWidth size='small' variant='contained'>
         View
       </Button>
     </Card>

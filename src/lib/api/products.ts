@@ -2,6 +2,8 @@ import { Product } from '@/types/Product';
 import { ProductFilters } from '@/types/Filters';
 import { SortOption } from '@/types/Sort';
 import { buildQueryString } from '@/lib/utils/buildQueryString';
+import { EXTERNAL_API } from '../constants';
+import { generateRandomRating } from '../utils/generateRandomRating';
 
 interface PaginatedProductsResponse {
   products: Product[];
@@ -33,4 +35,24 @@ export async function getProducts({
 
   const data: PaginatedProductsResponse = await res.json();
   return { ...data };
+}
+
+export async function getProduct(id: number): Promise<Product | null> {
+  try {
+    const res = await fetch(`${EXTERNAL_API}/products/${id}`, {
+      cache: 'no-store',
+    });
+
+    if (!res.ok) return null;
+
+    const product = await res.json();
+
+    return {
+      ...product,
+      rating: generateRandomRating(),
+    };
+  } catch (error) {
+    console.error('Failed to fetch product:', error);
+    return null;
+  }
 }
