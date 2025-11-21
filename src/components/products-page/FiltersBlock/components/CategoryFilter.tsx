@@ -9,24 +9,35 @@ import {
 import { getCategories } from '@/lib/api/categories';
 import { useQuery } from '@tanstack/react-query';
 import { CategorySlug } from '@/types/Categories';
+import { useProductsStore } from '@/store/productsStore';
 
-interface CategoryFilterProps {
-  selected: CategorySlug[];
-  onChange: (category: CategorySlug) => void;
-}
-
-export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
+export const CategoryFilter = () => {
   const { data: categories } = useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
     staleTime: 1000 * 60 * 60,
   });
 
+  const selectedCategories = useProductsStore(
+    state => state.filters.categories
+  );
+  const updateFilters = useProductsStore(state => state.updateFilters);
+
+  const handleChange = (category: CategorySlug) => {
+    const isSelected = selectedCategories.includes(category);
+    const updated = isSelected
+      ? selectedCategories.filter(c => c !== category)
+      : [...selectedCategories, category];
+
+    updateFilters({ categories: updated });
+  };
+
   return (
     <Box>
       <Typography variant='subtitle1' fontWeight={600} gutterBottom>
         Categories
       </Typography>
+      
       <FormGroup>
         {categories?.map(category => (
           <FormControlLabel
@@ -34,8 +45,8 @@ export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
             control={
               <Checkbox
                 size='small'
-                checked={selected.includes(category.slug)}
-                onChange={() => onChange(category.slug)}
+                checked={selectedCategories.includes(category.slug)}
+                onChange={() => handleChange(category.slug)}
               />
             }
             label={category.name}

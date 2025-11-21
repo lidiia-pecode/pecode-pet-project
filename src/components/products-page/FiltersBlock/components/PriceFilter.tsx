@@ -1,23 +1,27 @@
 'use client';
+import { useRangeFilter } from '@/hooks/useRangeFilter';
+import { useProductsStore } from '@/store/productsStore';
 import { Box, Typography, Slider } from '@mui/material';
 
-interface PriceFilterProps {
-  min: number;
-  max: number;
-  onChange: (min: number, max: number) => void;
-}
+export const PriceFilter = () => {
+  const price = useProductsStore(state => state.filters.price);
+  const updateFilters = useProductsStore(state => state.updateFilters);
 
-export const PriceFilter = ({ min, max, onChange }: PriceFilterProps) => {
-  const handleChange = (_: Event, newValue: number | number[]) => {
-    const [newMin, newMax] = newValue as [number, number];
-    onChange(newMin, newMax);
+  const commitPriceChange = (value: [number, number]) => {
+    updateFilters({ price: { min: value[0], max: value[1] } });
   };
+  
+  const { localValue, handleChange, handleChangeCommitted } = useRangeFilter(
+    [price.min, price.max],
+    commitPriceChange
+  );
 
   return (
     <Box>
       <Typography variant='subtitle1' fontWeight={600} gutterBottom>
         Price
       </Typography>
+
       <Box
         sx={{
           display: 'flex',
@@ -27,13 +31,15 @@ export const PriceFilter = ({ min, max, onChange }: PriceFilterProps) => {
           color: 'text.secondary',
         }}
       >
-        <span>₴{min}</span>
-        <span>₴{max}</span>
+        <span>₴{localValue[0]}</span>
+        <span>₴{localValue[1]}</span>
       </Box>
+
       <Box sx={{ px: 1 }}>
         <Slider
-          value={[min, max]}
+          value={localValue}
           onChange={handleChange}
+          onChangeCommitted={handleChangeCommitted}
           valueLabelDisplay='auto'
           min={0}
           max={1000}

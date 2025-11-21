@@ -3,31 +3,40 @@
 import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useProductsStore } from '@/store/productsStore';
 
 export const SearchBar = () => {
   const { isMobile } = useResponsive();
-  const { filters, updateFilters } = useProductsStore();
+  const searchQuery = useProductsStore(state => state.filters.searchQuery);
+  const updateFilters = useProductsStore(state => state.updateFilters);
 
-  const [query, setQuery] = useState(filters.searchQuery || '');
+  const [inputValue, setInputValue] = useState(searchQuery || '');
+
+  const handleChangeInputValue = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setInputValue(event.target.value.trimStart());
+  };
+  
+  const handleClearInputValue = () => setInputValue('');
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      updateFilters({ searchQuery: query.trim() });
+      updateFilters({ searchQuery: inputValue.trim() });
     }, 500);
 
     return () => clearTimeout(handler);
-  }, [query, updateFilters]);
+  }, [inputValue, updateFilters]);
 
   return (
     <TextField
       fullWidth
       size='small'
       placeholder={isMobile ? 'Search...' : 'Search products...'}
-      value={query}
-      onChange={e => setQuery(e.target.value.trimStart())}
+      value={inputValue}
+      onChange={handleChangeInputValue}
       slotProps={{
         input: {
           startAdornment: (
@@ -35,9 +44,9 @@ export const SearchBar = () => {
               <SearchIcon color='action' />
             </InputAdornment>
           ),
-          endAdornment: query && (
+          endAdornment: inputValue && (
             <InputAdornment position='end'>
-              <IconButton onClick={() => setQuery('')} size='small'>
+              <IconButton onClick={handleClearInputValue} size='small'>
                 <CloseIcon />
               </IconButton>
             </InputAdornment>

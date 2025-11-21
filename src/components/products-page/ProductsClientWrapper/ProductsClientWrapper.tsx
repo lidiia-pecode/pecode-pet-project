@@ -6,8 +6,6 @@ import {
   productsContainerStyles,
 } from './ProductsClientWrapper.styles';
 
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { getProducts } from '@/lib/api/products';
 import { ProductsPagination } from '../ProductsPagination';
 import { ProductsList } from '../ProductsList';
 import { ProductsTopBar } from '../ProductsTopBar';
@@ -15,43 +13,31 @@ import { FiltersBlock } from '../FiltersBlock';
 import { useProductsStore } from '@/store/productsStore';
 import { useResponsive } from '@/hooks/useResponsive';
 import { Drawer, Box } from '@mui/material';
+import { useProducts } from '@/hooks/useProducts';
 
 export default function ProductClientWrapper() {
+  const { data, isLoading } = useProducts();
   const { isTablet, isMobile } = useResponsive();
-  const {
-    viewMode,
-    isMobileFiltersOpen,
-    closeMobileFilters,
-    currentPage,
-    filters,
-    sortOption,
-    setPage,
-  } = useProductsStore();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['products', currentPage, filters, sortOption],
-    queryFn: () =>
-      getProducts({
-        page: currentPage,
-        filters,
-        sortOption,
-      }),
-    placeholderData: keepPreviousData,
-  });
-
+  const viewMode = useProductsStore(state => state.viewMode);
+  const filtersOpened = useProductsStore(state => state.filtersOpened);
+  const currentPage = useProductsStore(state => state.currentPage);
   const currentMode = isMobile ? 'grid' : viewMode;
+
+  const closeFilters = useProductsStore(state => state.closeFilters);
+  const setPage = useProductsStore(state => state.setPage);
 
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div>
+    <>
       <ProductsTopBar />
 
       <Box sx={mainContentStyles}>
         {isTablet ? (
           <Drawer
-            open={isMobileFiltersOpen}
-            onClose={closeMobileFilters}
+            open={filtersOpened}
+            onClose={closeFilters}
             anchor='left'
             slotProps={{ paper: { sx: { p: 2 } } }}
           >
@@ -73,6 +59,6 @@ export default function ProductClientWrapper() {
           />
         </Box>
       </Box>
-    </div>
+    </>
   );
 }

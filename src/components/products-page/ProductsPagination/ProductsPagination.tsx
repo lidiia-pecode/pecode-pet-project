@@ -9,7 +9,7 @@ interface ProductsPaginationProps {
   onChange: (page: number) => void;
 }
 
-export const ProductsPagination: React.FC<ProductsPaginationProps> = ({
+const ProductsPaginationComponent: React.FC<ProductsPaginationProps> = ({
   currentPage,
   totalPages,
   onChange,
@@ -25,3 +25,5 @@ export const ProductsPagination: React.FC<ProductsPaginationProps> = ({
     </Stack>
   );
 };
+
+export const ProductsPagination = React.memo(ProductsPaginationComponent);

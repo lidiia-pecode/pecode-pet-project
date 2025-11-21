@@ -9,7 +9,7 @@ import { topBarStyles } from './ProductsTopBar.styles';
 
 export const ProductsTopBar = () => {
   const { isTablet } = useResponsive();
-  const { openMobileFilters } = useProductsStore();
+  const openMobileFilters = useProductsStore(state => state.openMobileFilters);
 
   return (
     <>

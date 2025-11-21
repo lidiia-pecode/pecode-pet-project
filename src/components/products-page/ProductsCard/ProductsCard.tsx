@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Card, CardContent, Box, Typography, Button } from '@mui/material';
 import type { Product } from '@/types/Product';
 import { baseStyles } from './ProductsCard.styles';
@@ -10,14 +10,13 @@ import { useRouter } from 'next/navigation';
 interface ProductsCardProps {
   product: Product;
 }
-
-export const ProductsCard: React.FC<ProductsCardProps> = ({ product }) => {
+const ProductsCardComponent: React.FC<ProductsCardProps> = ({ product }) => {
   const image = product.images?.[0] ?? '/placeholder.png';
 
   const router = useRouter();
-  const handleOpenProduct = () => {
-    router.replace(`/products/${product.id}`);
-  };
+  const handleOpenProduct = useCallback(() => {
+    router.push(`/products/${product.id}`);
+  }, [router, product.id]);
 
   return (
     <Card
@@ -60,3 +59,5 @@ export const ProductsCard: React.FC<ProductsCardProps> = ({ product }) => {
     </Card>
   );
 };
+
+export const ProductsCard = React.memo(ProductsCardComponent);

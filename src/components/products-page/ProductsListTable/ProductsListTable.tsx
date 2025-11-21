@@ -1,5 +1,6 @@
 'use client';
 
+import React, { useCallback } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { Product } from '@/types/Product';
 import { ProductRating } from '../shared/ProductRating';
@@ -79,13 +80,16 @@ const columns = [
   },
 ];
 
-export const ProductsListTable = ({ products }: { products: Product[] }) => {
+const ProductsListTableComponent = ({ products }: { products: Product[] }) => {
   const gridTemplateColumns = columns.map(c => c.width).join(' ');
 
   const router = useRouter();
-  const handleOpenProduct = (id: number) => {
-    router.replace(`/products/${id}`);
-  };
+  const handleOpenProduct = useCallback(
+    (id: number) => {
+      router.push(`/products/${id}`);
+    },
+    [router]
+  );
 
   return (
     <Box>
@@ -117,3 +121,5 @@ export const ProductsListTable = ({ products }: { products: Product[] }) => {
     </Box>
   );
 };
+
+export const ProductsListTable = React.memo(ProductsListTableComponent);

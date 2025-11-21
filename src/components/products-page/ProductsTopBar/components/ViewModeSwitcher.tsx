@@ -9,7 +9,8 @@ import { useResponsive } from '@/hooks/useResponsive';
 
 export const ViewModeSwitcher = () => {
   const { isMobile } = useResponsive();
-  const { viewMode, setViewMode } = useProductsStore();
+  const viewMode = useProductsStore(state => state.viewMode);
+  const setViewMode = useProductsStore(state => state.setViewMode);
 
   const mode = isMobile ? 'grid' : viewMode;
   

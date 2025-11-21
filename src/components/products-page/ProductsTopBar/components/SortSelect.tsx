@@ -12,7 +12,8 @@ import {
 } from '@mui/material';
 
 export const SortSelect = () => {
-  const { sortOption, setSortOption } = useProductsStore();
+  const sortOption = useProductsStore(state => state.sortOption);
+  const setSortOption = useProductsStore(state => state.setSortOption);
 
   const handleChange = (e: SelectChangeEvent<SortOption>) => {
     setSortOption(e.target.value as SortOption);

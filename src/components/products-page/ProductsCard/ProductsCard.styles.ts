@@ -22,6 +22,7 @@ export const baseStyles: Record<string, SxProps<Theme>> = {
     whiteSpace: 'nowrap',
   },
   description: {
+    minHeight: 72,
     mt: 0.5,
     color: 'text.secondary',
     overflow: 'hidden',

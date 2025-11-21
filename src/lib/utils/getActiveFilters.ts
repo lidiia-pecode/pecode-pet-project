@@ -1,14 +1,8 @@
-import {
-  FilterKey,
-  ProductFilters,
-  defaultFilters,
-  CATEGORIES,
-} from '@/types/Filters';
+import { FilterKey, ProductFilters } from '@/types/Filters';
 
 interface ActiveFilterItem {
   type: FilterKey;
   label: string;
-  value: unknown;
 }
 
 export const getActiveFilters = (
@@ -16,32 +10,21 @@ export const getActiveFilters = (
 ): ActiveFilterItem[] => {
   const active: ActiveFilterItem[] = [];
 
-  const validCategories = filters.categories.filter(cat =>
-    CATEGORIES.includes(cat)
-  );
-  validCategories.forEach(cat => {
-    active.push({ type: 'categories', label: cat, value: cat });
+  filters.categories.forEach(cat => {
+    active.push({ type: 'categories', label: cat });
   });
 
-  if (
-    filters.price.min !== defaultFilters.price.min ||
-    filters.price.max !== defaultFilters.price.max
-  ) {
+  if (filters.price.min !== 0 || filters.price.max !== 1000) {
     active.push({
       type: 'price',
       label: `$${filters.price.min} - $${filters.price.max}`,
-      value: null,
     });
   }
-  
-  if (
-    filters.rating.min !== defaultFilters.rating.min ||
-    filters.rating.max !== defaultFilters.rating.max
-  ) {
+
+  if (filters.rating.min !== 0 || filters.rating.max !== 5) {
     active.push({
       type: 'rating',
       label: `${filters.rating.min}★ - ${filters.rating.max}★`,
-      value: null,
     });
   }
 

@@ -5,7 +5,9 @@ import { useProductsStore } from '@/store/productsStore';
 import { Box, Button, Chip } from '@mui/material';
 
 export const ActiveFiltersBar = () => {
-  const { filters, removeFilter, clearFilters } = useProductsStore();
+  const filters = useProductsStore(state => state.filters);
+  const removeFilter = useProductsStore(state => state.removeFilter);
+  const clearFilters = useProductsStore(state => state.clearFilters);
   const activeFilters = getActiveFilters(filters);
 
   if (!activeFilters.length) return null;
