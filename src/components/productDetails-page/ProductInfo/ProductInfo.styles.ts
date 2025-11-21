@@ -1,13 +1,12 @@
-import { SxProps, Theme } from '@mui/material';
-
-export const productInfoStyles: Record<string, SxProps<Theme>> = {
+export const productInfoStyles = {
   container: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 3,
+    gap: { xs: 1.5, sm: 2, md: 3 },
   },
   title: {
-    component: 'h1',
+    fontSize: { xs: 24, sm: 36 },
+    fontWeight: 600,
   },
   ratingContainer: {
     display: 'flex',
@@ -16,13 +15,15 @@ export const productInfoStyles: Record<string, SxProps<Theme>> = {
   },
   price: {
     fontWeight: 'bold',
-    mb: 2,
+    fontSize: { xs: 24, sm: 32 },
+    mb: 1,
   },
   addToCartButton: {
     width: { xs: '100%', sm: 'auto' },
   },
   divider: {
-    my: 2,
+    mt: 2,
+    mb: 1,
   },
   descriptionContainer: {
     display: 'flex',
@@ -33,8 +34,8 @@ export const productInfoStyles: Record<string, SxProps<Theme>> = {
     fontWeight: 'bold',
   },
   descriptionText: {
-    variant: 'body1',
     color: 'text.secondary',
     lineHeight: 1.8,
+    fontSize: { xs: 16, sm: 18 },
   },
 };

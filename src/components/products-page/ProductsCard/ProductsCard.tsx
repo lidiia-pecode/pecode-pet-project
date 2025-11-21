@@ -32,8 +32,8 @@ const ProductsCardComponent: React.FC<ProductsCardProps> = ({ product }) => {
         sx={baseStyles.imageGrid}
       />
 
-      <CardContent sx={{ flexGrow: 1, p: 2 }}>
-        <Typography sx={baseStyles.title}>{product.title}</Typography>
+      <CardContent sx={{ flexGrow: 1 }}>
+        <Typography variant='h6' sx={baseStyles.title}>{product.title}</Typography>
 
         <Typography sx={baseStyles.description}>
           {product.description}
@@ -53,7 +53,7 @@ const ProductsCardComponent: React.FC<ProductsCardProps> = ({ product }) => {
         </Box>
       </CardContent>
 
-      <Button fullWidth size='small' variant='contained'>
+      <Button fullWidth variant='contained' size='large' sx={{borderRadius: 0}}>
         View
       </Button>
     </Card>

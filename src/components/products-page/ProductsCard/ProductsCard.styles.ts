@@ -8,11 +8,12 @@ export const baseStyles: Record<string, SxProps<Theme>> = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    borderRadius: '12px',
   },
   imageGrid: {
     width: '100%',
     height: 180,
-    objectFit: 'contain',
+    objectFit: 'cover',
     backgroundColor: 'background.paper',
   },
   title: {
@@ -32,7 +33,7 @@ export const baseStyles: Record<string, SxProps<Theme>> = {
     WebkitBoxOrient: 'vertical',
   },
   price: {
-    fontWeight: 700,
+    fontWeight: 500,
   },
   priceRow: {
     display: 'flex',

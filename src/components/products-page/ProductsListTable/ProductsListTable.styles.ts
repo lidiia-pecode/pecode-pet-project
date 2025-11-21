@@ -22,7 +22,7 @@ export const listTableStyles: Record<string, SxProps<Theme>> = {
   image: {
     width: { xs: 64, sm: 64, md: 80 }, 
     height: { xs: 64, sm: 64, md: 80 },
-    objectFit: 'contain',
+    objectFit: 'cover',
     justifySelf: 'center',
   },
 

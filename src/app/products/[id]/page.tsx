@@ -1,8 +1,9 @@
-import { Box, Container} from '@mui/material';
+import { Box, Container } from '@mui/material';
 import { getProductById } from '@/lib';
 import { ImageCarousel } from '@/components/productDetails-page/ImageCarousel';
 import { ProductInfo } from '@/components/productDetails-page/ProductInfo';
 import { ProductAdditional } from '@/components/productDetails-page/ProductAdditional';
+import { ProductBreadcrumbs } from '@/components/productDetails-page/ProductBreadcrumbs';
 
 interface ProductPageProps {
   params: { id: string };
@@ -20,7 +21,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <Container maxWidth='lg'>
-      <div>breadcrumbs/breadcrumbs/breadcrumbs/breadcrumbs</div>
+      <ProductBreadcrumbs
+        productTitle={product.title}
+        sx={{ display: { xs: 'block', md: 'none' }, mb: 4 }}
+      />
       <Box
         sx={{
           display: 'flex',

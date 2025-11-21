@@ -18,7 +18,7 @@ export const ProductInfo = ({
 }: ProductInfoProps) => {
   return (
     <Box sx={productInfoStyles.container}>
-      <Typography variant='h3' sx={productInfoStyles.title}>{title}</Typography>
+      <Typography variant='h1' sx={productInfoStyles.title}>{title}</Typography>
  
       <Box sx={productInfoStyles.ratingContainer}>
         <ProductRating value={rating.rate} size='large' showCount={false} />
