@@ -1,19 +1,10 @@
-import { CategorySlug } from "./Filters";
+import { Category } from "./Categories";
 
 export interface PaginatedResponse {
   products: Product[];
   total: number;
   totalPages: number;
   currentPage: number;
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  slug: CategorySlug;
-  image: string;
-  creationAt: string;
-  updatedAt: string;
 }
 
 export interface IProductRating {

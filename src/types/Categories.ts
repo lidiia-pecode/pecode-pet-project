@@ -32,3 +32,15 @@
 //   maxRating: BASE_FILTERS.rating.max,
 //   searchQuery: BASE_FILTERS.searchQuery,
 // };
+
+
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  image: string;
+  creationAt: string;
+  updatedAt: string;
+}
+
+export type CategorySlug = Category['slug'];

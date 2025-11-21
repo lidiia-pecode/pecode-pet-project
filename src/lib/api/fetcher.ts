@@ -2,20 +2,8 @@ import { EXTERNAL_API } from "../constants";
 
 export async function apiGet<T>(
   path: string,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  params?: Record<string, any>
 ): Promise<T> {
-  const url = new URL(`${EXTERNAL_API}${path}`);
-
-  if (params) {
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        url.searchParams.append(key, String(value));
-      }
-    });
-  }
-
-  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const res = await fetch(`${EXTERNAL_API}${path}`, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error(`API Error: ${res.status} ${res.statusText}`);
   }

@@ -3,7 +3,7 @@ import { Product } from '@/types/Product';
 import { generateRandomRating } from '@/lib/utils/generateRandomRating';
 import { getPreparedProducts } from '@/lib/utils/getPreparedProducts';
 import { parseFiltersFromSearchParams } from '@/lib/utils/parseFilters';
-import { EXTERNAL_API } from '@/lib/constants';
+import { apiGet } from '@/lib/api/fetcher';
 
 const DEFAULT_LIMIT = 6;
 
@@ -13,10 +13,7 @@ export async function GET(request: NextRequest) {
       request.nextUrl.searchParams
     );
 
-    const response = await fetch(`${EXTERNAL_API}/products`);
-    if (!response.ok) throw new Error('Failed to fetch products');
-
-    let products: Product[] = await response.json();
+    let products = await apiGet<Product[]>('/products');
 
     products = products.map(product => ({
       ...product,

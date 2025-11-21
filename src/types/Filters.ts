@@ -1,3 +1,5 @@
+import { CategorySlug } from "./Categories";
+
 export interface ProductFilters {
   price: { min: number; max: number };
   rating: { min: number; max: number };
@@ -23,4 +25,3 @@ export const CATEGORIES = [
   'miscellaneous',
 ] as const;
 
-export type CategorySlug = (typeof CATEGORIES)[number];

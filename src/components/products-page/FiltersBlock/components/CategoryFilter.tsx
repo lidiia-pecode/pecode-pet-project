@@ -6,7 +6,9 @@ import {
   FormGroup,
   FormControlLabel,
 } from '@mui/material';
-import { CATEGORIES, CategorySlug } from '@/types/Filters';
+import { getCategories } from '@/lib/api/categories';
+import { useQuery } from '@tanstack/react-query';
+import { CategorySlug } from '@/types/Categories';
 
 interface CategoryFilterProps {
   selected: CategorySlug[];
@@ -14,23 +16,29 @@ interface CategoryFilterProps {
 }
 
 export const CategoryFilter = ({ selected, onChange }: CategoryFilterProps) => {
+  const { data: categories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: getCategories,
+    staleTime: 1000 * 60 * 60,
+  });
+
   return (
     <Box>
       <Typography variant='subtitle1' fontWeight={600} gutterBottom>
         Categories
       </Typography>
       <FormGroup>
-        {CATEGORIES.map(category => (
+        {categories?.map(category => (
           <FormControlLabel
-            key={category}
+            key={category.id}
             control={
               <Checkbox
                 size='small'
-                checked={selected.includes(category)}
-                onChange={() => onChange(category)}
+                checked={selected.includes(category.slug)}
+                onChange={() => onChange(category.slug)}
               />
             }
-            label={category}
+            label={category.name}
           />
         ))}
       </FormGroup>

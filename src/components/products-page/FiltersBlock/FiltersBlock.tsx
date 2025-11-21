@@ -4,12 +4,12 @@ import { ActiveFiltersBar } from '../shared/ActiveFiltersBar';
 import { PriceFilter } from './components/PriceFilter';
 import { RatingFilter } from './components/RatingFilter';
 import { CategoryFilter } from './components/CategoryFilter';
-import { CategorySlug } from '@/types/Filters';
 import { getActiveFilters } from '@/lib/utils/getActiveFilters';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useProductsStore } from '@/store/productsStore';
 
 import { paperStyles, containerStyles } from './FiltersBlock.styles';
+import { CategorySlug } from '@/types/Categories';
 
 export const FiltersBlock = () => {
   const { isTablet } = useResponsive();

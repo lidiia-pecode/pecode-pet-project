@@ -1,5 +1,5 @@
 import { Box, Container} from '@mui/material';
-import { getProduct } from '@/lib';
+import { getProductById } from '@/lib';
 import { ImageCarousel } from '@/components/productDetails-page/ImageCarousel';
 import { ProductInfo } from '@/components/productDetails-page/ProductInfo';
 import { ProductAdditional } from '@/components/productDetails-page/ProductAdditional';
@@ -12,9 +12,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   const resolvedParams = params instanceof Promise ? await params : params;
   const idString = resolvedParams.id;
 
-  console.log('id string:', idString, 'Number(id):', Number(idString));
-
-  const product = await getProduct(Number(idString));
+  const product = await getProductById(Number(idString));
 
   if (!product) {
     return <div>Product not found</div>;
