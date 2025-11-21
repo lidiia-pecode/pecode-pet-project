@@ -17,11 +17,3 @@ export const BASE_FILTERS = {
 
 export const defaultFilters: ProductFilters = { ...BASE_FILTERS };
 
-export const CATEGORIES = [
-  'clothes',
-  'furniture',
-  'shoes',
-  'electronics',
-  'miscellaneous',
-] as const;
-
