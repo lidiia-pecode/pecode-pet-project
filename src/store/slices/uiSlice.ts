@@ -2,7 +2,7 @@ import { ViewMode } from '@/types/Product';
 import { StateCreator } from 'zustand';
 
 export interface UIState {
-  viewMode: ViewMode | null;
+  viewMode: ViewMode;
   filtersOpened: boolean;
   _hasHydrated: boolean;
   setViewMode: (mode: ViewMode) => void;
@@ -11,7 +11,7 @@ export interface UIState {
 }
 
 export const createUISlice: StateCreator<UIState> = set => ({
-  viewMode: null,
+  viewMode: 'grid',
   filtersOpened: false,
   _hasHydrated: false,
 

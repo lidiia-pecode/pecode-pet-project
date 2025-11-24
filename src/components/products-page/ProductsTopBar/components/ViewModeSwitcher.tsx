@@ -11,8 +11,9 @@ import { useEffect } from 'react';
 export const ViewModeSwitcher = () => {
   const { isMobile } = useResponsive();
   const viewMode = useProductsStore(state => state.viewMode);
+  const hasHydrated = useProductsStore(state => state._hasHydrated);
   const setViewMode = useProductsStore(state => state.setViewMode);
-  
+
   const handleChange = (_: unknown, newMode: ViewMode | null) => {
     if (newMode) setViewMode(newMode);
   };
@@ -25,7 +26,7 @@ export const ViewModeSwitcher = () => {
 
   return (
     <ToggleButtonGroup
-      value={viewMode}
+      value={hasHydrated ? viewMode : null}
       exclusive
       onChange={handleChange}
       size='small'
