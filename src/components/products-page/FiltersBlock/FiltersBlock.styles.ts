@@ -20,3 +20,8 @@ export const paperStyles = (isTablet: boolean): SxProps<Theme> => ({
   position: 'sticky',
   top: isTablet ? 0 : 80,
 });
+
+export const filtersSidebarStyles: SxProps<Theme> = {
+  width: 260,
+  flexShrink: 0,
+};

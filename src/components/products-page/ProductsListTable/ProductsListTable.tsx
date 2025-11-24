@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { Product } from '@/types/Product';
 import { ProductRating } from '../shared/ProductRating';
@@ -80,7 +80,7 @@ const columns = [
   },
 ];
 
-const ProductsListTableComponent = ({ products }: { products: Product[] }) => {
+export const ProductsListTable = ({ products }: { products: Product[] }) => {
   const gridTemplateColumns = columns.map(c => c.width).join(' ');
 
   const router = useRouter();
@@ -121,5 +121,3 @@ const ProductsListTableComponent = ({ products }: { products: Product[] }) => {
     </Box>
   );
 };
-
-export const ProductsListTable = React.memo(ProductsListTableComponent);

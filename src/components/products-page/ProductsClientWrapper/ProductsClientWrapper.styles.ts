@@ -9,7 +9,3 @@ export const productsContainerStyles: SxProps<Theme> = {
   minHeight: 520,
 };
 export const mainContentStyles: SxProps<Theme> = { display: 'flex', gap: 3 };
-export const filtersSidebarStyles: SxProps<Theme> = {
-  width: 260,
-  flexShrink: 0,
-};

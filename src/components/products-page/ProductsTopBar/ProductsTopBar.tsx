@@ -9,7 +9,7 @@ import { topBarStyles } from './ProductsTopBar.styles';
 
 export const ProductsTopBar = () => {
   const { isTablet } = useResponsive();
-  const openMobileFilters = useProductsStore(state => state.openMobileFilters);
+  const openFilters = useProductsStore(state => state.openFilters);
 
   return (
     <>
@@ -21,7 +21,7 @@ export const ProductsTopBar = () => {
       <Box sx={{ mb: 2 }}>
         <Box sx={topBarStyles.filtersBarInner}>
           {isTablet ? (
-            <Button variant='outlined' onClick={openMobileFilters}>
+            <Button variant='outlined' onClick={openFilters}>
               Filters
             </Button>
           ) : (

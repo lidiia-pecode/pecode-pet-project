@@ -1,18 +1,16 @@
 'use client';
-import { Box, Divider, Paper, Button } from '@mui/material';
+import { Box, Divider, Paper, Button, Drawer } from '@mui/material';
 import { ActiveFiltersBar } from '../shared/ActiveFiltersBar';
 import { PriceFilter } from './components/PriceFilter';
 import { RatingFilter } from './components/RatingFilter';
 import { CategoryFilter } from './components/CategoryFilter';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useProductsStore } from '@/store/productsStore';
-import { paperStyles, containerStyles } from './FiltersBlock.styles';
+import { paperStyles, containerStyles, filtersSidebarStyles } from './FiltersBlock.styles';
 
 export const FiltersBlock = () => {
   const { isTablet } = useResponsive();
-  const closeMobileFilters = useProductsStore(
-    state => state.closeMobileFilters
-  );
+  const closeFilters = useProductsStore(state => state.closeFilters);
 
   return (
     <Box sx={containerStyles}>
@@ -31,11 +29,43 @@ export const FiltersBlock = () => {
         <CategoryFilter />
 
         {isTablet && (
-          <Button variant='outlined' onClick={closeMobileFilters}>
+          <Button variant='outlined' onClick={closeFilters} sx={{xs: 'block', md: 'none'}}>
             Close
           </Button>
         )}
       </Paper>
     </Box>
+  );
+};
+
+export const FiltersBlockWrapper = () => {
+  const filtersOpened = useProductsStore(state => state.filtersOpened);
+  const closeFilters = useProductsStore(state => state.closeFilters);
+
+  return (
+    <>
+      {/* Drawer для мобільних/планшетів */}
+      <Drawer
+        open={filtersOpened}
+        onClose={closeFilters}
+        anchor='left'
+        slotProps={{ paper: { sx: { p: 2 } } }}
+        sx={{ 
+          display: { xs: 'block', md: 'none' } 
+        }}
+      >
+        <FiltersBlock />
+      </Drawer>
+
+      {/* Sidebar для desktop */}
+      <Box 
+        sx={{
+          ...filtersSidebarStyles,
+          display: { xs: 'none', md: 'block' }
+        }}
+      >
+        <FiltersBlock />
+      </Box>
+    </>
   );
 };
