@@ -4,11 +4,9 @@ import { TextField, InputAdornment, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { useResponsive } from '@/hooks/useResponsive';
 import { useProductsStore } from '@/store/productsStore';
 
 export const SearchBar = () => {
-  const { isMobile } = useResponsive();
   const searchQuery = useProductsStore(state => state.filters.searchQuery);
   const updateFilters = useProductsStore(state => state.updateFilters);
 
@@ -17,7 +15,7 @@ export const SearchBar = () => {
   const handleChangeInputValue = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setInputValue(event.target.value.trimStart());
+    setInputValue(event.target.value);
   };
   
   const handleClearInputValue = () => setInputValue('');
@@ -32,9 +30,10 @@ export const SearchBar = () => {
 
   return (
     <TextField
+      id='search-input'
       fullWidth
       size='small'
-      placeholder={isMobile ? 'Search...' : 'Search products...'}
+      placeholder='Search...'
       value={inputValue}
       onChange={handleChangeInputValue}
       slotProps={{

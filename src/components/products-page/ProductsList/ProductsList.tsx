@@ -1,74 +1,29 @@
 'use client';
 
-import { Box, CircularProgress, Typography } from '@mui/material';
-import { ProductsCard } from '../ProductsCard/ProductsCard';
-import { listStyles } from './ProductsList.styles';
-import { ProductsListTable } from '../ProductsListTable';
-import { useProducts } from '@/hooks/useProducts';
-import { useResponsive } from '@/hooks/useResponsive';
+import { Box, CircularProgress } from '@mui/material';
 import { useProductsStore } from '@/store/productsStore';
-import { ProductsListTableSkeleton } from './components/ProductsListTableSkeleton';
-import { ProductsGridSkeleton } from './components/ProductsGridSkeleton';
+import { ProductsGridView } from '../ProductsGridView/ProductsGridView';
+import { ProductsTableView } from '../ProductsTableView';
+import { emptyBox } from './ProductsList.styles';
 
 export const ProductsList = () => {
-  const { data, isLoading } = useProducts();
-  const { isMobile } = useResponsive();
-
   const viewMode = useProductsStore(state => state.viewMode);
-  const mode = isMobile ? 'grid' : viewMode;
+  const hasHydrated = useProductsStore(state => state._hasHydrated);
 
-  if (!mode) {
+  if (!hasHydrated) {
     return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80%',
-        }}
-      >
+      <Box sx={emptyBox}>
         <CircularProgress />
       </Box>
     );
   }
 
-  if (isLoading) {
-    return mode === 'list' ? (
-      <ProductsListTableSkeleton />
-    ) : (
-      <ProductsGridSkeleton />
-    );
-  }
-
-  if (!data?.products || !data.products.length) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80%',
-        }}
-      >
-        <Typography variant='h6' color='text.secondary'>
-          No products Found
-        </Typography>
-      </Box>
-    );
-  }
-
-  const products = data.products;
-
   return (
     <>
-      {mode === 'list' ? (
-        <ProductsListTable products={products} />
+      {viewMode === 'list' ? (
+        <ProductsTableView />
       ) : (
-        <Box sx={listStyles.gridContainer}>
-          {products.map(product => (
-            <ProductsCard key={product.id} product={product} />
-          ))}
-        </Box>
+        <ProductsGridView />
       )}
     </>
   );

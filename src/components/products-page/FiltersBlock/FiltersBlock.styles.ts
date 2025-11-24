@@ -6,20 +6,21 @@ export const containerStyles: SxProps<Theme> = {
   height: '100%',
 };
 
-export const paperStyles = (isTablet: boolean): SxProps<Theme> => ({
+export const paperStyles: SxProps<Theme> = {
   display: 'flex',
   flexDirection: 'column',
   gap: 3,
   flexShrink: 0,
   height: 'fit-content',
-  borderRadius: isTablet ? 0 : 3,
-  boxShadow: isTablet ? 'none' : '',
-  width: isTablet ? 300 : 260,
-  p: isTablet ? 2 : 3,
+  borderRadius: { xs: 0, md: 3 },
+  boxShadow: { xs: 'none', md: 2 },
+  width: { xs: 300, md: 260 },
+  p: { xs: 2, md: 3 },
   pt: 3,
   position: 'sticky',
-  top: isTablet ? 0 : 80,
-});
+  top: { xs: 0, md: 80 },
+};
+
 
 export const filtersSidebarStyles: SxProps<Theme> = {
   width: 260,

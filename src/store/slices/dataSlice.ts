@@ -67,8 +67,7 @@ export const createDataSlice: StateCreator<DataState> = (set, get) => {
         case 'categories':
           updated.categories = [];
           break;
-        case 'searchQuery':
-          updated.searchQuery = '';
+        default:
           break;
       }
       get().updateFilters(updated);

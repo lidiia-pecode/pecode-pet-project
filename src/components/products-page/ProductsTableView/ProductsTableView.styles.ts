@@ -8,6 +8,8 @@ export const listTableStyles: Record<string, SxProps<Theme>> = {
     borderBottom: '2px solid',
     borderColor: 'divider',
     fontWeight: 700,
+    backgroundColor: 'action.hover',
+    borderRadius: '12px 12px 0 0',
   },
 
   row: {
@@ -20,16 +22,17 @@ export const listTableStyles: Record<string, SxProps<Theme>> = {
   },
 
   image: {
-    width: { xs: 64, sm: 64, md: 80 }, 
+    width: { xs: 64, sm: 64, md: 80 },
     height: { xs: 64, sm: 64, md: 80 },
     objectFit: 'cover',
     justifySelf: 'center',
   },
 
   title: {
+    width: '100%',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
-    ml: 1.5,
+    pl: 1.5,
   },
 };

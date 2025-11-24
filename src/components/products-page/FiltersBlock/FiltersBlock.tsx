@@ -4,23 +4,19 @@ import { ActiveFiltersBar } from '../shared/ActiveFiltersBar';
 import { PriceFilter } from './components/PriceFilter';
 import { RatingFilter } from './components/RatingFilter';
 import { CategoryFilter } from './components/CategoryFilter';
-import { useResponsive } from '@/hooks/useResponsive';
 import { useProductsStore } from '@/store/productsStore';
 import { paperStyles, containerStyles, filtersSidebarStyles } from './FiltersBlock.styles';
 
 export const FiltersBlock = () => {
-  const { isTablet } = useResponsive();
   const closeFilters = useProductsStore(state => state.closeFilters);
 
   return (
     <Box sx={containerStyles}>
-      <Paper elevation={3} sx={paperStyles(isTablet)}>
-        {isTablet && (
-          <>
-            <ActiveFiltersBar />
-            <Divider />
-          </>
-        )}
+      <Paper elevation={3} sx={paperStyles}>
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, flexDirection: 'column', gap: 3}}>
+          <ActiveFiltersBar />
+          <Divider />
+        </Box>
 
         <PriceFilter />
         <Divider />
@@ -28,11 +24,15 @@ export const FiltersBlock = () => {
         <Divider />
         <CategoryFilter />
 
-        {isTablet && (
-          <Button variant='outlined' onClick={closeFilters} sx={{xs: 'block', md: 'none'}}>
+        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+          <Button
+            variant='outlined'
+            onClick={closeFilters}
+            sx={{ xs: 'block', md: 'none' }}
+          >
             Close
           </Button>
-        )}
+        </Box>
       </Paper>
     </Box>
   );
@@ -44,7 +44,6 @@ export const FiltersBlockWrapper = () => {
 
   return (
     <>
-      {/* Drawer для мобільних/планшетів */}
       <Drawer
         open={filtersOpened}
         onClose={closeFilters}
@@ -57,7 +56,6 @@ export const FiltersBlockWrapper = () => {
         <FiltersBlock />
       </Drawer>
 
-      {/* Sidebar для desktop */}
       <Box 
         sx={{
           ...filtersSidebarStyles,

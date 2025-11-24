@@ -13,7 +13,7 @@ export const ActiveFiltersBar = () => {
   if (!activeFilters.length) return null;
 
   return (
-    <Box sx={{ display: 'flex', alignContent: 'center', flexWrap: 'wrap', gap: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 1 }}>
       <Button size='small' variant='outlined' onClick={clearFilters}>
         Clear All
       </Button>
@@ -21,6 +21,7 @@ export const ActiveFiltersBar = () => {
       {activeFilters.map(filter => (
         <Chip
           color='primary'
+          size='small'
           key={`${filter.type}-${filter.label}`}
           label={filter.label}
           onDelete={() => removeFilter(filter.type)}
