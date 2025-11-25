@@ -1,3 +1,5 @@
+'use client'
+
 import { Box, Button } from '@mui/material';
 import { ActiveFiltersBar } from '../shared/ActiveFiltersBar';
 import { SearchBar } from './components/SearchBar';
