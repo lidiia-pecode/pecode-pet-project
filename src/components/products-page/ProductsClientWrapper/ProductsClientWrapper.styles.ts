@@ -7,5 +7,7 @@ export const productsContainerStyles: SxProps<Theme> = {
   gap: 4,
   flexGrow: 1,
   minHeight: 520,
+  
+  overflowX: 'hidden'
 };
 export const mainContentStyles: SxProps<Theme> = { display: 'flex', gap: 3 };

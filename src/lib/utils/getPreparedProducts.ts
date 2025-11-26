@@ -31,17 +31,56 @@ function filterProducts(products: Product[], filters: ProductFilters) {
   });
 }
 
+// function sortProducts(products: Product[], sortOption: SortOption) {
+//   return [...products].sort((a, b) => {
+//     switch (sortOption) {
+//       case SORT_OPTIONS.PRICE_ASC:
+//         return a.price - b.price;
+//       case SORT_OPTIONS.PRICE_DESC:
+//         return b.price - a.price;
+//       case SORT_OPTIONS.RATING_DESC:
+//         return b.rating.rate - a.rating.rate;
+//       case SORT_OPTIONS.POPULAR_DESC:
+//         return b.rating.count - a.rating.count;
+//       default:
+//         return 0;
+//     }
+//   });
+// }
+
 function sortProducts(products: Product[], sortOption: SortOption) {
   return [...products].sort((a, b) => {
     switch (sortOption) {
+      case SORT_OPTIONS.TITLE_ASC:
+        return a.title.localeCompare(b.title);
+      case SORT_OPTIONS.TITLE_DESC:
+        return b.title.localeCompare(a.title);
+
       case SORT_OPTIONS.PRICE_ASC:
         return a.price - b.price;
       case SORT_OPTIONS.PRICE_DESC:
         return b.price - a.price;
+
+      case SORT_OPTIONS.RATING_ASC:
+        return a.rating.rate - b.rating.rate;
       case SORT_OPTIONS.RATING_DESC:
         return b.rating.rate - a.rating.rate;
-      case SORT_OPTIONS.POPULAR_DESC:
+
+      case SORT_OPTIONS.REVIEWS_ASC:
+        return a.rating.count - b.rating.count;
+      case SORT_OPTIONS.REVIEWS_DESC:
         return b.rating.count - a.rating.count;
+
+      case SORT_OPTIONS.DATE_ASC:
+        return (
+          new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime()
+        );
+
+      case SORT_OPTIONS.DATE_DESC:
+        return (
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        );
+
       default:
         return 0;
     }
