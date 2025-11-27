@@ -1,20 +1,18 @@
-import { Product } from "@/types/Product";
 import { Box, Button, Chip, IconButton } from "@mui/material";
-import { Table } from "@tanstack/react-table";
 import ViewColumnIcon from '@mui/icons-material/ViewColumn';
 
 interface ITableToolbarProps {
-  table: Table<Product>;
   selectedRowsCount: number;
   totalRowsCount: number;
   onOpenColumnMenu: (e: React.MouseEvent<HTMLElement>) => void;
+  onClearRowSelection: () => void;
 };
 
 export const TableToolbar = ({
-  table,
   selectedRowsCount,
   totalRowsCount,
   onOpenColumnMenu,
+  onClearRowSelection
 }: ITableToolbarProps) => (
   <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
     <IconButton onClick={onOpenColumnMenu}>
@@ -25,7 +23,7 @@ export const TableToolbar = ({
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
         <Button
           size='small'
-          onClick={() => table.resetRowSelection()}
+          onClick={onClearRowSelection}
         >
           Clear Selection
         </Button>

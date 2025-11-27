@@ -31,7 +31,7 @@ export function buildQueryString({
 
   if (filters.searchQuery) params.append('searchQuery', filters.searchQuery);
 
-  if (sortOption !== SORT_OPTIONS.POPULAR_DESC)
+  if (sortOption !== SORT_OPTIONS.REVIEWS_DESC)
     params.append('sort', sortOption);
 
   return params.toString();

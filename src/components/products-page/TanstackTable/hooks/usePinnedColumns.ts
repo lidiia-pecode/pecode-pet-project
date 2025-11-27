@@ -8,10 +8,12 @@ export const usePinnedColumns = (table: Table<Product>) => {
     .filter(col => (col.columnDef.meta as ProductColumnMeta)?.pin);
 
   const stickyLefts: Record<string, number> = {};
-  pinnedColumns.reduce((acc, col) => {
-    stickyLefts[col.id] = acc;
-    return acc + col.getSize();
-  }, 0);
+  let currentLeft = 0;
+
+  for (const col of pinnedColumns) {
+    stickyLefts[col.id] = currentLeft;
+    currentLeft += col.getSize();
+  }
 
   const isPinned = (id: string) => id in stickyLefts;
   return { pinnedColumns, stickyLefts, isPinned };

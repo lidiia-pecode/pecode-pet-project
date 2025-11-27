@@ -3,8 +3,6 @@ import { ProductColumnMeta } from '../TanstackTable';
 import { flexRender, Header, Table } from '@tanstack/react-table';
 import { Box } from '@mui/material';
 import { ArrowDropDown, ArrowDropUp, UnfoldMore } from '@mui/icons-material';
-import { useProductsStore } from '@/store/productsStore';
-import { SORT_OPTIONS, SortOption } from '@/types/Sort';
 
 interface IColumnResizer {
   header: Header<Product, unknown>;
@@ -37,47 +35,6 @@ const TableHeaderCell = ({ header, stickyLeft }: ITableHeaderCell) => {
   const align =
     (header.column.columnDef.meta as ProductColumnMeta)?.align ?? 'flex-start';
 
-  const sortOption = useProductsStore(state => state.sortOption);
-  const setSortOption = useProductsStore(state => state.setSortOption);
-
-  const cycleSort = (columnId: string) => {
-    const map: Record<string, { asc: SortOption; desc: SortOption }> = {
-      title: {
-        asc: SORT_OPTIONS.TITLE_ASC,
-        desc: SORT_OPTIONS.TITLE_DESC,
-      },
-      price: {
-        asc: SORT_OPTIONS.PRICE_ASC,
-        desc: SORT_OPTIONS.PRICE_DESC,
-      },
-      rating: {
-        asc: SORT_OPTIONS.RATING_ASC,
-        desc: SORT_OPTIONS.RATING_DESC,
-      },
-      reviews: {
-        asc: SORT_OPTIONS.REVIEWS_ASC,
-        desc: SORT_OPTIONS.REVIEWS_DESC,
-      },
-      date: {
-        asc: SORT_OPTIONS.DATE_ASC,
-        desc: SORT_OPTIONS.DATE_DESC,
-      },
-    };
-
-    const conf = map[columnId];
-    if (!conf) return;
-
-    switch (sortOption) {
-      case conf.asc:
-        setSortOption(conf.desc);
-        break;
-      case conf.desc:
-        setSortOption(SORT_OPTIONS.NONE);
-        break;
-      default:
-        setSortOption(conf.asc);
-    }
-  };
   return (
     <Box
       sx={{
@@ -98,10 +55,11 @@ const TableHeaderCell = ({ header, stickyLeft }: ITableHeaderCell) => {
         textOverflow: 'ellipsis',
         cursor: header.column.getCanSort() ? 'pointer' : 'default',
       }}
-      onClick={() => {
-        if (!header.column.getCanSort()) return;
-        cycleSort(header.column.id);
-      }}
+      onClick={
+        header.column.getCanSort()
+          ? header.column.getToggleSortingHandler()
+          : undefined
+      }
     >
       {flexRender(header.column.columnDef.header, header.getContext())}
       {header.column.getCanSort() && (

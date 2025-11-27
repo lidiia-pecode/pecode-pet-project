@@ -4,17 +4,17 @@
 import dayjs from 'dayjs';
 import {
   ColumnDef,
-  ColumnOrderState,
   getCoreRowModel,
   useReactTable,
   RowSelectionState,
+  SortingState,
 } from '@tanstack/react-table';
 import { Box, Typography, Button, Checkbox } from '@mui/material';
 import { Product } from '@/types/Product';
 import { ProductRating } from '../shared/ProductRating';
 import { useRouter } from 'next/navigation';
 import { useProducts } from '@/hooks/useProducts';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePinnedColumns } from './hooks/usePinnedColumns';
 import { useColumnDrag } from './hooks/useColumnDrag';
 import { TableHeader } from './components/TableHeader';
@@ -22,6 +22,7 @@ import { TableRow } from './components/TableRow';
 import { TableToolbar } from './components/TableToolbar';
 import { ColumnMenu } from './components/ColumnMenu';
 import { TableSkeletonRow } from './components/TableSkeletonRow';
+import { useProductsStore } from '@/store/productsStore';
 
 export type ProductColumnMeta = {
   align?: 'flex-start' | 'center';
@@ -29,16 +30,10 @@ export type ProductColumnMeta = {
 };
 
 export const TanstackTable = () => {
-  const { data, isLoading } = useProducts();
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const { data, isLoading } = useProducts(sorting);
   const products = data?.products || [];
-
-  const [columnVisibility, setColumnVisibility] = useState({});
-  const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([]);
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-
-  const handleOpenMenu = (e: React.MouseEvent<HTMLElement>) =>
-    setMenuAnchor(e.currentTarget);
 
   const router = useRouter();
   const handleOpenProduct = (id: number) => router.push(`/products/${id}`);
@@ -173,15 +168,49 @@ export const TanstackTable = () => {
     []
   );
 
+  const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+
+  const handleOpenMenu = (e: React.MouseEvent<HTMLElement>) =>
+    setMenuAnchor(e.currentTarget);
+
+  const columnVisibility = useProductsStore(state => state.columnVisibility);
+  const setColumnVisibility = useProductsStore(
+    state => state.setColumnVisibility
+  );
+
+  const columnOrder = useProductsStore(state => state.columnOrder);
+  const setColumnOrder = useProductsStore(state => state.setColumnOrder);
+
+  const currentPage = useProductsStore(state => state.currentPage);
+  const pageSelections = useProductsStore(state => state.pageSelections);
+  const setPageSelection = useProductsStore(state => state.setPageSelection);
+  const [rowSelection, setRowSelectionState] = useState<RowSelectionState>(
+    pageSelections[currentPage] || {}
+  );
+
+  useEffect(() => {
+    setRowSelectionState(pageSelections[currentPage] || {});
+  }, [currentPage, pageSelections]);
+
   const table = useReactTable({
     data: products,
     columns,
     columnResizeMode: 'onChange',
-    state: { columnVisibility, columnOrder, rowSelection },
+    state: { columnVisibility, columnOrder, rowSelection, sorting },
     enableRowSelection: true,
+    manualSorting: true,
+    onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: updaterOrValue => {
+      const newSelection: RowSelectionState =
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(rowSelection)
+          : updaterOrValue;
+
+      setRowSelectionState(newSelection);
+      setPageSelection(currentPage, { ...newSelection });
+    },
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -196,16 +225,26 @@ export const TanstackTable = () => {
   const columnWidths = Object.fromEntries(
     table.getAllColumns().map(col => [col.id, col.getSize()])
   );
-  const selectedRowsCount = table.getSelectedRowModel().rows.length;
-  const totalRowsCount = table.getFilteredRowModel().rows.length;
+
+  const selectedRowsCount = Object.values(pageSelections).reduce(
+    (sum, selection) => sum + Object.keys(selection).length,
+    0
+  );
+
+  const handleClearSelection = () => {
+    setRowSelectionState({});
+    Object.keys(pageSelections).forEach(page =>
+      setPageSelection(Number(page), {})
+    );
+  };
 
   return (
     <Box>
       <TableToolbar
-        table={table}
         selectedRowsCount={selectedRowsCount}
-        totalRowsCount={totalRowsCount}
+        totalRowsCount={data?.total || 0}
         onOpenColumnMenu={handleOpenMenu}
+        onClearRowSelection={handleClearSelection}
       />
 
       <ColumnMenu

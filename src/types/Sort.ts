@@ -1,22 +1,6 @@
-// export const SORT_OPTIONS = {
-//   POPULAR_DESC: 'popularDesc',
-//   RATING_DESC: 'ratingDesc',
-//   PRICE_ASC: 'priceAsc',
-//   PRICE_DESC: 'priceDesc',
-// } as const;
-
-// export type SortOption = (typeof SORT_OPTIONS)[keyof typeof SORT_OPTIONS];
-
-// export const SORT_LABELS: Record<SortOption, string> = {
-//   [SORT_OPTIONS.POPULAR_DESC]: 'Most popular',
-//   [SORT_OPTIONS.RATING_DESC]: 'Highest rated',
-//   [SORT_OPTIONS.PRICE_ASC]: 'Price: Low to High',
-//   [SORT_OPTIONS.PRICE_DESC]: 'Price: High to Low',
-// };
-
 
 export const SORT_OPTIONS_DROPDOWN = {
-  POPULAR_DESC: 'popularDesc',
+  REVIEWS_DESC: 'popularDesc',
   RATING_DESC: 'ratingDesc',
   PRICE_ASC: 'priceAsc',
   PRICE_DESC: 'priceDesc',
@@ -46,7 +30,7 @@ export type SortOptionDopdown =
   (typeof SORT_OPTIONS_DROPDOWN)[keyof typeof SORT_OPTIONS_DROPDOWN];
 
 export const SORT_LABELS: Record<SortOptionDopdown, string> = {
-  [SORT_OPTIONS_DROPDOWN.POPULAR_DESC]: 'Most popular',
+  [SORT_OPTIONS_DROPDOWN.REVIEWS_DESC]: 'Most popular',
   [SORT_OPTIONS_DROPDOWN.RATING_DESC]: 'Highest rated',
   [SORT_OPTIONS_DROPDOWN.PRICE_ASC]: 'Price: Low to High',
   [SORT_OPTIONS_DROPDOWN.PRICE_DESC]: 'Price: High to Low',

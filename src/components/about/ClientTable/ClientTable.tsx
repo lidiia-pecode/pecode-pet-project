@@ -37,7 +37,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import { ArrowDropDown, ArrowDropUp, UnfoldMore } from '@mui/icons-material';
 import { Product } from '@/types/Product';
-import { ProductRating } from '../shared/ProductRating';
+import { ProductRating } from '../../products-page/shared/ProductRating';
 import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -78,7 +78,6 @@ const usePinnedColumns = (table: Table<Product>) => {
   const isPinned = (id: string) => id in stickyLefts;
   return { pinnedColumns, stickyLefts, isPinned };
 };
-
 
 const useColumnDrag = ({
   table,
@@ -228,7 +227,6 @@ const TableHeader = ({ table, stickyLefts }: TableHeaderProps) => (
       )}
   </Box>
 );
-
 
 // ------------------------
 // TableCell
@@ -509,7 +507,6 @@ export const ProductsTable = ({ products }: { products: Product[] }) => {
   // Pinned columns
   // ------------------------
   const { pinnedColumns, stickyLefts, isPinned } = usePinnedColumns(table);
-
 
   // ------------------------
   // DnD Kit

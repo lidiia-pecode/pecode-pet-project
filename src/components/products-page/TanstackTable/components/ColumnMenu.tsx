@@ -50,8 +50,12 @@ const SortableMenuItem = ({ column, isPinned }: ISortableMenuItem) => {
   };
 
   return (
-    <MenuItem ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <ListItemIcon>
+    <MenuItem ref={setNodeRef} style={style}>
+      <ListItemIcon
+        {...(!isPinned ? listeners : {})}
+        {...(!isPinned ? attributes : {})}
+        sx={{ cursor: !isPinned ? 'grab' : 'default' }}
+      >
         <DragIndicatorIcon
           fontSize='small'
           sx={{ opacity: isPinned ? 0.3 : 1 }}
@@ -125,7 +129,7 @@ export const ColumnMenu = ({
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext
+      <SortableContext 
         items={table
           .getAllLeafColumns()
           .filter(c => !isPinned(c.id))

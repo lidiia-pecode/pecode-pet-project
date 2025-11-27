@@ -1,16 +1,16 @@
-import { ProductsTable } from "@/components/products-page/ProductsTable/ProductsTable";
-import { apiGet } from "@/lib/api/fetcher";
-import { generateRandomRating } from "@/lib/utils/generateRandomRating";
-import { Product } from "@/types/Product";
+import { ProductsTable } from '@/components/about/ClientTable/ClientTable';
+import { apiGet } from '@/lib/api/fetcher';
+import { generateRandomRating } from '@/lib/utils/generateRandomRating';
+import { Product } from '@/types/Product';
 
 export default async function AboutPage() {
-    let products = await apiGet<Product[]>('/products');
+  let products = await apiGet<Product[]>('/products');
 
-    products = products.map(p => ({
-      ...p,
-      rating: generateRandomRating(),
-    }));
-  
+  products = products.map(p => ({
+    ...p,
+    rating: generateRandomRating(),
+  }));
+
   return (
     <div>
       <h1>About this project</h1>
@@ -21,7 +21,7 @@ export default async function AboutPage() {
         fugiat fuga? Quia.
       </p>
 
-      <ProductsTable products={products}/>
+      <ProductsTable products={products} />
     </div>
   );
 }
