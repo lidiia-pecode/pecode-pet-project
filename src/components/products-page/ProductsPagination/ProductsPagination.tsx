@@ -1,6 +1,6 @@
 'use client';
 
-import { useProducts } from '@/hooks/useProducts';
+import { useProducts } from '@/hooks/products/useProducts';
 import { useProductsStore } from '@/store/productsStore';
 import { Stack, Pagination } from '@mui/material';
 

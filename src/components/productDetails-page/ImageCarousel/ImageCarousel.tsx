@@ -16,7 +16,7 @@ import 'swiper/css/thumbs';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-import { useResponsive } from '@/hooks/useResponsive';
+import { useResponsive } from '@/hooks/ui/useResponsive';
 import { carouselStyles } from './ImageCarousel.styles';
 
 interface ImageCarouselProps {

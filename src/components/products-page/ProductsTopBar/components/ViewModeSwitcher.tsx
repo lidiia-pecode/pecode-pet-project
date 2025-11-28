@@ -5,7 +5,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import GridViewIcon from '@mui/icons-material/GridView';
 import { ViewMode } from '@/types/Product';
 import { useProductsStore } from '@/store/productsStore';
-import { useResponsive } from '@/hooks/useResponsive';
+import { useResponsive } from '@/hooks/ui/useResponsive';
 import { useEffect } from 'react';
 
 export const ViewModeSwitcher = () => {

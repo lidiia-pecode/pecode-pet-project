@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useProducts } from '@/hooks/useProducts';
+import { useProducts } from '@/hooks/products/useProducts';
 import { Box } from '@mui/material';
 import { ProductsTableHeader } from './components/ProductsTableHeader';
 import { ProductsTableViewSkeleton } from './components/ProductsTableViewSkeleton';

@@ -1,5 +1,5 @@
 import { ProductsTable } from '@/components/about/ClientTable/ClientTable';
-import { apiGet } from '@/lib/api/fetcher';
+import { apiGet } from '@/lib/api/products/fetcher';
 import { generateRandomRating } from '@/lib/utils/generateRandomRating';
 import { Product } from '@/types/Product';
 

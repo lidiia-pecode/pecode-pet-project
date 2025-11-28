@@ -7,7 +7,7 @@ import {
   FormControlLabel,
   Skeleton,
 } from '@mui/material';
-import { getCategories } from '@/lib/api/categories';
+import { getCategories } from '@/lib/api/products/categories';
 import { useQuery } from '@tanstack/react-query';
 import { CategorySlug } from '@/types/Categories';
 import { useProductsStore } from '@/store/productsStore';
@@ -39,7 +39,7 @@ export const CategoryFilter = () => {
         Categories
       </Typography>
 
-      <FormGroup sx={{minHeight: 200}}>
+      <FormGroup sx={{ minHeight: 200 }}>
         {isLoading
           ? Array.from({ length: 5 }).map((_, i) => (
               <Box

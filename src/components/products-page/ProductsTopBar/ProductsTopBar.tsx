@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { Box, Button } from '@mui/material';
 import { ActiveFiltersBar } from '../shared/ActiveFiltersBar';
@@ -10,7 +10,6 @@ import { topBarStyles } from './ProductsTopBar.styles';
 
 export const ProductsTopBar = () => {
   const openFilters = useProductsStore(state => state.openFilters);
-
   return (
     <>
       <Box sx={topBarStyles.searchBarContainer}>
@@ -29,8 +28,8 @@ export const ProductsTopBar = () => {
           </Button>
 
           <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-            <ActiveFiltersBar />
-          </Box>
+              <ActiveFiltersBar />
+            </Box>
 
           <Box sx={topBarStyles.viewModeSwitcherContainer}>
             <ViewModeSwitcher />

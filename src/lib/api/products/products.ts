@@ -2,7 +2,7 @@ import { PaginatedResponse, Product } from '@/types/Product';
 import { ProductFilters } from '@/types/Filters';
 import { SortOption } from '@/types/Sort';
 import { buildQueryString } from '@/lib/utils/buildQueryString';
-import { generateRandomRating } from '../utils/generateRandomRating';
+import { generateRandomRating } from '../../utils/generateRandomRating';
 import { apiGet } from './fetcher';
 
 interface GetProductsParams {
@@ -38,4 +38,3 @@ export async function getProductById(id: number): Promise<Product> {
     rating: generateRandomRating(),
   };
 }
-

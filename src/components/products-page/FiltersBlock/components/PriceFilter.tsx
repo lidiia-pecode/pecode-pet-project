@@ -1,5 +1,5 @@
 'use client';
-import { useRangeFilter } from '@/hooks/useRangeFilter';
+import { useRangeFilter } from '@/hooks/products/useRangeFilter';
 import { useProductsStore } from '@/store/productsStore';
 import { Box, Typography, Slider } from '@mui/material';
 
@@ -10,7 +10,7 @@ export const PriceFilter = () => {
   const commitPriceChange = (value: [number, number]) => {
     updateFilters({ price: { min: value[0], max: value[1] } });
   };
-  
+
   const { localValue, handleChange, handleChangeCommitted } = useRangeFilter(
     [price.min, price.max],
     commitPriceChange

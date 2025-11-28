@@ -1,6 +1,6 @@
+import { ProductColumnMeta } from '@/components/products-page/TanstackTable/TanstackTable';
 import { Product } from '@/types/Product';
 import { Table } from '@tanstack/react-table';
-import { ProductColumnMeta } from '../TanstackTable';
 
 export const usePinnedColumns = (table: Table<Product>) => {
   const pinnedColumns = table

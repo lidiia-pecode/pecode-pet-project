@@ -14,10 +14,15 @@ import {
 export const SortSelect = () => {
   const sortOption = useProductsStore(state => state.sortOption);
   const setSortOption = useProductsStore(state => state.setSortOption);
+  const mode = useProductsStore(state => state.viewMode);
 
   const handleChange = (e: SelectChangeEvent<SortOption>) => {
     setSortOption(e.target.value as SortOption);
   };
+
+  if (mode === 'list') {
+    return null;
+  }
 
   return (
     <FormControl
