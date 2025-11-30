@@ -14,3 +14,20 @@ export const HOURLY_METRICS = [
 ] as const;
 
 export type HourlyMetric = (typeof HOURLY_METRICS)[number]['value'];
+
+export type HourlyData = {
+  time: string[];
+} & Partial<Record<HourlyMetric, number[]>>;
+
+export interface NominatimResult {
+  place_id: number;
+  display_name: string;
+  lat: string;
+  lon: string;
+}
+
+export interface LocationData {
+  lat: number;
+  lon: number;
+  label?: string | undefined;
+}

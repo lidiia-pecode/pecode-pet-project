@@ -13,6 +13,7 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import { useWeatherQuery } from '@/hooks/weather/useWeatherQuery';
 import { useWeatherStore } from '@/store/weatherStore';
 import { useState } from 'react';
+import { ChartRenderer } from './components/ChartRenderer';
 
 export const WeatherChart = () => {
   const { data, isLoading, refetch, isFetching } = useWeatherQuery();
@@ -25,9 +26,11 @@ export const WeatherChart = () => {
   const [expandChart, setExpandChart] = useState(false);
   const toggleExpandChart = () => setExpandChart(prev => !prev);
 
+  console.log(data);
+
   return (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, margin: '0 auto'}}>
         <Button
           disabled={disabled}
           onClick={() => {
@@ -56,7 +59,15 @@ export const WeatherChart = () => {
       </Box>
 
       <Collapse in={expandChart} timeout={200}>
-        <Box sx={{ mt: 2, p: 2, borderRadius: 2, border: '1px solid #ddd' }}>
+        <Box
+          sx={{
+            mt: 2,
+            py: 2,
+            borderRadius: 2,
+            border: '1px solid #ddd',
+            backgroundColor: '#6995d8',
+          }}
+        >
           {!data && !isLoading && (
             <Typography variant='body2' color='text.secondary'>
               No data loaded yet. Select metrics and click &quot;Get
@@ -65,11 +76,7 @@ export const WeatherChart = () => {
           )}
 
           {data && !isLoading && (
-            <Box>
-              <pre style={{ fontSize: 12, background: '#f4f4f4', padding: 10 }}>
-                {JSON.stringify(data.hourly, null, 2)}
-              </pre>
-            </Box>
+            <ChartRenderer data={data} metrics={metrics} />
           )}
         </Box>
       </Collapse>

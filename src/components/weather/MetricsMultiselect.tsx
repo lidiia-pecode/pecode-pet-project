@@ -28,7 +28,7 @@ export const MetricsCheckboxList = () => {
   };
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 600 }}>
+    <Box sx={{ width: '100%', maxWidth: 600, mb: 2 }}>
       <Box
         sx={{
           display: 'flex',
