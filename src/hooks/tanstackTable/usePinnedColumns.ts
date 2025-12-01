@@ -1,11 +1,10 @@
-import { ProductColumnMeta } from '@/components/products-page/TanstackTable/TanstackTable';
-import { Product } from '@/types/Product';
+import { ColumnMeta } from '@/types/TanstackTable';
 import { Table } from '@tanstack/react-table';
 
-export const usePinnedColumns = (table: Table<Product>) => {
+export function usePinnedColumns<T>(table: Table<T>) {
   const pinnedColumns = table
     .getAllColumns()
-    .filter(col => (col.columnDef.meta as ProductColumnMeta)?.pin);
+    .filter(col => (col.columnDef.meta as ColumnMeta)?.pin);
 
   const stickyLefts: Record<string, number> = {};
   let currentLeft = 0;
@@ -17,4 +16,4 @@ export const usePinnedColumns = (table: Table<Product>) => {
 
   const isPinned = (id: string) => id in stickyLefts;
   return { pinnedColumns, stickyLefts, isPinned };
-};
+}

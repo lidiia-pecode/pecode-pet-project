@@ -1,4 +1,4 @@
-import { EXTERNAL_API } from "../constants";
+import { EXTERNAL_API } from "@/lib/constants";
 
 export async function apiGet<T>(
   path: string,

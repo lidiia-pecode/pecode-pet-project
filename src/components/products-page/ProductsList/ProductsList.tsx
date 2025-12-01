@@ -3,9 +3,8 @@
 import { Box, CircularProgress } from '@mui/material';
 import { useProductsStore } from '@/store/productsStore';
 import { ProductsGridView } from '../ProductsGridView/ProductsGridView';
-// import { ProductsTableView } from '../ProductsTableView';
 import { emptyBox } from './ProductsList.styles';
-import { TanstackTable } from '../TanstackTable/TanstackTable';
+import { ProductTable } from '../TableView/ProductTable';
 
 export const ProductsList = () => {
   const viewMode = useProductsStore(state => state.viewMode);
@@ -20,12 +19,6 @@ export const ProductsList = () => {
   }
 
   return (
-    <Box>
-      {viewMode === 'list' ? (
-        <TanstackTable />
-      ) : (
-        <ProductsGridView />
-      )}
-    </Box>
+    <Box>{viewMode === 'list' ? <ProductTable /> : <ProductsGridView />}</Box>
   );
 };

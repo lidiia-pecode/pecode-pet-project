@@ -33,7 +33,6 @@ export const CustomTooltip = ({
 }: CustomTooltipProps) => {
   if (!active || !payload?.length || (showAll && !hoveredLine)) return null;
 
-  // Фільтруємо payload, якщо потрібно показувати тільки наведену лінію
   const filtered =
     showAll && hoveredLine
       ? payload.filter(p => p.dataKey === hoveredLine)

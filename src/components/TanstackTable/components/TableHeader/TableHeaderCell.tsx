@@ -1,39 +1,22 @@
-import { Product } from '@/types/Product';
-import { ProductColumnMeta } from '../TanstackTable';
-import { flexRender, Header, Table } from '@tanstack/react-table';
-import { Box } from '@mui/material';
+import { ColumnMeta } from '@/types/TanstackTable';
+import { flexRender, Header } from '@tanstack/react-table';
 import { ArrowDropDown, ArrowDropUp, UnfoldMore } from '@mui/icons-material';
+import { Box } from '@mui/material';
 
-interface IColumnResizer {
-  header: Header<Product, unknown>;
-};
+import { ColumnResizer } from './ColumnResizer';
 
-const ColumnResizer = ({ header }: IColumnResizer) => (
-  <Box
-    onMouseDown={header.getResizeHandler()}
-    onTouchStart={header.getResizeHandler()}
-    sx={{
-      position: 'absolute',
-      right: 0,
-      top: 0,
-      height: '100%',
-      width: 6,
-      cursor: 'col-resize',
-      zIndex: 20,
-      '&:hover': { backgroundColor: 'primary.main', opacity: 0.3 },
-    }}
-  />
-);
-
-interface ITableHeaderCell {
-  header: Header<Product, unknown>;
+interface ITableHeaderCell<T> {
+  header: Header<T, unknown>;
   stickyLeft?: number;
-};
+}
 
-const TableHeaderCell = ({ header, stickyLeft }: ITableHeaderCell) => {
+export function TableHeaderCell<T>({
+  header,
+  stickyLeft,
+}: ITableHeaderCell<T>) {
   const isPinned = stickyLeft != null;
   const align =
-    (header.column.columnDef.meta as ProductColumnMeta)?.align ?? 'flex-start';
+    (header.column.columnDef.meta as ColumnMeta)?.align ?? 'flex-start';
 
   return (
     <Box
@@ -83,32 +66,4 @@ const TableHeaderCell = ({ header, stickyLeft }: ITableHeaderCell) => {
       )}
     </Box>
   );
-};
-
-interface ITableHeader {
-  table: Table<Product>;
-  stickyLefts: Record<string, number>;
-};
-
-export const TableHeader = ({ table, stickyLefts }: ITableHeader) => (
-  <Box
-    sx={{
-      display: 'flex',
-      height: 40,
-      backgroundColor: 'action.hover',
-      borderBottom: '1px solid #ddd',
-    }}
-  >
-    {table
-      .getHeaderGroups()
-      .map(group =>
-        group.headers.map(header => (
-          <TableHeaderCell
-            key={header.id}
-            header={header}
-            stickyLeft={stickyLefts[header.column.id]}
-          />
-        ))
-      )}
-  </Box>
-);
+}

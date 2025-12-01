@@ -1,4 +1,3 @@
-import { Product } from '@/types/Product';
 import {
   DragEndEvent,
   PointerSensor,
@@ -9,19 +8,19 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { Column, ColumnOrderState, Table } from '@tanstack/react-table';
 import { Dispatch, SetStateAction } from 'react';
 
-interface IUseColumnDrag {
-  table: Table<Product>;
-  pinnedColumns: Column<Product, unknown>[];
+interface IUseColumnDrag<T> {
+  table: Table<T>;
+  pinnedColumns: Column<T, unknown>[];
   columnOrder: ColumnOrderState;
   setColumnOrder: Dispatch<SetStateAction<ColumnOrderState>>;
 }
 
-export const useColumnDrag = ({
+export function useColumnDrag<T> ({
   table,
   pinnedColumns,
   columnOrder,
   setColumnOrder,
-}: IUseColumnDrag) => {
+}: IUseColumnDrag<T>) {
   const sensors = useSensors(useSensor(PointerSensor));
 
   const handleDragEnd = (event: DragEndEvent) => {

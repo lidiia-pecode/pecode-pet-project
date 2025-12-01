@@ -1,7 +1,7 @@
-import { ProductsTable } from '@/components/about/ClientTable/ClientTable';
 import { apiGet } from '@/lib/api/products/fetcher';
 import { generateRandomRating } from '@/lib/utils/generateRandomRating';
 import { Product } from '@/types/Product';
+import { TestWrapper } from './TestWrapper';
 
 export default async function AboutPage() {
   let products = await apiGet<Product[]>('/products');
@@ -21,7 +21,7 @@ export default async function AboutPage() {
         fugiat fuga? Quia.
       </p>
 
-      <ProductsTable products={products} />
+      <TestWrapper products={products}/>
     </div>
   );
 }
