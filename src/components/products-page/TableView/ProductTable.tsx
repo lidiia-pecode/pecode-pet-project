@@ -187,15 +187,17 @@ export const ProductTable = () => {
       columns={columns}
       isLoading={isLoading}
       totalCount={total}
-      page={currentPage}
-      sorting={sorting}
-      setSorting={setSorting}
-      columnVisibility={columnVisibility}
-      setColumnVisibility={setColumnVisibility}
-      columnOrder={columnOrder}
-      setColumnOrder={setColumnOrder}
-      pageSelections={pageSelections}
-      setPageSelection={setPageSelection}
+      stateProps={{
+        sorting,
+        setSorting,
+        columnVisibility,
+        setColumnVisibility,
+        columnOrder,
+        setColumnOrder,
+        pageSelections,
+        setPageSelection,
+        page: currentPage,
+      }}
     />
   );
 };

@@ -5,120 +5,75 @@ import {
   getCoreRowModel,
   useReactTable,
   RowSelectionState,
-  SortingState,
   ColumnDef,
   getSortedRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table';
 import { Box, Pagination } from '@mui/material';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import { usePinnedColumns } from '@/hooks/tanstackTable/usePinnedColumns';
 import { useColumnDrag } from '@/hooks/tanstackTable/useColumnDrag';
-
 import { TableHeader } from './components/TableHeader';
 import { TableRow } from './components/TableRow';
 import { TableToolbar } from './components/TableToolbar';
 import { ColumnMenu } from './components/TableMenu';
 import { TableSkeletonRow } from './components/TableSkeletonRow';
+import { TableStateProps } from '@/types/TanstackTable';
+import { useEffectiveTableState } from '@/hooks/tanstackTable/useEffectiveTableState';
 
-type Props<TData> = {
-  data: TData[];
+type Props<T> = {
+  data: T[];
   isLoading?: boolean;
-  totalCount?: number;
-
-  columns: ColumnDef<TData, unknown>[];
-
-  page?: number;
-  pageSize?: number;
-
-  sorting?: SortingState;
-  setSorting?: Dispatch<SetStateAction<SortingState>>;
-
-  columnVisibility?: Record<string, boolean>;
-  setColumnVisibility?: Dispatch<SetStateAction<Record<string, boolean>>>;
-
-  columnOrder?: string[];
-  setColumnOrder?: Dispatch<SetStateAction<string[]>>;
-
-  pageSelections?: Record<number, RowSelectionState>;
-  setPageSelection?: (page: number, selection: RowSelectionState) => void;
+  totalCount: number;
+  columns: ColumnDef<T, unknown>[];
+  stateProps?: TableStateProps;
 };
 
-export function TanstackTable<TData>({
+export function TanstackTable<T>({
   data,
   columns,
   isLoading = false,
   totalCount = 0,
+  stateProps,
+}: Props<T>) {
+  const {
+    sorting,
+    setSorting,
+    columnVisibility,
+    setColumnVisibility,
+    columnOrder,
+    setColumnOrder,
+    pageSelections,
+    setPageSelection,
+    page,
+    setPage,
+    pageSize,
+  } = useEffectiveTableState(stateProps);
 
-  page,
-  pageSize = 8,
-
-  sorting,
-  setSorting,
-
-  columnVisibility,
-  setColumnVisibility,
-
-  columnOrder,
-  setColumnOrder,
-
-  pageSelections,
-  setPageSelection,
-}: Props<TData>) {
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
-  const [internalSorting, setInternalSorting] = useState<SortingState>([]);
-  const effectiveSorting = sorting ?? internalSorting;
-  const setEffectiveSorting = setSorting ?? setInternalSorting;
-
   const handleOpenMenu = (e: React.MouseEvent<HTMLElement>) =>
     setMenuAnchor(e.currentTarget);
-
   const handleCloseMenu = () => setMenuAnchor(null);
 
-  const [internalPage, setInternalPage] = useState<number>(0);
-  const effectivePage = page ?? internalPage;
-  const isInternalPagination = page == null;
-  const totalPages = Math.ceil(totalCount / pageSize);
-
-  const [internalColumnVisibility, setInternalColumnVisibility] = useState<
-    Record<string, boolean>
-  >({});
-  const [localColumnOrder, setLocalColumnOrder] = useState<string[]>([]);
-
-  const effectiveColumnVisibility =
-    columnVisibility ?? internalColumnVisibility;
-  const setEffectiveColumnVisibility =
-    setColumnVisibility ?? setInternalColumnVisibility;
-
-  const effectiveColumnOrder = columnOrder ?? localColumnOrder;
-  const setEffectiveColumnOrder = setColumnOrder ?? setLocalColumnOrder;
-
   const [rowSelection, setRowSelectionState] = useState<RowSelectionState>(
-    pageSelections?.[effectivePage] ?? {}
+    pageSelections?.[page] || {}
   );
 
   useEffect(() => {
-    if (pageSelections) {
-      setRowSelectionState(pageSelections[effectivePage] || {});
-    }
-  }, [effectivePage, pageSelections]);
+    setRowSelectionState(pageSelections?.[page] || {});
+  }, [page, pageSelections]);
 
   const handleRowSelectionChange = (
     updaterOrValue:
       | RowSelectionState
       | ((old: RowSelectionState) => RowSelectionState)
   ) => {
-    const newSelection: RowSelectionState =
+    const newSelection =
       typeof updaterOrValue === 'function'
         ? updaterOrValue(rowSelection)
         : updaterOrValue;
-
     setRowSelectionState(newSelection);
-
-    if (setPageSelection) {
-      setPageSelection(effectivePage, newSelection);
-    }
+    setPageSelection?.(page, newSelection);
   };
 
   const table = useReactTable({
@@ -126,18 +81,18 @@ export function TanstackTable<TData>({
     columns,
     columnResizeMode: 'onChange',
     state: {
-      columnVisibility: effectiveColumnVisibility,
-      columnOrder: effectiveColumnOrder,
+      columnVisibility,
+      columnOrder,
       rowSelection,
-      sorting: effectiveSorting,
-      pagination: { pageIndex: effectivePage, pageSize },
+      sorting,
+      pagination: { pageIndex: page, pageSize },
     },
     enableRowSelection: true,
-    manualSorting: !!sorting,
-    manualPagination: !isInternalPagination,
-    onSortingChange: setEffectiveSorting,
-    onColumnVisibilityChange: setEffectiveColumnVisibility,
-    onColumnOrderChange: setEffectiveColumnOrder,
+    manualSorting: !!stateProps?.sorting,
+    manualPagination: !!stateProps?.page,
+    onSortingChange: setSorting,
+    onColumnVisibilityChange: setColumnVisibility,
+    onColumnOrderChange: setColumnOrder,
     onRowSelectionChange: handleRowSelectionChange,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -148,17 +103,18 @@ export function TanstackTable<TData>({
   const { sensors, handleDragEnd } = useColumnDrag({
     table,
     pinnedColumns,
-    columnOrder: effectiveColumnOrder,
-    setColumnOrder: setEffectiveColumnOrder,
+    columnOrder,
+    setColumnOrder,
   });
 
   const columnWidths = Object.fromEntries(
     table.getAllColumns().map(col => [col.id, col.getSize()])
   );
 
+  const totalPages = Math.ceil(totalCount / pageSize);
   const selectedRowsCount = pageSelections
     ? Object.values(pageSelections).reduce(
-        (sum, selection) => sum + Object.keys(selection).length,
+        (sum, sel) => sum + Object.keys(sel).length,
         0
       )
     : Object.keys(rowSelection).length;
@@ -166,9 +122,7 @@ export function TanstackTable<TData>({
   const handleClearSelection = () => {
     setRowSelectionState({});
     if (setPageSelection && pageSelections) {
-      Object.keys(pageSelections).forEach(page =>
-        setPageSelection(Number(page), {})
-      );
+      Object.keys(pageSelections).forEach(p => setPageSelection(Number(p), {}));
     }
   };
 
@@ -189,7 +143,7 @@ export function TanstackTable<TData>({
         isPinned={isPinned}
         sensors={sensors}
         handleDragEnd={handleDragEnd}
-        setColumnOrder={setEffectiveColumnOrder}
+        setColumnOrder={setColumnOrder}
       />
 
       <Box sx={{ overflowX: 'auto', width: '100%', position: 'relative' }}>
@@ -197,33 +151,27 @@ export function TanstackTable<TData>({
           <TableHeader table={table} stickyLefts={stickyLefts} />
 
           {isLoading ? (
-            Array.from({ length: 6 }).map((_, i) => (
-              <TableSkeletonRow
-                key={i}
-                columnWidths={columnWidths}
-                stickyLefts={stickyLefts}
-              />
-            ))
+            <TableSkeletonRow table={table} rows={6} />
           ) : (
-            <>
-              {table.getRowModel().rows.map(row => (
+            table
+              .getRowModel()
+              .rows.map(row => (
                 <TableRow
                   key={row.id}
                   row={row}
                   columnWidths={columnWidths}
                   stickyLefts={stickyLefts}
                 />
-              ))}
-            </>
+              ))
           )}
         </Box>
       </Box>
 
-      {!page && (
+      {!stateProps?.page && (
         <Pagination
           count={totalPages}
-          page={effectivePage + 1}
-          onChange={(_, value) => setInternalPage(value - 1)}
+          page={page + 1}
+          onChange={(_, value) => setPage(value - 1)}
         />
       )}
     </Box>

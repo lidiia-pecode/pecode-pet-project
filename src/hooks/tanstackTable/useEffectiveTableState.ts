@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export function useEffectiveTableState(
   stateProps?: TableStateProps,
-  defaultPageSize = 8
+  defaultPageSize = 5
 ) {
   const [internalSorting, setInternalSorting] = useState<SortingState>([]);
   const sorting = stateProps?.sorting ?? internalSorting;
