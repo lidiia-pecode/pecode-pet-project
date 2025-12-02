@@ -125,13 +125,13 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
             }}
           />
         ))}
-        
+
         {useIndividualTooltips &&
-          metrics.map((metric) => (
+          metrics.map(metric => (
             <Line
               key={`${metric}-hover`}
               type='monotone'
-              dataKey={metric}
+              dataKey={`hover-${metric}`}
               stroke='transparent'
               strokeWidth={15}
               dot={false}

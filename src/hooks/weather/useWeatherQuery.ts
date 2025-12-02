@@ -9,7 +9,12 @@ export function useWeatherQuery() {
   return useQuery({
     queryKey: ['weather', location, metrics],
     queryFn: () => fetchWeather(location!.lat, location!.lon, metrics),
-    enabled: !!location && metrics.length > 0,
+    // enabled: !!location && metrics.length > 0,
+    enabled: false,
     staleTime: 1000 * 60 * 10,
   });
 }
+
+export type WeatherData = NonNullable<
+  ReturnType<typeof useWeatherQuery>['data']
+>;

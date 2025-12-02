@@ -4,82 +4,128 @@ import {
   Box,
   Button,
   CircularProgress,
-  Collapse,
   IconButton,
   Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ReplayIcon from '@mui/icons-material/Replay';
-import { useWeatherQuery } from '@/hooks/weather/useWeatherQuery';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import { useWeatherQuery, WeatherData } from '@/hooks/weather/useWeatherQuery';
 import { useWeatherStore } from '@/store/weatherStore';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChartRenderer } from './components/ChartRenderer';
+import { HourlyMetric, LocationData } from '@/types/Weather';
+import { STYLES } from './weatherChart.styles';
+
 
 export const WeatherChart = () => {
-  const { data, isLoading, refetch, isFetching } = useWeatherQuery();
   const location = useWeatherStore(s => s.location);
   const metrics = useWeatherStore(s => s.metrics);
 
-  const disabled = !location || metrics.length === 0;
-  const needsReload = !isLoading && !isFetching && !!data;
+  const { isLoading, isFetching, refetch } = useWeatherQuery();
 
-  const [expandChart, setExpandChart] = useState(false);
-  const toggleExpandChart = () => setExpandChart(prev => !prev);
+  const [chartExpanded, setChartExpanded] = useState(false);
+  const [cachedData, setCachedData] = useState<WeatherData | null>(null);
+  const [lastFetchedLocation, setLastFetchedLocation] =
+    useState<LocationData | null>(null);
+  const [lastFetchedMetrics, setLastFetchedMetrics] = useState<HourlyMetric[]>(
+    []
+  );
 
-  console.log(data);
+  const canFetch = !!location && metrics.length > 0;
+
+  const hasParametersChanged = useMemo(() => {
+    if (!cachedData || !lastFetchedLocation) return false;
+
+    const locationChanged =
+      lastFetchedLocation.lat !== location?.lat ||
+      lastFetchedLocation.lon !== location?.lon;
+
+    const metricsChanged =
+      lastFetchedMetrics.length !== metrics.length ||
+      lastFetchedMetrics.some(m => !metrics.includes(m));
+
+    return locationChanged || metricsChanged;
+  }, [cachedData, lastFetchedLocation, location, metrics, lastFetchedMetrics]);
+
+  const shouldBlurChart = hasParametersChanged && !isFetching;
+
+  const handleFetchClick = async () => {
+    if (!canFetch) return;
+
+    const result = await refetch();
+
+    if (result?.data) {
+      setCachedData(result.data);
+      setLastFetchedLocation(location);
+      setLastFetchedMetrics([...metrics]);
+      setChartExpanded(true);
+    }
+  };
+
+  const toggleChart = () => setChartExpanded(prev => !prev);
+
+
+  if (!cachedData) {
+    return (
+      <Box sx={{ width: '100%', mt: 2 }}>
+        <Button
+          fullWidth
+          variant='contained'
+          disabled={!canFetch || isLoading}
+          sx={STYLES.button}
+          onClick={handleFetchClick}
+        >
+          {isLoading && <CircularProgress size={20} sx={{ color: 'white' }} />}
+          <Typography>Get Forecast</Typography>
+        </Button>
+      </Box>
+    );
+  }
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, margin: '0 auto'}}>
-        <Button
-          disabled={disabled}
-          onClick={() => {
-            refetch();
-            toggleExpandChart();
-          }}
-        >
-          {isLoading ? <CircularProgress size={20} /> : 'Get Forecast'}
-        </Button>
+    <Box sx={{ width: '100%', mt: 2 }}>
+      <Box sx={{ position: 'relative' }}>
+        <Box sx={STYLES.header}>
+          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+            Weather Forecast
+          </Typography>
 
-        {needsReload && !isLoading && (
-          <IconButton onClick={() => refetch()} color='primary'>
-            <ReplayIcon />
+          <IconButton
+            size='small'
+            onClick={toggleChart}
+            sx={STYLES.expandIcon(chartExpanded)}
+          >
+            <ExpandMoreIcon />
           </IconButton>
-        )}
-
-        <IconButton
-          size='small'
-          sx={{
-            transform: expandChart ? 'rotate(180deg)' : 'rotate(0deg)',
-            transition: '0.2s',
-          }}
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-      </Box>
-
-      <Collapse in={expandChart} timeout={200}>
-        <Box
-          sx={{
-            mt: 2,
-            py: 2,
-            borderRadius: 2,
-            border: '1px solid #ddd',
-            backgroundColor: '#6995d8',
-          }}
-        >
-          {!data && !isLoading && (
-            <Typography variant='body2' color='text.secondary'>
-              No data loaded yet. Select metrics and click &quot;Get
-              Forecast&quot;.
-            </Typography>
-          )}
-
-          {data && !isLoading && (
-            <ChartRenderer data={data} metrics={metrics} />
-          )}
         </Box>
-      </Collapse>
+
+        {chartExpanded && (
+          <>
+            <Box sx={STYLES.chartContainer(shouldBlurChart)}>
+              <ChartRenderer data={cachedData} metrics={lastFetchedMetrics} />
+            </Box>
+
+            {hasParametersChanged && (
+              <Box sx={STYLES.overlay}>
+                <Button
+                  variant='contained'
+                  disabled={!canFetch || isFetching}
+                  sx={STYLES.overlayButton}
+                  onClick={handleFetchClick}
+                >
+                  {isFetching && (
+                    <CircularProgress size={20} sx={{ color: 'white' }} />
+                  )}
+
+                  <RefreshIcon />
+
+                  <Typography>Update Forecast</Typography>
+                </Button>
+              </Box>
+            )}
+          </>
+        )}
+      </Box>
     </Box>
   );
 };
