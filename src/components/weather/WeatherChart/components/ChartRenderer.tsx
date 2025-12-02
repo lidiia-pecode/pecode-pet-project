@@ -2,8 +2,6 @@
 
 import dayjs from 'dayjs';
 import { useState, useMemo } from 'react';
-import { HourlyData, HourlyMetric, HOURLY_METRICS } from '@/types/Weather';
-import { COLORS } from '../../constants';
 import {
   LineChart,
   Line,
@@ -13,56 +11,58 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import { HourlyData, HourlyMetric, metricLabels } from '@/types/Weather';
 import { useResponsive } from '@/hooks/ui/useResponsive';
+import { getMetricColor } from '../../constants';
 import { CustomTooltip } from './CustomTooltip';
-
 
 interface ChartRendererProps {
   data: HourlyData;
   metrics: HourlyMetric[];
 }
 
-const metricLabels = Object.fromEntries(
-  HOURLY_METRICS.map(m => [m.value, m.label])
-);
-
-
 export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
-  const [hoveredLine, setHoveredLine] = useState<string | null>(null);
   const { isTablet } = useResponsive();
+  const [hoveredMetric, setHoveredMetric] = useState<HourlyMetric | null>(null);
   const useIndividualTooltips = metrics.length > 5;
 
-  const chartData = useMemo(() => {
-    return data.time.map((time, idx) => {
-      const point: Record<string, string | number> = { time };
-      metrics.forEach(m => {
-        if (data[m]?.[idx] != null) point[m] = data[m][idx];
-      });
-      return point;
-    });
-  }, [data, metrics]);
+  const chartData = useMemo(
+    () =>
+      data.time.map((time, idx) => {
+        const point: Record<string, string | number> = { time };
+        metrics.forEach(metric => {
+          const value = data[metric]?.[idx];
+          if (value != null) point[metric] = value;
+        });
+        return point;
+      }),
+    [data, metrics]
+  );
 
   const xAxisTicks = useMemo(() => {
-    const days = new Map<string, string | number>();
-    chartData.forEach(p => {
-      const day = dayjs(p.time).format('YYYY-MM-DD');
-      if (!days.has(day)) days.set(day, p.time);
+    const uniqueDays = new Map<string, string | number>();
+    chartData.forEach(point => {
+      const day = dayjs(point.time).format('YYYY-MM-DD');
+      if (!uniqueDays.has(day)) uniqueDays.set(day, point.time);
     });
-    return Array.from(days.values());
+    return Array.from(uniqueDays.values());
   }, [chartData]);
 
-  const getOpacity = (metric: string) => {
+  const getOpacity = (metric: HourlyMetric) => {
     if (!useIndividualTooltips) return 1;
-    return hoveredLine ? (hoveredLine === metric ? 1 : 0.4) : 0.5;
+    return hoveredMetric ? (hoveredMetric === metric ? 1 : 0.35) : 0.5;
   };
-
-  const chartMargin = isTablet
-    ? { top: 10, right: 0, left: 0, bottom: 10 }
-    : { top: 10, right: 20, left: 0, bottom: 10 };
 
   return (
     <ResponsiveContainer width='100%' height={380}>
-      <LineChart data={chartData} margin={chartMargin}>
+      <LineChart
+        data={chartData}
+        margin={
+          isTablet
+            ? { top: 10, right: 0, left: 0, bottom: 10 }
+            : { top: 10, right: 20, left: 0, bottom: 10 }
+        }
+      >
         <XAxis
           dataKey='time'
           ticks={xAxisTicks}
@@ -70,16 +70,17 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
           tick={{ fontSize: 12, fill: '#1e3a8a' }}
           stroke='#1e3a8a'
         />
-        <YAxis stroke='#1e3a8a' tick={{ fontSize: 12, fill: '#1e3a8a' }} />
+        <YAxis tick={{ fontSize: 12, fill: '#1e3a8a' }} stroke='#1e3a8a' />
 
         <Tooltip
-          cursor={useIndividualTooltips ? false : undefined}
+          cursor={!useIndividualTooltips}
+          active={useIndividualTooltips ? !!hoveredMetric : undefined}
           content={props => (
             <CustomTooltip
               {...props}
-              hoveredLine={hoveredLine}
-              showAll={useIndividualTooltips}
               metrics={metrics}
+              hoveredMetric={hoveredMetric}
+              useIndividualTooltips={useIndividualTooltips}
             />
           )}
         />
@@ -91,55 +92,58 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
           wrapperStyle={{
             backgroundColor: isTablet ? 'transparent' : '#0d2872',
             borderRadius: 8,
-            padding: 16,
+            padding: isTablet ? 0 : 16,
             marginTop: isTablet ? 16 : 0,
             cursor: useIndividualTooltips ? 'pointer' : 'default',
           }}
-          formatter={(v: string) => metricLabels[v] ?? v}
+          formatter={v => metricLabels[v] ?? v}
           onMouseEnter={e =>
-            useIndividualTooltips && e?.value && setHoveredLine(e.value)
+            useIndividualTooltips &&
+            e?.value &&
+            setHoveredMetric(e.value as HourlyMetric)
           }
-          onMouseLeave={() => useIndividualTooltips && setHoveredLine(null)}
+          onMouseLeave={() => useIndividualTooltips && setHoveredMetric(null)}
         />
 
-        {metrics.map((metric, i) => (
+        {metrics.map(metric => (
           <Line
             key={metric}
             type='monotone'
             dataKey={metric}
-            stroke={COLORS[i % COLORS.length]}
+            stroke={getMetricColor(metric, metrics)}
             strokeWidth={2}
             dot={false}
             opacity={getOpacity(metric)}
             activeDot={
               useIndividualTooltips
-                ? hoveredLine === metric
+                ? hoveredMetric === metric
                   ? { r: 5 }
                   : false
                 : { r: 5 }
             }
-            onMouseEnter={() => useIndividualTooltips && setHoveredLine(metric)}
-            onMouseLeave={() => useIndividualTooltips && setHoveredLine(null)}
-            style={{
-              cursor: useIndividualTooltips ? 'pointer' : 'default',
-            }}
+            onMouseEnter={() =>
+              useIndividualTooltips && setHoveredMetric(metric)
+            }
+            onMouseLeave={() => useIndividualTooltips && setHoveredMetric(null)}
+            style={{ cursor: useIndividualTooltips ? 'pointer' : 'default' }}
           />
         ))}
 
         {useIndividualTooltips &&
           metrics.map(metric => (
             <Line
-              key={`${metric}-hover`}
+              key={`hover-${metric}`}
               type='monotone'
-              dataKey={`hover-${metric}`}
+              dataKey={metric}
               stroke='transparent'
-              strokeWidth={15}
+              strokeWidth={20}
               dot={false}
               activeDot={false}
-              onMouseEnter={() => setHoveredLine(metric)}
-              onMouseLeave={() => setHoveredLine(null)}
-              style={{ cursor: 'pointer' }}
               legendType='none'
+              isAnimationActive={false}
+              onMouseEnter={() => setHoveredMetric(metric)}
+              onMouseLeave={() => setHoveredMetric(null)}
+              style={{ cursor: 'pointer' }}
             />
           ))}
       </LineChart>

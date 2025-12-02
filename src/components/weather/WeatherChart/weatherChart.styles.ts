@@ -60,11 +60,5 @@ export const STYLES = {
     alignItems: 'center',
     justifyContent: 'space-between',
     mb: 1,
-    px: 1,
   },
-
-  expandIcon: (isExpanded: boolean) => ({
-    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-    transition: 'transform 0.3s',
-  }),
 } as const;

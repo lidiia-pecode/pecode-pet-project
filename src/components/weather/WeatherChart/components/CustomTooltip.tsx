@@ -1,68 +1,62 @@
 import dayjs from 'dayjs';
 import { Paper, Typography, Box } from '@mui/material';
-import { HOURLY_METRICS, HourlyMetric } from '@/types/Weather';
-import { COLORS } from '../../constants';
+import { HourlyMetric, metricLabels } from '@/types/Weather';
+import { getMetricColor } from '../../constants';
 
 interface TooltipPayloadItem {
-  name?: string;
   value?: string | number;
   dataKey?: string;
-  color?: string;
+  name?: string;
 }
 
 interface CustomTooltipProps {
   active?: boolean;
   payload?: readonly TooltipPayloadItem[];
   label?: string | number;
-  hoveredLine: string | null;
-  showAll: boolean;
   metrics: HourlyMetric[];
+  hoveredMetric: string | null;
+  useIndividualTooltips: boolean;
 }
-
-const metricLabels = Object.fromEntries(
-  HOURLY_METRICS.map(m => [m.value, m.label])
-);
 
 export const CustomTooltip = ({
   active,
   payload,
   label,
-  hoveredLine,
-  showAll,
   metrics,
+  hoveredMetric,
+  useIndividualTooltips,
 }: CustomTooltipProps) => {
-  if (!active || !payload?.length || (showAll && !hoveredLine)) return null;
+  if (!active || !payload?.length) return null;
 
-  const filtered =
-    showAll && hoveredLine
-      ? payload.filter(p => p.dataKey === hoveredLine)
+  const filteredItems =
+    useIndividualTooltips && hoveredMetric
+      ? payload.filter(item => item.dataKey === hoveredMetric)
       : payload;
 
-  if (!filtered.length) return null;
+  if (!filteredItems.length) return null;
 
   return (
     <Paper
       elevation={3}
       sx={{
         bgcolor: '#0d2872',
-        color: 'common.white',
+        color: 'white',
         p: 2,
         borderRadius: 2,
-        minWidth: 120,
+        minWidth: 140,
       }}
     >
       <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
         {dayjs(label).format('D MMM, HH:mm')}
       </Typography>
 
-      {filtered.map((item, i) => {
-        const key = item.dataKey ?? item.name ?? '';
-        const idx = metrics.indexOf(key as HourlyMetric);
-        const color =
-          idx >= 0 ? COLORS[idx % COLORS.length] : COLORS[i % COLORS.length];
-
+      {filteredItems.map((item, idx) => {
+        const key = item.dataKey ?? '';
         return (
-          <Box key={`${key}-${i}`} sx={{ color, typography: 'body2' }}>
+          <Box
+            key={`${key}-${idx}`}
+            sx={{ color: getMetricColor(key, metrics), typography: 'body2' }}
+          >
             {metricLabels[key] ?? key}: {item.value}
           </Box>
         );

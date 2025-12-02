@@ -14,7 +14,3 @@ export function useWeatherQuery() {
     staleTime: 1000 * 60 * 10,
   });
 }
-
-export type WeatherData = NonNullable<
-  ReturnType<typeof useWeatherQuery>['data']
->;

@@ -13,6 +13,10 @@ export const HOURLY_METRICS = [
   { label: 'Soil Moisture', value: 'soil_moisture_0_1cm' },
 ] as const;
 
+export const metricLabels = Object.fromEntries(
+  HOURLY_METRICS.map(m => [m.value, m.label])
+);
+
 export type HourlyMetric = (typeof HOURLY_METRICS)[number]['value'];
 
 export type HourlyData = {

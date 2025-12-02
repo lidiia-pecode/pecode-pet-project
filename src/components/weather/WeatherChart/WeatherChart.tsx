@@ -9,13 +9,18 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import { useWeatherQuery, WeatherData } from '@/hooks/weather/useWeatherQuery';
+import { useWeatherQuery } from '@/hooks/weather/useWeatherQuery';
 import { useWeatherStore } from '@/store/weatherStore';
 import { useState, useMemo } from 'react';
 import { ChartRenderer } from './components/ChartRenderer';
-import { HourlyMetric, LocationData } from '@/types/Weather';
+import { HourlyData, HourlyMetric, LocationData } from '@/types/Weather';
 import { STYLES } from './weatherChart.styles';
 
+interface CachedWeatherState {
+  data: HourlyData;
+  location: LocationData;
+  metrics: HourlyMetric[];
+}
 
 export const WeatherChart = () => {
   const location = useWeatherStore(s => s.location);
@@ -24,48 +29,44 @@ export const WeatherChart = () => {
   const { isLoading, isFetching, refetch } = useWeatherQuery();
 
   const [chartExpanded, setChartExpanded] = useState(false);
-  const [cachedData, setCachedData] = useState<WeatherData | null>(null);
-  const [lastFetchedLocation, setLastFetchedLocation] =
-    useState<LocationData | null>(null);
-  const [lastFetchedMetrics, setLastFetchedMetrics] = useState<HourlyMetric[]>(
-    []
+  const [cachedState, setCachedState] = useState<CachedWeatherState | null>(
+    null
   );
 
   const canFetch = !!location && metrics.length > 0;
 
   const hasParametersChanged = useMemo(() => {
-    if (!cachedData || !lastFetchedLocation) return false;
+    if (!cachedState) return false;
 
     const locationChanged =
-      lastFetchedLocation.lat !== location?.lat ||
-      lastFetchedLocation.lon !== location?.lon;
+      cachedState.location.lat !== location?.lat ||
+      cachedState.location.lon !== location?.lon;
 
-    const metricsChanged =
-      lastFetchedMetrics.length !== metrics.length ||
-      lastFetchedMetrics.some(m => !metrics.includes(m));
+    const metricsChanged = cachedState.metrics.join(',') !== metrics.join(',');
 
     return locationChanged || metricsChanged;
-  }, [cachedData, lastFetchedLocation, location, metrics, lastFetchedMetrics]);
+  }, [cachedState, location, metrics]);
 
   const shouldBlurChart = hasParametersChanged && !isFetching;
 
-  const handleFetchClick = async () => {
-    if (!canFetch) return;
+  const handleFetchWeather = async () => {
+    if (!canFetch || !location) return;
 
     const result = await refetch();
 
     if (result?.data) {
-      setCachedData(result.data);
-      setLastFetchedLocation(location);
-      setLastFetchedMetrics([...metrics]);
+      setCachedState({
+        data: result.data,
+        location,
+        metrics: [...metrics],
+      });
       setChartExpanded(true);
     }
   };
 
   const toggleChart = () => setChartExpanded(prev => !prev);
 
-
-  if (!cachedData) {
+  if (!cachedState) {
     return (
       <Box sx={{ width: '100%', mt: 2 }}>
         <Button
@@ -73,7 +74,7 @@ export const WeatherChart = () => {
           variant='contained'
           disabled={!canFetch || isLoading}
           sx={STYLES.button}
-          onClick={handleFetchClick}
+          onClick={handleFetchWeather}
         >
           {isLoading && <CircularProgress size={20} sx={{ color: 'white' }} />}
           <Typography>Get Forecast</Typography>
@@ -86,14 +87,18 @@ export const WeatherChart = () => {
     <Box sx={{ width: '100%', mt: 2 }}>
       <Box sx={{ position: 'relative' }}>
         <Box sx={STYLES.header}>
-          <Typography variant='body2' sx={{ color: 'text.secondary' }}>
+          <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
             Weather Forecast
           </Typography>
 
           <IconButton
             size='small'
             onClick={toggleChart}
-            sx={STYLES.expandIcon(chartExpanded)}
+            sx={{
+              transform: chartExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.3s',
+            }}
+            aria-label={chartExpanded ? 'Collapse chart' : 'Expand chart'}
           >
             <ExpandMoreIcon />
           </IconButton>
@@ -102,7 +107,10 @@ export const WeatherChart = () => {
         {chartExpanded && (
           <>
             <Box sx={STYLES.chartContainer(shouldBlurChart)}>
-              <ChartRenderer data={cachedData} metrics={lastFetchedMetrics} />
+              <ChartRenderer
+                data={cachedState.data}
+                metrics={cachedState.metrics}
+              />
             </Box>
 
             {hasParametersChanged && (
@@ -111,7 +119,7 @@ export const WeatherChart = () => {
                   variant='contained'
                   disabled={!canFetch || isFetching}
                   sx={STYLES.overlayButton}
-                  onClick={handleFetchClick}
+                  onClick={handleFetchWeather}
                 >
                   {isFetching && (
                     <CircularProgress size={20} sx={{ color: 'white' }} />
