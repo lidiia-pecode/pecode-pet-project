@@ -129,23 +129,7 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
           />
         ))}
 
-        {useIndividualTooltips &&
-          metrics.map(metric => (
-            <Line
-              key={`hover-${metric}`}
-              type='monotone'
-              dataKey={metric}
-              stroke='transparent'
-              strokeWidth={20}
-              dot={false}
-              activeDot={false}
-              legendType='none'
-              isAnimationActive={false}
-              onMouseEnter={() => setHoveredMetric(metric)}
-              onMouseLeave={() => setHoveredMetric(null)}
-              style={{ cursor: 'pointer' }}
-            />
-          ))}
+
       </LineChart>
     </ResponsiveContainer>
   );

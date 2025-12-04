@@ -7,91 +7,110 @@ import { useWeatherStore } from '@/store/weatherStore';
 import { HeaderToggleButton } from './components/HeaderToggleButton';
 import { SearchField } from './components/SearchField';
 import { SuggestionList } from './components/SuggestionsList';
-import { NominatimResult } from '@/types/Weather';
+import { LocationData, NominatimResult } from '@/types/Weather';
 import { useLocationSearch } from '@/hooks/weather/useLocationSearch';
-import { formatCoordinates, parseNominatim } from '@/lib/utils/weather/location';
-
+import {
+  formatCoordinates,
+  parseNominatim,
+} from '@/lib/utils/weather/location';
 
 const MapComponent = dynamic(() => import('../MapComponent'), {
   ssr: false,
   loading: () => <Box sx={{ height: 420, bgcolor: 'grey.100' }} />,
 });
 
+const LocationHistoryList = dynamic(
+  () => import('./components/LocationHistoryList'),
+  { ssr: false }
+);
+
+
 export const LocationPicker = () => {
   const [query, setQuery] = useState('');
   const [isMapExpanded, setIsMapExpanded] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
 
   const location = useWeatherStore(state => state.location);
   const setLocation = useWeatherStore(state => state.setLocation);
 
+  const addLocationToHistory = useWeatherStore(
+    state => state.addLocationToHistory
+  );
+
   const { suggestions, loading, error, clearSuggestions } =
     useLocationSearch(query);
-
-  const isLocationSelected = location !== null;
 
   const toggleMap = useCallback(() => {
     setIsMapExpanded(prev => !prev);
   }, []);
 
   const handleConfirm = useCallback(() => {
-    if (location) {
+    if (selectedLocation) {
       setIsMapExpanded(false);
+      setLocation(selectedLocation);
+      addLocationToHistory(selectedLocation);
     }
-  }, [location]);
+  }, [selectedLocation, addLocationToHistory, setLocation]);
 
   const handleSuggestionClick = useCallback(
     (item: NominatimResult) => {
       const parsedLocation = parseNominatim(item);
-      setLocation(parsedLocation);
+      setSelectedLocation(parsedLocation);
       setQuery(item.display_name);
       clearSuggestions();
     },
-    [setLocation, clearSuggestions]
+    [clearSuggestions]
   );
 
   const handleMapClick = useCallback(
     (lat: number, lon: number) => {
-      setLocation({ lat, lon });
+      setSelectedLocation({ lat, lon });
       setQuery(formatCoordinates(lat, lon));
     },
-    [setLocation]
+    []
   );
 
   const clearSelection = useCallback(() => {
-    setLocation(null);
+    setSelectedLocation(null);
     setQuery('');
     clearSuggestions();
-  }, [setLocation, clearSuggestions]);
+  }, [clearSuggestions]);
 
   return (
     <Box sx={{ width: '100%', mb: 2 }}>
       <HeaderToggleButton
         isOpen={isMapExpanded}
-        isSelected={isLocationSelected}
+        isSelected={location !== null}
         location={location}
         onClick={toggleMap}
       />
 
       <Collapse in={isMapExpanded} timeout={200}>
-        <Box sx={{ position: 'relative', mt: 2 }}>
-          <SearchField
-            query={query}
-            loading={loading}
-            error={error}
-            isSelected={isLocationSelected}
-            onChange={setQuery}
-            onClear={clearSelection}
-            onConfirm={handleConfirm}
-          />
+        <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+          <Box sx={{ flex: 1 }}>
+            <Box sx={{ position: 'relative' }}>
+              <SearchField
+                query={query}
+                loading={loading}
+                error={error}
+                isSelected={selectedLocation !== null}
+                onChange={setQuery}
+                onClear={clearSelection}
+                onConfirm={handleConfirm}
+              />
 
-          <SuggestionList
-            suggestions={suggestions}
-            onSelect={handleSuggestionClick}
-          />
-        </Box>
+              <SuggestionList
+                suggestions={suggestions}
+                onSelect={handleSuggestionClick}
+              />
+            </Box>
 
-        <Box sx={{ width: '100%', height: 420 }}>
-          <MapComponent selected={location} onClick={handleMapClick} />
+            <Box sx={{ width: '100%', height: 420 }}>
+              <MapComponent selected={selectedLocation} onClick={handleMapClick} />
+            </Box>
+          </Box>
+
+          <LocationHistoryList onSelect={toggleMap} />
         </Box>
       </Collapse>
     </Box>

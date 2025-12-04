@@ -2,6 +2,7 @@ import { Box, Button, Typography } from '@mui/material';
 import RoomIcon from '@mui/icons-material/Room';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { LocationData } from '@/types/Weather';
+import { formatCoordinates } from '@/lib/utils/weather/location';
 
 interface Props {
   isOpen: boolean;
@@ -35,14 +36,22 @@ export const HeaderToggleButton = ({
     >
       <RoomIcon color='primary' sx={{ mr: 1 }} />
 
-      <Box sx={{ flexGrow: 1, textAlign: 'left', display: 'flex', gap: 2, alignItems: 'center'}}>
+      <Box
+        sx={{
+          flexGrow: 1,
+          textAlign: 'left',
+          display: 'flex',
+          gap: 2,
+          alignItems: 'center',
+        }}
+      >
         <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
           {isSelected ? 'Change Location' : 'Choose Location'}
         </Typography>
-        {isSelected && (
+        
+        {isSelected && location &&(
           <Typography variant='body2' color='text.secondary'>
-            {location?.label ||
-              `${location?.lat.toFixed(4)}, ${location?.lon.toFixed(4)}`}
+            {location?.label || `${formatCoordinates(location.lat, location.lon)}`}
           </Typography>
         )}
       </Box>
