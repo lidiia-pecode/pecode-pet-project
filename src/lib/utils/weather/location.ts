@@ -3,6 +3,11 @@ import { LocationData, NominatimResult } from "@/types/Weather";
 export const formatCoordinates = (lat: number, lon: number): string =>
   `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
 
+export function getCompactLocation(label: string, start: number = -4, end: number = -2) {
+  const parts = label.split(',').map(p => p.trim());
+  return parts.slice(start, end).join(', ');
+}
+
 export const parseNominatim = (item: NominatimResult): LocationData => ({
   lat: Number(item.lat),
   lon: Number(item.lon),

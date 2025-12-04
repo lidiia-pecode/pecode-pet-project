@@ -29,8 +29,9 @@ export const HeaderToggleButton = ({
         borderRadius: 2,
         textTransform: 'none',
         transition: '0.2s',
+        backgroundColor: 'background.paper',
         '&:hover': {
-          backgroundColor: '#a3c8ed',
+          backgroundColor: '#edf2fa',
         },
       }}
     >
@@ -48,10 +49,11 @@ export const HeaderToggleButton = ({
         <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
           {isSelected ? 'Change Location' : 'Choose Location'}
         </Typography>
-        
-        {isSelected && location &&(
+
+        {isSelected && location && (
           <Typography variant='body2' color='text.secondary'>
-            {location?.label || `${formatCoordinates(location.lat, location.lon)}`}
+            {location?.label ||
+              `${formatCoordinates(location.lat, location.lon)}`}
           </Typography>
         )}
       </Box>

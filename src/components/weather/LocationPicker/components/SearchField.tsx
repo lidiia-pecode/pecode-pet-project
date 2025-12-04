@@ -36,6 +36,7 @@ export const SearchField = ({
 
   return (
     <TextField
+      id='weather-search'
       fullWidth
       size='small'
       placeholder='Enter a city or address…'
@@ -67,7 +68,7 @@ export const SearchField = ({
 
               {showConfirmButton && (
                 <Tooltip title='Confirm location'>
-                  <IconButton onClick={onConfirm} >
+                  <IconButton onClick={onConfirm}>
                     <CheckCircleIcon
                       fontSize='medium'
                       sx={{

@@ -5,9 +5,10 @@ const GRADIENT = {
 
 export const STYLES = {
   button: {
-    height: 50,
+    height: 48,
     display: 'flex',
     gap: 1,
+    borderRadius: 2,
     background: GRADIENT.primary,
     '&:hover': { background: GRADIENT.hover },
     '&.Mui-disabled': {

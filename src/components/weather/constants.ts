@@ -27,3 +27,13 @@ export const MAP_CONFIG = {
   SEARCH_DEBOUNCE: 300,
   SEARCH_LIMIT: 6,
 } as const;
+
+
+export const DEFAULT_LOCATION = {
+  title: 'Kyiv, Ukraine',
+  lat: 50.4501,
+  lon: 30.5234,
+};
+
+
+

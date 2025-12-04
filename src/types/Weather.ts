@@ -35,3 +35,13 @@ export interface LocationData {
   lon: number;
   label?: string | undefined;
 }
+
+export interface CurrentWeather {
+  temperature_2m: number;
+  apparent_temperature: number;
+  relative_humidity_2m: number;
+  wind_speed_10m: number;
+  pressure_msl: number;
+  is_day: number;
+  weather_code: number;
+}

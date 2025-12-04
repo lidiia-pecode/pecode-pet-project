@@ -1,3 +1,5 @@
+'use client';
+
 import { HourlyMetric, LocationData } from '@/types/Weather';
 import { create } from 'zustand';
 
@@ -48,7 +50,7 @@ export const useWeatherStore = create<WeatherState>(set => {
       if (typeof window !== 'undefined') {
         sessionStorage.removeItem('location_history');
       }
-      return { locationHistory: [] };
+      set({ locationHistory: [] });
     },
   };
 });
