@@ -7,9 +7,9 @@ export default function WeatherPage() {
   return (
     <>
       <CurrentWeather />
-      
+
       <LocationPicker />
-      
+
       <MetricsCheckboxList />
 
       <WeatherChart />

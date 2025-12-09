@@ -1,4 +1,4 @@
-import { CurrentWeather, HourlyData, HourlyMetric } from '@/types/Weather';
+import { ICurrentWeather, HourlyData, HourlyMetric } from '@/types/Weather';
 
 export async function fetchWeather(
   latitude: number,
@@ -30,7 +30,7 @@ export async function fetchWeather(
 export async function fetchCurrentWeather(
   latitude: number,
   longitude: number
-): Promise<CurrentWeather> {
+): Promise<ICurrentWeather> {
   const params = new URLSearchParams({
     latitude: latitude.toString(),
     longitude: longitude.toString(),
@@ -54,5 +54,17 @@ export async function fetchCurrentWeather(
   }
 
   const json = await res.json();
-  return json.current as CurrentWeather;
+  return json.current as ICurrentWeather;
+}
+
+
+export async function getWeatherAdvice(data: ICurrentWeather): Promise<string> {
+  const res = await fetch('/api/weather', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data }),
+  });
+  
+    const result = await res.json();
+    return result.advice; 
 }

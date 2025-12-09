@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LocationData } from '@/types/Weather';
-import { MAP_CONFIG } from './constants';
+import { MAP_CONFIG } from '../../constants';
 
 interface MapComponentProps {
   selected?: LocationData | null;

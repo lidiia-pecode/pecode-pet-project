@@ -68,7 +68,7 @@ export const WeatherChart = () => {
 
   if (!cachedState) {
     return (
-      <Box sx={{ width: '100%', mt: 2 }}>
+      <Box sx={{ width: '100%', mt: 3 }}>
         <Button
           fullWidth
           variant='contained'

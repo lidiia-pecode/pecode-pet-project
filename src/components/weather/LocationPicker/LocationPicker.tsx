@@ -14,7 +14,7 @@ import {
   parseNominatim,
 } from '@/lib/utils/weather/location';
 
-const MapComponent = dynamic(() => import('../MapComponent'), {
+const MapComponent = dynamic(() => import('./components/MapComponent'), {
   ssr: false,
   loading: () => <Box sx={{ height: 420, bgcolor: 'grey.100' }} />,
 });
@@ -24,11 +24,12 @@ const LocationHistoryList = dynamic(
   { ssr: false }
 );
 
-
 export const LocationPicker = () => {
   const [query, setQuery] = useState('');
   const [isMapExpanded, setIsMapExpanded] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
+    null
+  );
 
   const location = useWeatherStore(state => state.location);
   const setLocation = useWeatherStore(state => state.setLocation);
@@ -62,13 +63,10 @@ export const LocationPicker = () => {
     [clearSuggestions]
   );
 
-  const handleMapClick = useCallback(
-    (lat: number, lon: number) => {
-      setSelectedLocation({ lat, lon });
-      setQuery(formatCoordinates(lat, lon));
-    },
-    []
-  );
+  const handleMapClick = useCallback((lat: number, lon: number) => {
+    setSelectedLocation({ lat, lon });
+    setQuery(formatCoordinates(lat, lon));
+  }, []);
 
   const clearSelection = useCallback(() => {
     setSelectedLocation(null);
@@ -106,7 +104,10 @@ export const LocationPicker = () => {
             </Box>
 
             <Box sx={{ width: '100%', height: 420 }}>
-              <MapComponent selected={selectedLocation} onClick={handleMapClick} />
+              <MapComponent
+                selected={selectedLocation}
+                onClick={handleMapClick}
+              />
             </Box>
           </Box>
 

@@ -28,12 +28,13 @@ export const MetricsCheckboxList = () => {
   };
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 600, mb: 2 }}>
+    <Box sx={{ width: '100%', mb: 2 }}>
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           cursor: 'pointer',
+          mb: 2,
         }}
         onClick={toggleExpandMetrics}
       >
@@ -55,7 +56,7 @@ export const MetricsCheckboxList = () => {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
             gap: 0.5,
           }}
         >
