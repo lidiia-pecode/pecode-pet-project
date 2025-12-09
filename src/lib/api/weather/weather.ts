@@ -1,19 +1,22 @@
-import { ICurrentWeather, HourlyData, HourlyMetric } from '@/types/Weather';
+import {
+  ICurrentWeather,
+  WeatherMetric,
+  WeatherData,
+  TMetricTab,
+} from '@/types/Weather';
 
 export async function fetchWeather(
   latitude: number,
   longitude: number,
-  metrics: HourlyMetric[] = []
-): Promise<HourlyData> {
+  metrics: WeatherMetric[] = [],
+  mode: TMetricTab
+): Promise<WeatherData> {
   const params = new URLSearchParams({
     latitude: latitude.toString(),
     longitude: longitude.toString(),
     timezone: 'auto',
   });
-
-  if (metrics.length) {
-    params.append('hourly', metrics.join(','));
-  }
+  params.append(`${mode}`, metrics.join(','));
 
   const url = `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
   const res = await fetch(url);
@@ -24,7 +27,10 @@ export async function fetchWeather(
 
   const json = await res.json();
 
-  return json.hourly as HourlyData;
+  return {
+    ...json.hourly,
+    ...json.daily,
+  } as WeatherData;
 }
 
 export async function fetchCurrentWeather(
@@ -57,14 +63,13 @@ export async function fetchCurrentWeather(
   return json.current as ICurrentWeather;
 }
 
-
 export async function getWeatherAdvice(data: ICurrentWeather): Promise<string> {
   const res = await fetch('/api/weather', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ data }),
   });
-  
-    const result = await res.json();
-    return result.advice; 
+
+  const result = await res.json();
+  return result.advice;
 }

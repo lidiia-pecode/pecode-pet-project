@@ -1,17 +1,19 @@
 'use client';
 
-import { HourlyMetric, LocationData } from '@/types/Weather';
+import { LocationData, TMetricTab, WeatherMetric } from '@/types/Weather';
 import { create } from 'zustand';
 
 interface WeatherState {
+  metrics: WeatherMetric[];
+  metricMode: TMetricTab;
   location: LocationData | null;
-  metrics: HourlyMetric[];
   locationHistory: LocationData[];
 
+  setMetrics: (m: WeatherMetric[]) => void;
+  setMetricMode: (mode: TMetricTab) => void;
   setLocation: (loc: LocationData | null) => void;
   addLocationToHistory: (loc: LocationData) => void;
   clearHistory: () => void;
-  setMetrics: (m: HourlyMetric[]) => void;
 }
 
 export const useWeatherStore = create<WeatherState>(set => {
@@ -23,12 +25,14 @@ export const useWeatherStore = create<WeatherState>(set => {
   }
 
   return {
-    location: null,
     metrics: [],
+    metricMode: 'hourly',
+    location: null,
     locationHistory: initialHistory,
 
-    setLocation: location => set({ location }),
     setMetrics: metrics => set({ metrics }),
+    setMetricMode: mode => set({ metricMode: mode }),
+    setLocation: location => set({ location }),
     addLocationToHistory: loc =>
       set(state => {
         const filtered = state.locationHistory.filter(

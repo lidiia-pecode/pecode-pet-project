@@ -47,7 +47,7 @@ export const CurrentWeather = () => {
         position: 'relative',
         background: isDay ? '#ffffff' : '#0f1e40',
         color: isDay ? '#000' : '#fff',
-        boxShadow: '0 8px 20px rgba(0,0,0,0.1)',
+        boxShadow: '0 0 20px rgba(0,0,0,0.1)',
         overflow: 'hidden',
         mb: 3,
       }}

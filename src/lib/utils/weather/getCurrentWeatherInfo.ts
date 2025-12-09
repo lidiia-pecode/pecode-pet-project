@@ -41,7 +41,7 @@ export function getCurrentWeatherInfo(code: number): WeatherIconContent {
     case 95:
     case 96:
     case 99:
-      return { path: '/weather/thunderstorm.png', description: 'Thunderstorm' };
+      return { path: '/weather/thunder.png', description: 'Thunderstorm' };
     default:
       return { path: 'unknown', description: 'unknown' };
   }

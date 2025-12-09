@@ -1,6 +1,6 @@
 import { CurrentWeather } from '@/components/weather/CurrentWeather';
 import { LocationPicker } from '@/components/weather/LocationPicker';
-import { MetricsCheckboxList } from '@/components/weather/MetricsMultiselect';
+import { MetricsMultiselect } from '@/components/weather/MetricsMultiselect';
 import { WeatherChart } from '@/components/weather/WeatherChart';
 
 export default function WeatherPage() {
@@ -10,7 +10,7 @@ export default function WeatherPage() {
 
       <LocationPicker />
 
-      <MetricsCheckboxList />
+      <MetricsMultiselect />
 
       <WeatherChart />
     </>

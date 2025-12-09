@@ -21,10 +21,8 @@ export const DAILY_METRICS = [
   { label: 'Max Temperature', value: 'temperature_2m_max' },
   { label: 'Min Temperature', value: 'temperature_2m_min' },
   { label: 'Mean Temperature', value: 'temperature_2m_mean' },
-
   { label: 'Apparent Temp Max', value: 'apparent_temperature_max' },
   { label: 'Apparent Temp Min', value: 'apparent_temperature_min' },
-
   { label: 'Precipitation Sum', value: 'precipitation_sum' },
   { label: 'Rain Sum', value: 'rain_sum' },
   { label: 'Snowfall Sum', value: 'snowfall_sum' },
@@ -32,29 +30,36 @@ export const DAILY_METRICS = [
     label: 'Precipitation Probability Max',
     value: 'precipitation_probability_max',
   },
-
   { label: 'Wind Speed Max', value: 'wind_speed_10m_max' },
   { label: 'Wind Gusts Max', value: 'wind_gusts_10m_max' },
   { label: 'Wind Direction Dominant', value: 'wind_direction_10m_dominant' },
-
   { label: 'Shortwave Radiation Sum', value: 'shortwave_radiation_sum' },
-
   { label: 'UV Index Max', value: 'uv_index_max' },
-
   { label: 'Sunrise', value: 'sunrise' },
   { label: 'Sunset', value: 'sunset' },
 ] as const;
 
+export const METRICS = [...HOURLY_METRICS, ...DAILY_METRICS] as const;
 
-export const metricLabels = Object.fromEntries(
-  HOURLY_METRICS.map(m => [m.value, m.label])
-);
+export type MetricItem = (typeof METRICS)[number];
+export type WeatherMetric = MetricItem['value'];
 
-export type HourlyMetric = (typeof HOURLY_METRICS)[number]['value'];
+export const METRIC_TABS = [
+  { id: 'hourly', label: 'Hourly' },
+  { id: 'daily', label: 'Daily' },
+] as const;
 
-export type HourlyData = {
+export type TMetricTab = (typeof METRIC_TABS)[number]['id'];
+
+export const weatherMetricLabels: Record<WeatherMetric, string> =
+  Object.fromEntries(METRICS.map(m => [m.value, m.label])) as Record<
+    WeatherMetric,
+    string
+  >;
+
+export type WeatherData = {
   time: string[];
-} & Partial<Record<HourlyMetric, number[]>>;
+} & Partial<Record<WeatherMetric, number[]>>;
 
 export interface NominatimResult {
   place_id: number;

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { Paper, Typography, Box } from '@mui/material';
-import { HourlyMetric, metricLabels } from '@/types/Weather';
+import { WeatherMetric } from '@/types/Weather';
 import { getMetricColor } from '../../constants';
 
 interface TooltipPayloadItem {
@@ -13,9 +13,10 @@ interface CustomTooltipProps {
   active?: boolean;
   payload?: readonly TooltipPayloadItem[];
   label?: string | number;
-  metrics: HourlyMetric[];
+  metrics: WeatherMetric[];
   hoveredMetric: string | null;
   useIndividualTooltips: boolean;
+  metricMap: Map<WeatherMetric, string>;
 }
 
 export const CustomTooltip = ({
@@ -25,6 +26,7 @@ export const CustomTooltip = ({
   metrics,
   hoveredMetric,
   useIndividualTooltips,
+  metricMap
 }: CustomTooltipProps) => {
   if (!active || !payload?.length) return null;
 
@@ -51,13 +53,13 @@ export const CustomTooltip = ({
       </Typography>
 
       {filteredItems.map((item, idx) => {
-        const key = item.dataKey ?? '';
+        const key = item.dataKey as WeatherMetric;
         return (
           <Box
             key={`${key}-${idx}`}
             sx={{ color: getMetricColor(key, metrics), typography: 'body2' }}
           >
-            {metricLabels[key] ?? key}: {item.value}
+            {metricMap.get(key) ?? key}: {item.value}
           </Box>
         );
       })}

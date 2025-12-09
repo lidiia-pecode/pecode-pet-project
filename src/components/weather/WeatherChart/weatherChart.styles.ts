@@ -1,4 +1,4 @@
-const GRADIENT = {
+export const GRADIENT = {
   primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
   hover: 'linear-gradient(135deg, #5568d3 0%, #63408a 100%)',
 };

@@ -11,20 +11,26 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { HourlyData, HourlyMetric, metricLabels } from '@/types/Weather';
+import { METRICS, WeatherData, WeatherMetric} from '@/types/Weather';
 import { useResponsive } from '@/hooks/ui/useResponsive';
 import { getMetricColor } from '../../constants';
 import { CustomTooltip } from './CustomTooltip';
 
 interface ChartRendererProps {
-  data: HourlyData;
-  metrics: HourlyMetric[];
+  data: WeatherData;
+  metrics: WeatherMetric[];
 }
 
 export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
   const { isTablet } = useResponsive();
-  const [hoveredMetric, setHoveredMetric] = useState<HourlyMetric | null>(null);
+  const [hoveredMetric, setHoveredMetric] = useState<WeatherMetric | null>(null);
   const useIndividualTooltips = metrics.length > 5;
+
+  const metricMap = useMemo(() => {
+    const map = new Map<WeatherMetric, string>();
+    METRICS.forEach(m => map.set(m.value, m.label));
+    return map;
+  }, []);
 
   const chartData = useMemo(
     () =>
@@ -48,7 +54,7 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
     return Array.from(uniqueDays.values());
   }, [chartData]);
 
-  const getOpacity = (metric: HourlyMetric) => {
+  const getOpacity = (metric: WeatherMetric) => {
     if (!useIndividualTooltips) return 1;
     return hoveredMetric ? (hoveredMetric === metric ? 1 : 0.35) : 0.5;
   };
@@ -81,6 +87,7 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
               metrics={metrics}
               hoveredMetric={hoveredMetric}
               useIndividualTooltips={useIndividualTooltips}
+              metricMap={metricMap}
             />
           )}
         />
@@ -96,11 +103,11 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
             marginTop: isTablet ? 16 : 0,
             cursor: useIndividualTooltips ? 'pointer' : 'default',
           }}
-          formatter={v => metricLabels[v] ?? v}
+          formatter={v => metricMap.get(v as WeatherMetric)}
           onMouseEnter={e =>
             useIndividualTooltips &&
             e?.value &&
-            setHoveredMetric(e.value as HourlyMetric)
+            setHoveredMetric(e.value as WeatherMetric)
           }
           onMouseLeave={() => useIndividualTooltips && setHoveredMetric(null)}
         />
@@ -128,8 +135,6 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
             style={{ cursor: useIndividualTooltips ? 'pointer' : 'default' }}
           />
         ))}
-
-
       </LineChart>
     </ResponsiveContainer>
   );

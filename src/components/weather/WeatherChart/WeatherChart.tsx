@@ -13,13 +13,13 @@ import { useWeatherQuery } from '@/hooks/weather/useWeatherQuery';
 import { useWeatherStore } from '@/store/weatherStore';
 import { useState, useMemo } from 'react';
 import { ChartRenderer } from './components/ChartRenderer';
-import { HourlyData, HourlyMetric, LocationData } from '@/types/Weather';
+import { LocationData, WeatherData, WeatherMetric } from '@/types/Weather';
 import { STYLES } from './weatherChart.styles';
 
 interface CachedWeatherState {
-  data: HourlyData;
+  data: WeatherData;
   location: LocationData;
-  metrics: HourlyMetric[];
+  metrics: WeatherMetric[];
 }
 
 export const WeatherChart = () => {
