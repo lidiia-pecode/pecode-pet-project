@@ -19,6 +19,7 @@ import {
 
 import WeatherAdvice from './components/WeatherAdvice';
 import { WeatherStats } from './components/WeatherStats';
+import { CurrentWeatherSkeleton } from './components/CurrentWeatherSkeleton';
 
 export const CurrentWeather = () => {
   const { data, isLoading } = useCurrentWeatherQuery();
@@ -32,7 +33,7 @@ export const CurrentWeather = () => {
     ? getCompactLocation(autoLocation.label)
     : DEFAULT_LOCATION.title;
 
-  if (isLoading || !data) return <div>Loading...</div>;
+  if (isLoading || !data) return <CurrentWeatherSkeleton />;
 
   const isDay = data.is_day;
   const { path, description } = getCurrentWeatherInfo(data.weather_code || 0);
