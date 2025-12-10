@@ -1,17 +1,12 @@
 'use client';
 
 import { Box } from '@mui/material';
-import {
-  HOURLY_METRICS,
-  DAILY_METRICS,
-  WeatherMetric,
-  TMetricTab,
-  METRIC_TABS,
-} from '@/types/Weather';
+import { WeatherMetric, TMetricTab, METRIC_TABS } from '@/types/Weather';
 
 import { useWeatherStore } from '@/store/weatherStore';
 import { MetricTabButton } from './components/MetricTabButton';
 import { MetricCheckboxGroup } from './components/MetricCheckboxGroup';
+import { DAILY_METRICS, HOURLY_METRICS } from '../constants';
 
 export const MetricsMultiselect = () => {
   const metrics = useWeatherStore(state => state.metrics);

@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Typography, Divider } from '@mui/material';
+import { Box, Typography, Divider, Paper } from '@mui/material';
 import { History, ArrowDropDown, ArrowDropUp } from '@mui/icons-material';
 import { useState } from 'react';
 import { useWeatherStore } from '@/store/weatherStore';
@@ -31,16 +31,13 @@ export const LocationHistoryList = ({ onSelect }: { onSelect: () => void }) => {
   if (!total) return null;
 
   return (
-    <Box
+    <Paper
+      elevation={1}
       sx={{
-        width: 360,
+        width: 340,
         height: 460,
         display: 'flex',
         flexDirection: 'column',
-        border: '1px solid #ddd',
-        borderRadius: 2,
-        backgroundColor: 'background.paper',
-        overflow: 'hidden',
       }}
     >
       <Box
@@ -70,9 +67,7 @@ export const LocationHistoryList = ({ onSelect }: { onSelect: () => void }) => {
             color: 'primary.main',
           }}
         >
-          <Typography variant='subtitle2' >
-            Clear history
-          </Typography>
+          <Typography variant='subtitle2'>Clear history</Typography>
         </Box>
       </Box>
 
@@ -143,7 +138,7 @@ export const LocationHistoryList = ({ onSelect }: { onSelect: () => void }) => {
           ))}
         </AnimatePresence>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { LocationData, TMetricTab, WeatherMetric } from '@/types/Weather';
+import { Country, LocationData, TMetricTab, WeatherMetric } from '@/types/Weather';
 import { create } from 'zustand';
 
 interface WeatherState {
@@ -8,12 +8,14 @@ interface WeatherState {
   metricMode: TMetricTab;
   location: LocationData | null;
   locationHistory: LocationData[];
+  selectedCountry: Country | null,
 
   setMetrics: (m: WeatherMetric[]) => void;
   setMetricMode: (mode: TMetricTab) => void;
   setLocation: (loc: LocationData | null) => void;
   addLocationToHistory: (loc: LocationData) => void;
   clearHistory: () => void;
+  setCountry: (val: Country | null) => void;
 }
 
 export const useWeatherStore = create<WeatherState>(set => {
@@ -29,6 +31,7 @@ export const useWeatherStore = create<WeatherState>(set => {
     metricMode: 'hourly',
     location: null,
     locationHistory: initialHistory,
+    selectedCountry: null,
 
     setMetrics: metrics => set({ metrics }),
     setMetricMode: mode => set({ metricMode: mode }),
@@ -56,5 +59,7 @@ export const useWeatherStore = create<WeatherState>(set => {
       }
       set({ locationHistory: [] });
     },
+
+    setCountry: selectedCountry => set({ selectedCountry }),
   };
 });

@@ -11,9 +11,9 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { METRICS, WeatherData, WeatherMetric} from '@/types/Weather';
+import { WeatherData, WeatherMetric} from '@/types/Weather';
 import { useResponsive } from '@/hooks/ui/useResponsive';
-import { getMetricColor } from '../../constants';
+import { getMetricColor, METRICS } from '../../constants';
 import { CustomTooltip } from './CustomTooltip';
 
 interface ChartRendererProps {

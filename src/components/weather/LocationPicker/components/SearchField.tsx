@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import {
   Box,
@@ -11,6 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
+import { useWeatherStore } from '@/store/weatherStore';
 
 interface SearchFieldProps {
   query: string;
@@ -31,8 +32,9 @@ export const SearchField = ({
   onClear,
   onConfirm,
 }: SearchFieldProps) => {
-  const showClearButton = isSelected || query;
-  const showConfirmButton = isSelected;
+  const selectedCountry = useWeatherStore(state => state.selectedCountry);
+  const showClearButton = (isSelected && !selectedCountry)|| query;
+  const showConfirmButton = isSelected && !selectedCountry;
 
   return (
     <TextField
@@ -82,6 +84,12 @@ export const SearchField = ({
               )}
             </Box>
           ),
+        },
+      }}
+      sx={{
+        backgroundColor: '#fff',
+        '&:hover fieldset': {
+          borderColor: '#6c81ce !important',
         },
       }}
     />

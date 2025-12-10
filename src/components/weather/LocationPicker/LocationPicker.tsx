@@ -13,6 +13,9 @@ import {
   formatCoordinates,
   parseNominatim,
 } from '@/lib/utils/weather/location';
+import { CountryDropdown } from './components/CountryDropdown';
+import { apolloClient } from '@/lib/graphql/apolloClient';
+import { ApolloProvider } from '@apollo/client/react';
 
 const MapComponent = dynamic(() => import('./components/MapComponent'), {
   ssr: false,
@@ -37,6 +40,7 @@ export const LocationPicker = () => {
   const addLocationToHistory = useWeatherStore(
     state => state.addLocationToHistory
   );
+  const setCountry = useWeatherStore(state => state.setCountry);
 
   const { suggestions, loading, error, clearSuggestions } =
     useLocationSearch(query);
@@ -59,14 +63,16 @@ export const LocationPicker = () => {
       setSelectedLocation(parsedLocation);
       setQuery(item.display_name);
       clearSuggestions();
+      setCountry(null);
     },
-    [clearSuggestions]
+    [clearSuggestions, setCountry]
   );
 
   const handleMapClick = useCallback((lat: number, lon: number) => {
     setSelectedLocation({ lat, lon });
     setQuery(formatCoordinates(lat, lon));
-  }, []);
+    setCountry(null);
+  }, [setCountry]);
 
   const clearSelection = useCallback(() => {
     setSelectedLocation(null);
@@ -86,7 +92,7 @@ export const LocationPicker = () => {
       <Collapse in={isMapExpanded} timeout={200}>
         <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
           <Box sx={{ flex: 1 }}>
-            <Box sx={{ position: 'relative' }}>
+            <Box sx={{ display: 'flex', position: 'relative' }}>
               <SearchField
                 query={query}
                 loading={loading}
@@ -96,6 +102,9 @@ export const LocationPicker = () => {
                 onClear={clearSelection}
                 onConfirm={handleConfirm}
               />
+              <ApolloProvider client={apolloClient}>
+                <CountryDropdown setSelectedLocation={setSelectedLocation} />
+              </ApolloProvider>
 
               <SuggestionList
                 suggestions={suggestions}
