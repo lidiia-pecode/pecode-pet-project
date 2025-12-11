@@ -44,7 +44,6 @@ export const createDataSlice: StateCreator<DataState> = (set, get) => {
   return {
     filters: defaultFilters,
     currentPage: 1,
-    // sortOption: SORT_OPTIONS.POPULAR_DESC,
     sortOption: SORT_OPTIONS.REVIEWS_DESC,
 
     updateFilters: changed => {

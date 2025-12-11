@@ -4,7 +4,6 @@ import { theme } from '../styles/theme';
 import { CssBaseline } from '@mui/material';
 import { Layout } from '@/components/layout';
 import { EmotionRegistry } from '@/providers/EmotionRegistry';
-// import './globals.css';
 
 export default function RootLayout({
   children,

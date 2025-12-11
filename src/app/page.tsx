@@ -1,9 +1,25 @@
+import { AuthForm } from '@/components/homepage/AuthForm';
+import LogoutButton from '@/components/homepage/LogoutButton';
+import { cookies } from 'next/headers';
+import { Typography, Stack } from '@mui/material';
 
-export default function Home() {
+export default async function Home() {
+  const cookieStore = cookies();
+  const accessToken = (await cookieStore).get('access_token')?.value;
+
+  if (!accessToken) {
+    return <AuthForm />;
+  }
+
   return (
-    <main >
-      <h1>Welcome to Pecode Pet Project</h1>
-      <p>Login page placeholder</p>
-    </main>
+    <>
+      <Typography variant='h4' fontWeight={700}>
+        Welcome to Pecode Pet Project
+      </Typography>
+      
+      <Stack direction='row' spacing={2} sx={{ mt: 2 }}>
+        <LogoutButton />
+      </Stack>
+    </>
   );
 }

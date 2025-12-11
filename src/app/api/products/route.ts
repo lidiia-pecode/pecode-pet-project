@@ -3,7 +3,7 @@ import { Product } from '@/types/Product';
 import { generateRandomRating } from '@/lib/utils/generateRandomRating';
 import { getPreparedProducts } from '@/lib/utils/getPreparedProducts';
 import { parseFiltersFromSearchParams } from '@/lib/utils/parseFilters';
-import { apiGet } from '@/lib/api/products/fetcher';
+import { apiGet } from '@/lib/api/fetcher';
 
 const DEFAULT_LIMIT = 6;
 

@@ -7,6 +7,7 @@ import { SortSelect } from './components/SortSelect';
 import { ViewModeSwitcher } from './components/ViewModeSwitcher';
 import { useProductsStore } from '@/store/productsStore';
 import { topBarStyles } from './ProductsTopBar.styles';
+import { AddProductButton } from './components/AddProductButton';
 
 export const ProductsTopBar = () => {
   const openFilters = useProductsStore(state => state.openFilters);
@@ -22,10 +23,11 @@ export const ProductsTopBar = () => {
           <Button
             variant='outlined'
             onClick={openFilters}
-            sx={{ display: { xs: 'inline-flex', md: 'none' } }}
+            sx={{ display: { xs: 'inline-flex', md: 'none' }, height: 40, mr: 2}}
           >
             Filters
           </Button>
+          <AddProductButton />
 
           <Box sx={{ display: { xs: 'none', md: 'block' } }}>
               <ActiveFiltersBar />

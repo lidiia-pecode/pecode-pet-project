@@ -3,7 +3,7 @@ import { ProductFilters } from '@/types/Filters';
 import { SortOption } from '@/types/Sort';
 import { buildQueryString } from '@/lib/utils/buildQueryString';
 import { generateRandomRating } from '../../utils/generateRandomRating';
-import { apiGet } from './fetcher';
+import { apiGet } from '../fetcher';
 
 interface GetProductsParams {
   page: number;

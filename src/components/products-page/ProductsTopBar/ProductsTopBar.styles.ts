@@ -19,6 +19,7 @@ export const topBarStyles: Record<string, SxProps<Theme>> = {
     flex: 1,
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
 
   viewModeSwitcherContainer: {

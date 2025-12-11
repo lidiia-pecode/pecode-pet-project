@@ -1,4 +1,4 @@
-import { apiGet } from '@/lib/api/products/fetcher';
+import { apiGet } from '@/lib/api/fetcher';
 import { generateRandomRating } from '@/lib/utils/generateRandomRating';
 import { Product } from '@/types/Product';
 import { TestWrapper } from './TestWrapper';
@@ -21,7 +21,7 @@ export default async function AboutPage() {
         fugiat fuga? Quia.
       </p>
 
-      <TestWrapper products={products}/>
+      <TestWrapper products={products} />
     </div>
   );
 }

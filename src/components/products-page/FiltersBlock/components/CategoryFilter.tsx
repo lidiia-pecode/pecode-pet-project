@@ -7,17 +7,12 @@ import {
   FormControlLabel,
   Skeleton,
 } from '@mui/material';
-import { getCategories } from '@/lib/api/products/categories';
-import { useQuery } from '@tanstack/react-query';
 import { CategorySlug } from '@/types/Categories';
 import { useProductsStore } from '@/store/productsStore';
+import { useCategories } from '@/hooks/categories/useCategories';
 
 export const CategoryFilter = () => {
-  const { data: categories, isLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: getCategories,
-    staleTime: 1000 * 60 * 60,
-  });
+  const { data: categories, isLoading } = useCategories();
 
   const selectedCategories = useProductsStore(
     state => state.filters.categories
