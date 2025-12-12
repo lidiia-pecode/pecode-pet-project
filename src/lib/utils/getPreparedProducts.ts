@@ -31,23 +31,6 @@ function filterProducts(products: Product[], filters: ProductFilters) {
   });
 }
 
-// function sortProducts(products: Product[], sortOption: SortOption) {
-//   return [...products].sort((a, b) => {
-//     switch (sortOption) {
-//       case SORT_OPTIONS.PRICE_ASC:
-//         return a.price - b.price;
-//       case SORT_OPTIONS.PRICE_DESC:
-//         return b.price - a.price;
-//       case SORT_OPTIONS.RATING_DESC:
-//         return b.rating.rate - a.rating.rate;
-//       case SORT_OPTIONS.POPULAR_DESC:
-//         return b.rating.count - a.rating.count;
-//       default:
-//         return 0;
-//     }
-//   });
-// }
-
 function sortProducts(products: Product[], sortOption: SortOption) {
   return [...products].sort((a, b) => {
     switch (sortOption) {
