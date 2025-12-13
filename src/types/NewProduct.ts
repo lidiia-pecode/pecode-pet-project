@@ -3,7 +3,7 @@ import { Product } from './Product';
 
 export const newProductSchema = z.object({
   title: z.string().min(1, 'Title is required'),
-  price: z.number().positive('Price must be greater than 0'),
+  price: z.number().positive(),
   description: z.string().min(1, 'Description is required'),
   categoryId: z.number(),
   images: z

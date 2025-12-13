@@ -1,6 +1,9 @@
 export const COLORS = [
   '#ff69b4',
   '#ff0080',
+  '#c4ff00',
+  '#ffa18d',
+  '#f3ff50',
   '#3b82f6',
   '#a855f7',
   '#ff6f61',
@@ -8,9 +11,6 @@ export const COLORS = [
   '#ffd500',
   '#ff6347',
   '#f754e3',
-  '#c4ff00',
-  '#ffa18d',
-  '#f3ff50',
 ] as const;
 
 export const getMetricColor = (metric: string, metrics: string[]) => {

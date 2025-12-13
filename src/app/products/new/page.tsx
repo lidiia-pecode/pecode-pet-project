@@ -1,21 +1,46 @@
 import { NewCategoryForm } from '@/components/new/NewCategoryForm';
 import { NewProductForm } from '@/components/new/NewProductForm';
-import { Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 
 export default function CreateProductPage() {
   return (
-    <>
-      <Typography variant='h4' sx={{margin: '0 auto 24px', width: 'fit-content'}}>
+    <Container maxWidth='xl'>
+      <Typography
+        variant='h4'
+        sx={{
+          textAlign: 'center',
+          mb: 4,
+        }}
+      >
         Manage Products & Categories
       </Typography>
 
-      <Container
-        maxWidth='lg'
-        sx={{ display: 'flex', gap: 8, alignContent: 'start', p: 0 }}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: {
+            xs: 'column',
+            lg: 'row',
+          },
+          justifyContent: 'center',
+          alignItems: {
+            xs: 'center',
+            lg: 'flex-start',
+          },
+          gap: {
+            xs: 4,
+            lg: 6,
+          },
+        }}
       >
-        <NewProductForm />
-        <NewCategoryForm />
-      </Container>
-    </>
+        <Box sx={{ width: '100%', maxWidth: 800 }}>
+          <NewProductForm />
+        </Box>
+
+        <Box sx={{ width: '100%', maxWidth: 800 }}>
+          <NewCategoryForm />
+        </Box>
+      </Box>
+    </Container>
   );
 }

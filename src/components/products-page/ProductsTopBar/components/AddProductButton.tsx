@@ -7,8 +7,7 @@ import { useRouter } from 'next/navigation';
 
 export const AddProductButton = () => {
   const router = useRouter();
-
-  const handleClick = () => router.push('/products/new');
+  const handleClick = () => router.push('/?next=/products/new');;
 
   return (
     <Tooltip title='Add Product' arrow>

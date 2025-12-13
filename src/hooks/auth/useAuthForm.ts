@@ -1,47 +1,41 @@
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { registerUser } from '@/lib/api/auth/registerUser';
 import { loginUser } from '@/lib/api/auth/loginUser';
 import { AuthMode, AuthFormData, RegisterFormData } from '@/types/Auth';
 
 export const useAuthForm = (
-  success: (msg: string) => void,
+  // success: (msg: string) => void,
   error: (msg: string) => void
 ) => {
   const [mode, setMode] = useState<AuthMode>('login');
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleModeSwitch = () => {
     setMode(prev => (prev === 'login' ? 'register' : 'login'));
   };
 
-  const onSubmit = async (data: AuthFormData, onSuccess: () => void) => {
+  const onSubmit = async (
+    data: AuthFormData,
+    onSuccess: () => void
+  ): Promise<boolean> => {
     setLoading(true);
 
     try {
       if (mode === 'register') {
-        const registerData = data as RegisterFormData;
-
-        await registerUser({
-          name: registerData.name!,
-          email: registerData.email,
-          password: registerData.password,
-        });
-
-        success('Registration successful! You can now log in.');
-        setMode('login');
-        onSuccess();
+        const { name, email, password } = data as RegisterFormData;
+        await registerUser({ name, email, password });
+        await loginUser({ email, password });
+        // success('Registration successful! You are now logged in.');
       } else {
         await loginUser(data);
-
-        router.refresh();
-        success('Welcome back!');
-        onSuccess();
+        // success('Welcome back!');
       }
+      onSuccess();
+      return true;
     } catch (err) {
-      console.log(err);
+      console.error(err);
       error('Something went wrong');
+      return false;
     } finally {
       setLoading(false);
     }

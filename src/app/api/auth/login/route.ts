@@ -28,6 +28,7 @@ export async function POST(req: Request) {
       path: '/',
       maxAge: 60 * 60,
     });
+    
     res.cookies.set('refresh_token', data.refresh_token, {
       httpOnly: true,
       secure: true,
