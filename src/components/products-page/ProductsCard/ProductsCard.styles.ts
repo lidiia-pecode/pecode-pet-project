@@ -1,7 +1,7 @@
 import { Theme } from '@emotion/react';
 import { SxProps } from '@mui/material';
 
-export const baseStyles: Record<string, SxProps<Theme>> = {
+export const cardStyles = {
   cardGrid: {
     cursor: 'pointer',
     '&:hover': { boxShadow: 6 },
@@ -42,4 +42,4 @@ export const baseStyles: Record<string, SxProps<Theme>> = {
     gap: 1,
     mt: 1,
   },
-};
+} satisfies Record<string, SxProps<Theme>>;

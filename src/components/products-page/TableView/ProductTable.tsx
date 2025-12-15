@@ -5,7 +5,7 @@ import { SortingState } from '@tanstack/react-table';
 
 import { useProducts } from '@/hooks/products/useProducts';
 import { useProductColumns } from './components/ProductColumns';
-import { TanstackTable } from '../../TanstackTable/TanstackTable';
+import { TanstackTable } from '../../shared/TanstackTable/TanstackTable';
 import { useProductsStore } from '@/store/productsStore';
 
 export const ProductTable = () => {

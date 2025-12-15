@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useProductsStore } from '@/store/productsStore';
+import { searchBarStyles } from '../ProductsTopBar.styles';
 
 export const SearchBar = () => {
   const searchQuery = useProductsStore(state => state.filters.searchQuery);
@@ -52,10 +53,7 @@ export const SearchBar = () => {
           ),
         },
       }}
-      sx={{
-        bgcolor: 'background.paper',
-        borderRadius: 2,
-      }}
+      sx={searchBarStyles.textField}
     />
   );
 };

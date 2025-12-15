@@ -1,19 +1,20 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { LocationData } from '@/types/Weather';
 import { MAP_CONFIG } from '../../constants';
+import { CSSProperties } from '@mui/material';
 
-interface MapComponentProps {
-  selected?: LocationData | null;
-  onClick?: (lat: number, lon: number) => void;
-}
-
-const createMarkerElement = (): HTMLDivElement => {
-  const el = document.createElement('div');
-  Object.assign(el.style, {
+const mapStyles: Record<string, CSSProperties> = {
+  container: {
+    width: '100%',
+    height: '100%',
+    borderRadius: '8px',
+    overflow: 'hidden',
+  },
+  marker: {
     width: '20px',
     height: '20px',
     background: '#1976d2',
@@ -21,11 +22,22 @@ const createMarkerElement = (): HTMLDivElement => {
     boxShadow: '0 0 0 6px rgba(25,118,210,0.35)',
     border: '2px solid white',
     cursor: 'pointer',
-  });
+  },
+};
+
+interface MapComponentProps {
+  selected?: LocationData | null;
+  setShowSuggestions: Dispatch<SetStateAction<boolean>>
+  onClick?: (lat: number, lon: number) => void;
+}
+
+const createMarkerElement = (): HTMLDivElement => {
+  const el = document.createElement('div');
+  Object.assign(el.style, mapStyles.marker);
   return el;
 };
 
-export default function MapComponent({ selected, onClick }: MapComponentProps) {
+export default function MapComponent({ selected, setShowSuggestions, onClick }: MapComponentProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markerRef = useRef<maplibregl.Marker | null>(null);
@@ -55,13 +67,14 @@ export default function MapComponent({ selected, onClick }: MapComponentProps) {
 
     const handleClick = (e: maplibregl.MapMouseEvent) => {
       onClick(e.lngLat.lat, e.lngLat.lng);
+      setShowSuggestions(true);
     };
 
     map.on('click', handleClick);
     return () => {
       map.off('click', handleClick);
     };
-  }, [onClick]);
+  }, [onClick, setShowSuggestions]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -90,12 +103,7 @@ export default function MapComponent({ selected, onClick }: MapComponentProps) {
   return (
     <div
       ref={mapContainerRef}
-      style={{
-        width: '100%',
-        height: '100%',
-        borderRadius: '8px',
-        overflow: 'hidden',
-      }}
+      style={mapStyles.container}
     />
   );
 }

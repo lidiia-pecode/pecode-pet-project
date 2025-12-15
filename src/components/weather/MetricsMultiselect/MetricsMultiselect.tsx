@@ -7,6 +7,7 @@ import { useWeatherStore } from '@/store/weatherStore';
 import { MetricTabButton } from './components/MetricTabButton';
 import { MetricCheckboxGroup } from './components/MetricCheckboxGroup';
 import { DAILY_METRICS, HOURLY_METRICS } from '../constants';
+import { metricsMultiselectStyles } from './MetricsMultiselect.styles';
 
 export const MetricsMultiselect = () => {
   const metrics = useWeatherStore(state => state.metrics);
@@ -29,8 +30,8 @@ export const MetricsMultiselect = () => {
   };
 
   return (
-    <Box sx={{ width: '100%', mb: 3 }}>
-      <Box sx={{ display: 'flex', mb: 2, borderBottom: '1px solid #ccc' }}>
+    <Box sx={metricsMultiselectStyles.multiselectRoot}>
+      <Box sx={metricsMultiselectStyles.tabContainer}>
         {METRIC_TABS.map(tab => (
           <MetricTabButton
             key={tab.id}
@@ -42,17 +43,15 @@ export const MetricsMultiselect = () => {
         ))}
       </Box>
 
-      <Box sx={{ overflow: 'hidden', width: '100%' }}>
+      <Box sx={metricsMultiselectStyles.tabContentWrapper}>
         <Box
           sx={{
-            display: 'flex',
-            width: '200%',
+            ...metricsMultiselectStyles.tabContentInner,
             transform:
               metricMode === 'hourly' ? 'translateX(0%)' : 'translateX(-50%)',
-            transition: 'transform 0.3s ease',
           }}
         >
-          <Box sx={{ width: '50%', p: 1 }}>
+          <Box sx={metricsMultiselectStyles.tabPane}>
             <MetricCheckboxGroup
               metrics={HOURLY_METRICS}
               activeMetrics={metrics}
@@ -60,7 +59,7 @@ export const MetricsMultiselect = () => {
             />
           </Box>
 
-          <Box sx={{ width: '50%', p: 1 }}>
+          <Box sx={metricsMultiselectStyles.tabPane}>
             <MetricCheckboxGroup
               metrics={DAILY_METRICS}
               activeMetrics={metrics}

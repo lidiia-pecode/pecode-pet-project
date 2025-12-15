@@ -2,7 +2,15 @@
 
 import { useProducts } from '@/hooks/products/useProducts';
 import { useProductsStore } from '@/store/productsStore';
-import { Stack, Pagination } from '@mui/material';
+import { Theme } from '@emotion/react';
+import { Stack, Pagination, SxProps } from '@mui/material';
+
+const productsPaginationStyles = {
+  stack: {
+    mt: 4,
+    alignItems: 'center',
+  },
+} satisfies Record<string, SxProps<Theme>>;
 
 export const ProductsPagination = () => {
   const { data } = useProducts();
@@ -16,7 +24,7 @@ export const ProductsPagination = () => {
   }
 
   return (
-    <Stack spacing={2} alignItems='center' mt={4}>
+    <Stack spacing={2} sx={productsPaginationStyles.stack}>
       <Pagination
         count={totalPages}
         page={currentPage}

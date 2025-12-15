@@ -1,7 +1,6 @@
 'use client';
 
 import { useProductsStore } from '@/store/productsStore';
-import { theme } from '@/styles/theme';
 import { SORT_LABELS, SortOption } from '@/types/Sort';
 import {
   FormControl,
@@ -10,6 +9,7 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
+import { sortSelectStyles } from '../ProductsTopBar.styles';
 
 export const SortSelect = () => {
   const sortOption = useProductsStore(state => state.sortOption);
@@ -25,15 +25,7 @@ export const SortSelect = () => {
   }
 
   return (
-    <FormControl
-      size='small'
-      sx={{
-        minWidth: 160,
-        [theme.breakpoints.up('sm')]: {
-          minWidth: 200,
-        },
-      }}
-    >
+    <FormControl size='small' sx={sortSelectStyles.formControl}>
       <InputLabel id='sort-label'>Sort by</InputLabel>
       <Select
         labelId='sort-label'

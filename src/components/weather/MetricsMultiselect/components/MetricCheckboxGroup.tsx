@@ -1,7 +1,8 @@
 'use client';
 
 import { Box, Checkbox, FormControlLabel } from '@mui/material';
-import {MetricItem, WeatherMetric } from '@/types/Weather';
+import { MetricItem, WeatherMetric } from '@/types/Weather';
+import {metricCheckboxGroupStyles} from '../MetricsMultiselect.styles'
 
 interface Props {
   metrics: readonly MetricItem[];
@@ -11,13 +12,7 @@ interface Props {
 
 export const MetricCheckboxGroup = ({ metrics, activeMetrics, onToggle }: Props) => {
   return (
-    <Box
-      sx={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-        gap: 1,
-      }}
-    >
+    <Box sx={metricCheckboxGroupStyles.checkboxWrapper}>
       {metrics.map(metric => (
         <FormControlLabel
           key={metric.value}

@@ -2,6 +2,7 @@
 import { useRangeFilter } from '@/hooks/products/useRangeFilter';
 import { useProductsStore } from '@/store/productsStore';
 import { Box, Typography, Slider } from '@mui/material';
+import { sliderFilterStyles } from '../FiltersBlock.styles';
 
 export const PriceFilter = () => {
   const price = useProductsStore(state => state.filters.price);
@@ -18,24 +19,16 @@ export const PriceFilter = () => {
 
   return (
     <Box>
-      <Typography variant='subtitle1' fontWeight={600} gutterBottom>
+      <Typography variant='subtitle1' sx={sliderFilterStyles.title} gutterBottom>
         Price
       </Typography>
 
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontSize: 13,
-          mb: 0.5,
-          color: 'text.secondary',
-        }}
-      >
+      <Box sx={sliderFilterStyles.valueContainer}>
         <span>₴{localValue[0]}</span>
         <span>₴{localValue[1]}</span>
       </Box>
 
-      <Box sx={{ px: 1 }}>
+      <Box sx={sliderFilterStyles.sliderContainer}>
         <Slider
           value={localValue}
           onChange={handleChange}

@@ -4,8 +4,8 @@ import { Box } from '@mui/material';
 import { useProducts } from '@/hooks/products/useProducts';
 import { ProductsCard } from '../ProductsCard/ProductsCard';
 import { ProductsGridSkeleton } from './components/ProductsGridSkeleton';
-import { EmptyState } from '../ProductsList/components/EmptyState';
-import { cardViewStyles } from './ProductsGridView.styles';
+import { productsGridViewStyles } from './ProductsGridView.styles';
+import { EmptyState } from './components/EmptyState';
 
 export const ProductsGridView = () => {
   const { data, isLoading } = useProducts();
@@ -19,7 +19,7 @@ export const ProductsGridView = () => {
   }
 
   return (
-    <Box sx={cardViewStyles}>
+    <Box sx={productsGridViewStyles.cardsContainer}>
       {data.products.map(product => (
         <ProductsCard key={product.id} product={product} />
       ))}

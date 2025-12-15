@@ -14,7 +14,7 @@ import { useWeatherStore } from '@/store/weatherStore';
 import { useState, useMemo } from 'react';
 import { ChartRenderer } from './components/ChartRenderer';
 import { LocationData, WeatherData, WeatherMetric } from '@/types/Weather';
-import { STYLES } from './weatherChart.styles';
+import { weatherChartStyles } from './weatherChart.styles';
 
 interface CachedWeatherState {
   data: WeatherData;
@@ -73,7 +73,7 @@ export const WeatherChart = () => {
           fullWidth
           variant='contained'
           disabled={!canFetch || isLoading}
-          sx={STYLES.button}
+          sx={weatherChartStyles.button}
           onClick={handleFetchWeather}
         >
           {isLoading && <CircularProgress size={20} sx={{ color: 'white' }} />}
@@ -86,7 +86,7 @@ export const WeatherChart = () => {
   return (
     <Box sx={{ width: '100%', mt: 2 }}>
       <Box sx={{ position: 'relative' }}>
-        <Box sx={STYLES.header}>
+        <Box sx={weatherChartStyles.header}>
           <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
             Weather Forecast
           </Typography>
@@ -106,7 +106,13 @@ export const WeatherChart = () => {
 
         {chartExpanded && (
           <>
-            <Box sx={STYLES.chartContainer(shouldBlurChart)}>
+            <Box
+              sx={{
+                ...weatherChartStyles.chartContainer,
+                filter: shouldBlurChart ? 'blur(2px)' : 'none',
+                pointerEvents: shouldBlurChart ? 'none' : 'initial',
+              }}
+            >
               <ChartRenderer
                 data={cachedState.data}
                 metrics={cachedState.metrics}
@@ -114,11 +120,11 @@ export const WeatherChart = () => {
             </Box>
 
             {hasParametersChanged && (
-              <Box sx={STYLES.overlay}>
+              <Box sx={weatherChartStyles.overlay}>
                 <Button
                   variant='contained'
                   disabled={!canFetch || isFetching}
-                  sx={STYLES.overlayButton}
+                  sx={weatherChartStyles.overlayButton}
                   onClick={handleFetchWeather}
                 >
                   {isFetching && (

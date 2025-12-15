@@ -12,6 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ErrorIcon from '@mui/icons-material/Error';
 import { useWeatherStore } from '@/store/weatherStore';
+import { searchFieldStyles } from '../LocationPicker.styles';
 
 interface SearchFieldProps {
   query: string;
@@ -49,9 +50,9 @@ export const SearchField = ({
       variant='outlined'
       slotProps={{
         input: {
-          startAdornment: <SearchIcon sx={{ mr: 1, color: 'action.active' }} />,
+          startAdornment: <SearchIcon sx={searchFieldStyles.startAdornment} />,
           endAdornment: (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+            <Box sx={searchFieldStyles.endAdornmentWrapper}>
               {loading && <CircularProgress size={18} />}
 
               {error && (
@@ -73,11 +74,7 @@ export const SearchField = ({
                   <IconButton onClick={onConfirm}>
                     <CheckCircleIcon
                       fontSize='medium'
-                      sx={{
-                        color: '#68b04c',
-                        boxShadow: '0 0 10px rgba(94, 166, 0, 0.6)',
-                        borderRadius: '50%',
-                      }}
+                      sx={searchFieldStyles.confirmIcon}
                     />
                   </IconButton>
                 </Tooltip>
@@ -86,12 +83,7 @@ export const SearchField = ({
           ),
         },
       }}
-      sx={{
-        backgroundColor: '#fff',
-        '&:hover fieldset': {
-          borderColor: '#6c81ce !important',
-        },
-      }}
+      sx={searchFieldStyles.textField}
     />
   );
 };

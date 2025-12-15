@@ -2,6 +2,7 @@
 
 import { TMetricTab } from '@/types/Weather';
 import { Box } from '@mui/material';
+import { metricTabButtonStyles } from '../MetricsMultiselect.styles';
 
 interface Props {
   tab: TMetricTab;
@@ -14,13 +15,10 @@ export const MetricTabButton = ({ tab, active, label, onClick }: Props) => {
   return (
     <Box
       sx={{
-        flex: 1,
-        textAlign: 'center',
-        py: 1,
-        fontWeight: 600,
-        cursor: 'pointer',
-        color: active ? '#fff' : 'text.secondary',
-        backgroundColor: active ? 'primary.main' : 'grey.100',
+        ...metricTabButtonStyles.baseButton,
+        ...(active
+          ? metricTabButtonStyles.activeButton
+          : metricTabButtonStyles.inactiveButton),
       }}
       onClick={() => onClick(tab)}
     >

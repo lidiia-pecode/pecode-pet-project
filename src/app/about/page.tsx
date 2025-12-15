@@ -1,16 +1,4 @@
-import { apiGet } from '@/lib/api/fetcher';
-import { generateRandomRating } from '@/lib/utils/generateRandomRating';
-import { Product } from '@/types/Product';
-import { TestWrapper } from './TestWrapper';
-
 export default async function AboutPage() {
-  let products = await apiGet<Product[]>('/products');
-
-  products = products.map(p => ({
-    ...p,
-    rating: generateRandomRating(),
-  }));
-
   return (
     <div>
       <h1>About this project</h1>
@@ -20,8 +8,6 @@ export default async function AboutPage() {
         officiis! Ex, maxime ut? Alias omnis, consequuntur ut similique nobis
         fugiat fuga? Quia.
       </p>
-
-      <TestWrapper products={products} />
     </div>
   );
 }

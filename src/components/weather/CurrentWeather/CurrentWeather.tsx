@@ -20,6 +20,7 @@ import {
 import WeatherAdvice from './components/WeatherAdvice';
 import { WeatherStats } from './components/WeatherStats';
 import { CurrentWeatherSkeleton } from './components/CurrentWeatherSkeleton';
+import { currentWeatherStyles as styles } from './CurrentWeather.styles';
 
 export const CurrentWeather = () => {
   const { data, isLoading } = useCurrentWeatherQuery();
@@ -41,19 +42,11 @@ export const CurrentWeather = () => {
   return (
     <Paper
       sx={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        borderRadius: 3,
-        position: 'relative',
-        background: isDay ? '#ffffff' : '#0f1e40',
-        color: isDay ? '#000' : '#fff',
-        boxShadow: '0 0 20px rgba(0,0,0,0.1)',
-        overflow: 'hidden',
-        mb: 3,
+        ...styles.rootBase,
+        ...(isDay ? styles.day : styles.night),
       }}
     >
-      <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+      <Box sx={styles.icon}>
         {isDay ? (
           <WbSunnyIcon fontSize='large' />
         ) : (
@@ -63,18 +56,12 @@ export const CurrentWeather = () => {
 
       <Typography
         variant='h5'
-        sx={{
-          position: 'absolute',
-          top: 16,
-          left: 16,
-          fontWeight: 600,
-          maxWidth: 320
-        }}
+        sx={styles.title}
       >
         {locationTitle}
       </Typography>
 
-      <Box sx={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+      <Box sx={styles.content}>
         <Image
           src={path}
           alt={description}

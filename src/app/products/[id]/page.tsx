@@ -1,9 +1,9 @@
 import { Box, Container } from '@mui/material';
 import { getProductById } from '@/lib';
-import { ImageCarousel } from '@/components/productDetails-page/ImageCarousel';
-import { ProductInfo } from '@/components/productDetails-page/ProductInfo';
-import { ProductAdditional } from '@/components/productDetails-page/ProductAdditional';
-import { ProductBreadcrumbs } from '@/components/productDetails-page/ProductBreadcrumbs';
+import { ImageCarousel } from '@/components/product-details-page/ImageCarousel';
+import { ProductInfo } from '@/components/product-details-page/ProductInfo';
+import { ProductAdditional } from '@/components/product-details-page/ProductAdditional';
+import { ProductBreadcrumbs } from '@/components/product-details-page/ProductBreadcrumbs';
 
 interface ProductPageProps {
   params: { id: string };

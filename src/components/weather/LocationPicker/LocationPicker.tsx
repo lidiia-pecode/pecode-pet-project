@@ -16,6 +16,7 @@ import {
 import { CountryDropdown } from './components/CountryDropdown';
 import { apolloClient } from '@/lib/graphql/apolloClient';
 import { ApolloProvider } from '@apollo/client/react';
+import { locationPickerStyles } from './LocationPicker.styles';
 
 const MapComponent = dynamic(() => import('./components/MapComponent'), {
   ssr: false,
@@ -33,6 +34,11 @@ export const LocationPicker = () => {
   const [selectedLocation, setSelectedLocation] = useState<LocationData | null>(
     null
   );
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const handleQueryChange = useCallback((value: string) => {
+    setQuery(value);
+    setShowSuggestions(true);
+  }, []);
 
   const location = useWeatherStore(state => state.location);
   const setLocation = useWeatherStore(state => state.setLocation);
@@ -64,15 +70,19 @@ export const LocationPicker = () => {
       setQuery(item.display_name);
       clearSuggestions();
       setCountry(null);
+      setShowSuggestions(false);
     },
     [clearSuggestions, setCountry]
   );
 
-  const handleMapClick = useCallback((lat: number, lon: number) => {
-    setSelectedLocation({ lat, lon });
-    setQuery(formatCoordinates(lat, lon));
-    setCountry(null);
-  }, [setCountry]);
+  const handleMapClick = useCallback(
+    (lat: number, lon: number) => {
+      setSelectedLocation({ lat, lon });
+      setQuery(formatCoordinates(lat, lon));
+      setCountry(null);
+    },
+    [setCountry]
+  );
 
   const clearSelection = useCallback(() => {
     setSelectedLocation(null);
@@ -81,7 +91,7 @@ export const LocationPicker = () => {
   }, [clearSuggestions]);
 
   return (
-    <Box sx={{ width: '100%', mb: 2 }}>
+    <Box sx={locationPickerStyles.root}>
       <HeaderToggleButton
         isOpen={isMapExpanded}
         isSelected={location !== null}
@@ -90,15 +100,15 @@ export const LocationPicker = () => {
       />
 
       <Collapse in={isMapExpanded} timeout={200}>
-        <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
-          <Box sx={{ flex: 1 }}>
-            <Box sx={{ display: 'flex', position: 'relative' }}>
+        <Box sx={locationPickerStyles.collapseContent}>
+          <Box sx={locationPickerStyles.leftPanel}>
+            <Box sx={locationPickerStyles.searchWrapper}>
               <SearchField
                 query={query}
                 loading={loading}
                 error={error}
                 isSelected={selectedLocation !== null}
-                onChange={setQuery}
+                onChange={handleQueryChange}
                 onClear={clearSelection}
                 onConfirm={handleConfirm}
               />
@@ -107,14 +117,15 @@ export const LocationPicker = () => {
               </ApolloProvider>
 
               <SuggestionList
-                suggestions={suggestions}
+                suggestions={showSuggestions ? suggestions : []}
                 onSelect={handleSuggestionClick}
               />
             </Box>
 
-            <Box sx={{ width: '100%', height: 420 }}>
+            <Box sx={locationPickerStyles.mapWrapper}>
               <MapComponent
                 selected={selectedLocation}
+                setShowSuggestions={setShowSuggestions}
                 onClick={handleMapClick}
               />
             </Box>

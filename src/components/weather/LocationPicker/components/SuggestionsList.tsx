@@ -1,4 +1,5 @@
 import { Paper, List, ListItemButton, ListItemText } from '@mui/material';
+import { suggestionListStyles } from '../LocationPicker.styles';
 interface NominatimResult {
   place_id: number;
   display_name: string;
@@ -18,16 +19,7 @@ export const SuggestionList = ({
   if (suggestions.length === 0) return null;
 
   return (
-    <Paper
-      elevation={3}
-      sx={{
-        position: 'absolute',
-        top: '105%',
-        left: 0,
-        right: 0,
-        zIndex: 20,
-      }}
-    >
+    <Paper elevation={3} sx={suggestionListStyles.paper}>
       <List dense>
         {suggestions.map((s: NominatimResult) => (
           <ListItemButton key={s.place_id} onClick={() => onSelect(s)}>

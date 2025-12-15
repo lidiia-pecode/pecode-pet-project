@@ -1,26 +1,26 @@
 'use client';
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Card, CardContent, Box, Typography, Button } from '@mui/material';
 import type { Product } from '@/types/Product';
-import { baseStyles } from './ProductsCard.styles';
 import { ProductRating } from '../shared/ProductRating';
 import { useRouter } from 'next/navigation';
+import { cardStyles } from './ProductsCard.styles';
 
 interface ProductsCardProps {
   product: Product;
 }
-const ProductsCardComponent: React.FC<ProductsCardProps> = ({ product }) => {
+const ProductsCardComponent = ({ product }: ProductsCardProps) => {
   const image = product.images?.[0] ?? '/placeholder.png';
 
   const router = useRouter();
-  const handleOpenProduct = useCallback(() => {
+  const handleOpenProduct = () => {
     router.push(`/products/${product.id}`);
-  }, [router, product.id]);
+  };
 
   return (
     <Card
-      sx={baseStyles.cardGrid}
+      sx={cardStyles.cardGrid}
       onClick={handleOpenProduct}
       role='button'
       tabIndex={0}
@@ -29,18 +29,20 @@ const ProductsCardComponent: React.FC<ProductsCardProps> = ({ product }) => {
         component='img'
         src={image}
         alt={product.title}
-        sx={baseStyles.imageGrid}
+        sx={cardStyles.imageGrid}
       />
 
       <CardContent sx={{ flexGrow: 1 }}>
-        <Typography variant='h6' sx={baseStyles.title}>{product.title}</Typography>
+        <Typography variant='h6' sx={cardStyles.title}>
+          {product.title}
+        </Typography>
 
-        <Typography sx={baseStyles.description}>
+        <Typography sx={cardStyles.description}>
           {product.description}
         </Typography>
 
-        <Box sx={baseStyles.priceRow}>
-          <Typography sx={baseStyles.price}>${product.price}</Typography>
+        <Box sx={cardStyles.priceRow}>
+          <Typography sx={cardStyles.price}>${product.price}</Typography>
 
           <Box sx={{ ml: 1 }}>
             <ProductRating
@@ -53,7 +55,12 @@ const ProductsCardComponent: React.FC<ProductsCardProps> = ({ product }) => {
         </Box>
       </CardContent>
 
-      <Button fullWidth variant='contained' size='large' sx={{borderRadius: 0}}>
+      <Button
+        fullWidth
+        variant='contained'
+        size='large'
+        sx={{ borderRadius: 0 }}
+      >
         View
       </Button>
     </Card>

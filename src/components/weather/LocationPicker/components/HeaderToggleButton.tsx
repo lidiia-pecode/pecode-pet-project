@@ -3,6 +3,7 @@ import RoomIcon from '@mui/icons-material/Room';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { LocationData } from '@/types/Weather';
 import { formatCoordinates } from '@/lib/utils/weather/location';
+import { headerToggleButtonStyles } from '../LocationPicker.styles';
 
 interface Props {
   isOpen: boolean;
@@ -23,30 +24,12 @@ export const HeaderToggleButton = ({
       fullWidth
       variant='outlined'
       color='primary'
-      sx={{
-        justifyContent: 'flex-start',
-        paddingY: 1.2,
-        borderRadius: 2,
-        textTransform: 'none',
-        transition: '0.2s',
-        backgroundColor: 'background.paper',
-        '&:hover': {
-          backgroundColor: '#edf2fa',
-        },
-      }}
+      sx={headerToggleButtonStyles.button}
     >
-      <RoomIcon color='primary' sx={{ mr: 1 }} />
+      <RoomIcon color='primary' sx={headerToggleButtonStyles.icon} />
 
-      <Box
-        sx={{
-          flexGrow: 1,
-          textAlign: 'left',
-          display: 'flex',
-          gap: 2,
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>
+      <Box sx={headerToggleButtonStyles.contentBox}>
+        <Typography variant='subtitle1' sx={headerToggleButtonStyles.mainText}>
           {isSelected ? 'Change Location' : 'Choose Location'}
         </Typography>
 
@@ -59,10 +42,11 @@ export const HeaderToggleButton = ({
       </Box>
 
       <ExpandMoreIcon
-        sx={{
-          transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-          transition: '0.2s',
-        }}
+        sx={
+          isOpen
+            ? headerToggleButtonStyles.expandIconOpen
+            : headerToggleButtonStyles.expandIconClosed
+        }
       />
     </Button>
   );

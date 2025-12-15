@@ -21,6 +21,7 @@ import { GET_COUNTRIES } from '@/lib/graphql/query/getCountries';
 import { getCountryCoordinates } from '@/lib/utils/weather/getCountryCoordinates';
 import { Country, GetCountriesData, LocationData } from '@/types/Weather';
 import { useWeatherStore } from '@/store/weatherStore';
+import { countryDropdownStyles } from '../LocationPicker.styles';
 
 
 
@@ -59,11 +60,7 @@ export const CountryDropdown = ({
       fullWidth
       variant='contained'
       onClick={toggleOpen}
-      sx={{
-        height: 40,
-        lineHeight: 1,
-        '&:hover': { backgroundColor: '#899ad8' },
-      }}
+      sx={countryDropdownStyles.button}
     >
       {selectedCountry?.name || 'Select a Country'}
     </Button>
@@ -72,20 +69,7 @@ export const CountryDropdown = ({
   const renderDropdown = (): ReactNode => (
     <Paper
       elevation={1}
-      sx={{
-        position: 'absolute',
-        top: 46,
-        left: 0,
-        right: 0,
-        zIndex: 30,
-        maxHeight: 414,
-        overflowY: 'auto',
-        '::-webkit-scrollbar': { width: '5px' },
-        '::-webkit-scrollbar-thumb': {
-          backgroundColor: '#eee',
-          borderRadius: '8px',
-        },
-      }}
+      sx={countryDropdownStyles.dropdown}
     >
       <List sx={{ pl: 0.5 }}>
         {countries.map(c => (
@@ -107,7 +91,7 @@ export const CountryDropdown = ({
 
   return (
     <ClickAwayListener onClickAway={closeDropdown}>
-      <Box sx={{ width: 300, position: 'relative' }}>
+      <Box sx={countryDropdownStyles.container}>
         {renderButton()}
         {open && renderDropdown()}
       </Box>

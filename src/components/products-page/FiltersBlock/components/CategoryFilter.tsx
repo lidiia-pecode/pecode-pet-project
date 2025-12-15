@@ -5,11 +5,12 @@ import {
   Checkbox,
   FormGroup,
   FormControlLabel,
-  Skeleton,
 } from '@mui/material';
 import { CategorySlug } from '@/types/Categories';
 import { useProductsStore } from '@/store/productsStore';
 import { useCategories } from '@/hooks/categories/useCategories';
+import { categoryFilterStyles } from '../FiltersBlock.styles';
+import { CategoryFilterSkeleton } from './CategoryFilterSkeleton';
 
 export const CategoryFilter = () => {
   const { data: categories, isLoading } = useCategories();
@@ -30,26 +31,17 @@ export const CategoryFilter = () => {
 
   return (
     <Box>
-      <Typography variant='subtitle1' fontWeight={600} gutterBottom>
+      <Typography
+        variant='subtitle1'
+        sx={categoryFilterStyles.title}
+        gutterBottom
+      >
         Categories
       </Typography>
 
-      <FormGroup sx={{ minHeight: 200 }}>
+      <FormGroup sx={categoryFilterStyles.formGroup}>
         {isLoading
-          ? Array.from({ length: 5 }).map((_, i) => (
-              <Box
-                key={i}
-                sx={{ display: 'flex', alignItems: 'center', m: 1, ml: 0 }}
-              >
-                <Skeleton
-                  variant='rectangular'
-                  width={16}
-                  height={16}
-                  sx={{ mr: 1 }}
-                />
-                <Skeleton variant='text' width='50%' />
-              </Box>
-            ))
+          ? <CategoryFilterSkeleton />
           : categories?.map(category => (
               <FormControlLabel
                 key={category.id}

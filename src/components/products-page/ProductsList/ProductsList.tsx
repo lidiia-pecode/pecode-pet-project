@@ -3,8 +3,8 @@
 import { Box, CircularProgress } from '@mui/material';
 import { useProductsStore } from '@/store/productsStore';
 import { ProductsGridView } from '../ProductsGridView/ProductsGridView';
-import { emptyBox } from './ProductsList.styles';
 import { ProductTable } from '../TableView/ProductTable';
+import { centeredBox } from '../shared/styles';
 
 export const ProductsList = () => {
   const viewMode = useProductsStore(state => state.viewMode);
@@ -12,7 +12,7 @@ export const ProductsList = () => {
 
   if (!hasHydrated) {
     return (
-      <Box sx={emptyBox}>
+      <Box sx={centeredBox}>
         <CircularProgress />
       </Box>
     );

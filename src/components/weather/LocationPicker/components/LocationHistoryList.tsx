@@ -7,6 +7,7 @@ import { useWeatherStore } from '@/store/weatherStore';
 import { LocationData } from '@/types/Weather';
 import { formatCoordinates } from '@/lib/utils/weather/location';
 import { AnimatePresence, motion } from 'framer-motion';
+import { locationHistoryListStyles } from '../LocationPicker.styles';
 
 export const LocationHistoryList = ({ onSelect }: { onSelect: () => void }) => {
   const locationHistory = useWeatherStore(state => state.locationHistory);
@@ -31,69 +32,24 @@ export const LocationHistoryList = ({ onSelect }: { onSelect: () => void }) => {
   if (!total) return null;
 
   return (
-    <Paper
-      elevation={1}
-      sx={{
-        width: 340,
-        height: 460,
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <Box
-        sx={{
-          px: 1.5,
-          py: 1,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 1,
-          backgroundColor: '#edf2fa',
-        }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Paper elevation={1} sx={locationHistoryListStyles.root}>
+      <Box sx={locationHistoryListStyles.header}>
+        <Box sx={locationHistoryListStyles.headerTitle}>
           <History fontSize='small' sx={{ opacity: 0.7 }} />
           <Typography variant='subtitle2' sx={{ fontWeight: 500 }}>
             Recent locations
           </Typography>
         </Box>
 
-        <Box
-          onClick={clearHistory}
-          sx={{
-            py: 1,
-            cursor: 'pointer',
-            borderRadius: 1,
-            color: 'primary.main',
-          }}
-        >
+        <Box onClick={clearHistory} sx={locationHistoryListStyles.clearButton}>
           <Typography variant='subtitle2'>Clear history</Typography>
         </Box>
       </Box>
 
-      <Box
-        sx={{
-          flex: 1,
-          overflowY: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <Box sx={locationHistoryListStyles.listContainer}>
         {total > DEFAULT_VISIBLE && (
           <Box
-            sx={{
-              px: 1,
-              py: 0.7,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 0.7,
-              cursor: 'pointer',
-              color: 'primary.main',
-              fontSize: 13,
-              '&:hover': { bgcolor: 'grey.100' },
-              borderBottom: '1px solid #eee',
-            }}
+            sx={locationHistoryListStyles.loadMoreButton}
             onClick={allShown ? handleShowRecent : handleLoadPrevious}
           >
             <Typography variant='caption'>
@@ -121,12 +77,7 @@ export const LocationHistoryList = ({ onSelect }: { onSelect: () => void }) => {
               }}
             >
               <Box
-                sx={{
-                  px: 1.5,
-                  py: 1,
-                  cursor: 'pointer',
-                  '&:hover': { bgcolor: 'grey.100' },
-                }}
+                sx={locationHistoryListStyles.listItem}
                 onClick={() => handleSelect(loc)}
               >
                 <Typography fontSize={14}>

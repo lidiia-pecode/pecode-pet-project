@@ -2,6 +2,7 @@
 import { useRangeFilter } from '@/hooks/products/useRangeFilter';
 import { useProductsStore } from '@/store/productsStore';
 import { Box, Typography, Slider } from '@mui/material';
+import { sliderFilterStyles } from '../FiltersBlock.styles';
 
 export const RatingFilter = () => {
   const rating = useProductsStore(state => state.filters.rating);
@@ -18,22 +19,16 @@ export const RatingFilter = () => {
 
   return (
     <Box>
-      <Typography variant='subtitle1' fontWeight={600} gutterBottom>
+      <Typography variant='subtitle1' sx={sliderFilterStyles.title} gutterBottom>
         Rating
       </Typography>
       <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          fontSize: 13,
-          mb: 0.5,
-          color: 'text.secondary',
-        }}
+        sx={sliderFilterStyles.valueContainer}
       >
         <span>{rating.min}★</span>
         <span>{rating.max}★</span>
       </Box>
-      <Box sx={{ px: 1 }}>
+      <Box sx={sliderFilterStyles.sliderContainer}>
         <Slider
           value={localValue}
           onChange={handleChange}

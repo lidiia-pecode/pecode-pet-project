@@ -11,10 +11,11 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import { WeatherData, WeatherMetric} from '@/types/Weather';
+import { WeatherData, WeatherMetric } from '@/types/Weather';
 import { useResponsive } from '@/hooks/ui/useResponsive';
 import { getMetricColor, METRICS } from '../../constants';
 import { CustomTooltip } from './CustomTooltip';
+import { chartRendererStyles } from '../weatherChart.styles';
 
 interface ChartRendererProps {
   data: WeatherData;
@@ -23,7 +24,9 @@ interface ChartRendererProps {
 
 export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
   const { isTablet } = useResponsive();
-  const [hoveredMetric, setHoveredMetric] = useState<WeatherMetric | null>(null);
+  const [hoveredMetric, setHoveredMetric] = useState<WeatherMetric | null>(
+    null
+  );
   const useIndividualTooltips = metrics.length > 5;
 
   const metricMap = useMemo(() => {
@@ -73,10 +76,10 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
           dataKey='time'
           ticks={xAxisTicks}
           tickFormatter={t => dayjs(t).format('D MMM')}
-          tick={{ fontSize: 12, fill: '#1e3a8a' }}
+          tick={chartRendererStyles.axisTick}
           stroke='#1e3a8a'
         />
-        <YAxis tick={{ fontSize: 12, fill: '#1e3a8a' }} stroke='#1e3a8a' />
+        <YAxis tick={chartRendererStyles.axisTick} stroke='#1e3a8a' />
 
         <Tooltip
           cursor={!useIndividualTooltips}
@@ -97,10 +100,10 @@ export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
           verticalAlign={isTablet ? 'bottom' : 'top'}
           align={isTablet ? 'center' : 'right'}
           wrapperStyle={{
-            backgroundColor: isTablet ? 'transparent' : '#0d2872',
-            borderRadius: 8,
-            padding: isTablet ? 0 : 16,
-            marginTop: isTablet ? 16 : 0,
+            ...chartRendererStyles.legendWrapperBase,
+            ...(isTablet
+              ? chartRendererStyles.legendWrapperTablet
+              : chartRendererStyles.legendWrapperDesktop),
             cursor: useIndividualTooltips ? 'pointer' : 'default',
           }}
           formatter={v => metricMap.get(v as WeatherMetric)}

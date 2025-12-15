@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { Paper, Typography, Box } from '@mui/material';
 import { WeatherMetric } from '@/types/Weather';
 import { getMetricColor } from '../../constants';
+import { customTooltipStyles } from '../weatherChart.styles';
 
 interface TooltipPayloadItem {
   value?: string | number;
@@ -38,16 +39,7 @@ export const CustomTooltip = ({
   if (!filteredItems.length) return null;
 
   return (
-    <Paper
-      elevation={3}
-      sx={{
-        bgcolor: '#0d2872',
-        color: 'white',
-        p: 2,
-        borderRadius: 2,
-        minWidth: 140,
-      }}
-    >
+    <Paper elevation={3} sx={customTooltipStyles.paper}>
       <Typography variant='body2' sx={{ fontWeight: 600, mb: 1 }}>
         {dayjs(label).format('D MMM, HH:mm')}
       </Typography>
