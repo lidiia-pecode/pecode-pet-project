@@ -1,20 +1,14 @@
 'use client';
 
-import {
-  useState,
-  useCallback,
-  ReactNode,
-  Dispatch,
-  SetStateAction,
-} from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import {
   Box,
   Button,
   Paper,
   List,
-  ListItemButton,
   Typography,
   ClickAwayListener,
+  CircularProgress,
 } from '@mui/material';
 import { useQuery } from '@apollo/client/react';
 import { GET_COUNTRIES } from '@/lib/graphql/query/getCountries';
@@ -22,78 +16,90 @@ import { getCountryCoordinates } from '@/lib/utils/weather/getCountryCoordinates
 import { Country, GetCountriesData, LocationData } from '@/types/Weather';
 import { useWeatherStore } from '@/store/weatherStore';
 import { countryDropdownStyles } from '../LocationPicker.styles';
-
-
+import { getSortedCountriesByQuery } from '@/lib/utils/weather/getSortedCountriesByQuery';
+import CountryListItem from './CountryListItem';
+import { CountrySearch } from './CounrtySearch';
 
 interface CountryDropdownProps {
-  setSelectedLocation: Dispatch<SetStateAction<LocationData | null>>;
+  setSelectedLocation: (location: LocationData | null) => void;
 }
 
-export const CountryDropdown = ({
+export const CountryDropdown: React.FC<CountryDropdownProps> = ({
   setSelectedLocation,
-}: CountryDropdownProps) => {
-  const [open, setOpen] = useState(false);
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const selectedCountry = useWeatherStore(state => state.selectedCountry);
   const setCountry = useWeatherStore(state => state.setCountry);
 
   const { data, loading, error } = useQuery<GetCountriesData>(GET_COUNTRIES);
-  const countries = data?.countries ?? [];
 
-  const toggleOpen = () => setOpen(prev => !prev);
-  const closeDropdown = () => setOpen(false);
+  const handleCountrySelect = useCallback(
+    async (country: Country) => {
+      setCountry(country);
+      setSearchQuery('');
+      setIsOpen(false);
 
-  const handleSelect = useCallback(
-    async (selectedCountry: Country) => {
-      setCountry(selectedCountry);
-      setOpen(false);
-
-      const coords = await getCountryCoordinates(selectedCountry.name);
-      if (coords) {
-        setSelectedLocation(coords);
-      }
+      const coordinates = await getCountryCoordinates(country.name);
+      if (coordinates) setSelectedLocation(coordinates);
     },
     [setCountry, setSelectedLocation]
   );
 
-  const renderButton = (): ReactNode => (
-    <Button
-      fullWidth
-      variant='contained'
-      onClick={toggleOpen}
-      sx={countryDropdownStyles.button}
-    >
-      {selectedCountry?.name || 'Select a Country'}
-    </Button>
+  const sortedCountries = useMemo(
+    () => getSortedCountriesByQuery(data?.countries ?? [], searchQuery),
+    [data?.countries, searchQuery]
   );
 
-  const renderDropdown = (): ReactNode => (
-    <Paper
-      elevation={1}
-      sx={countryDropdownStyles.dropdown}
-    >
-      <List sx={{ pl: 0.5 }}>
-        {countries.map(c => (
-          <ListItemButton
-            key={c.code}
-            onClick={() => handleSelect(c)}
-            selected={selectedCountry?.code === c.code}
-          >
-            <Typography sx={{ mr: 1 }}>{c.emoji}</Typography>
-            <Typography>{c.name}</Typography>
-          </ListItemButton>
-        ))}
-      </List>
-    </Paper>
-  );
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    setSearchQuery('');
+  }, []);
 
-  if (loading) return <Typography>Loading countries...</Typography>;
-  if (error) return <Typography>Error loading countries</Typography>;
+  const toggleDropdown = useCallback(() => setIsOpen(prev => !prev), []);
+
+  if (loading) return <CircularProgress />;
+  if (error)
+    return <Typography color='error'>Something went wrong.</Typography>;
 
   return (
-    <ClickAwayListener onClickAway={closeDropdown}>
+    <ClickAwayListener onClickAway={handleClose}>
       <Box sx={countryDropdownStyles.container}>
-        {renderButton()}
-        {open && renderDropdown()}
+        <Button
+          fullWidth
+          variant='contained'
+          onClick={toggleDropdown}
+          sx={countryDropdownStyles.button}
+        >
+          {selectedCountry
+            ? `${selectedCountry.emoji} ${selectedCountry.name}`
+            : 'Select Country'}
+        </Button>
+
+        {isOpen && (
+          <Paper elevation={3} sx={countryDropdownStyles.dropdown}>
+            <CountrySearch value={searchQuery} onChange={setSearchQuery} />
+
+            <List sx={countryDropdownStyles.counrtyList}>
+              {sortedCountries.length > 0 ? (
+                sortedCountries.map(country => (
+                  <CountryListItem
+                    key={country.code}
+                    country={country}
+                    selected={selectedCountry?.code === country.code}
+                    query={searchQuery}
+                    onSelect={handleCountrySelect}
+                  />
+                ))
+              ) : (
+                <Typography color='text.secondary' sx={{ p: 2 }}>
+                  No countries found.
+                </Typography>
+              )}
+            </List>
+          </Paper>
+        )}
       </Box>
     </ClickAwayListener>
   );

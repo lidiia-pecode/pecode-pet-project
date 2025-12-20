@@ -164,4 +164,20 @@ export const countryDropdownStyles = {
       borderRadius: '8px',
     },
   },
+
+  counrtyList: { pl: 0.5, maxHeight: 400, overflow: 'auto' },
+
+  countrySearchWrapper: {
+    p: 1,
+    position: 'sticky',
+    top: 0,
+    zIndex: 2,
+    bgcolor: 'background.paper',
+  },
+
+  highlited: {
+    fontWeight: 'bold',
+    bgcolor: '#c6d4e9ff',
+    borderRadius: 0.5,
+  },
 } satisfies Record<string, SxProps<Theme>>;
