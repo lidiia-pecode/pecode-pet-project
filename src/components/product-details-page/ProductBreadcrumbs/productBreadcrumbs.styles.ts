@@ -3,6 +3,8 @@ import { SxProps, Theme } from '@mui/material';
 export const productBreadcrumbsStyles = {
   container: {
     overflow: 'hidden',
+    display: { xs: 'block', md: 'none' },
+    mb: 4,
   },
   breadcrumbs: {
     fontSize: 14,

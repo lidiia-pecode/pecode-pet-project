@@ -2,7 +2,7 @@ import { SxProps, Theme } from '@mui/material';
 
 export const navbar = {
   containerRow: {
-    display: 'flex',
+    display: {xs: 'none', md: 'flex'},
     flexDirection: 'row',
     gap: 3,
   },

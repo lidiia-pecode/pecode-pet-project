@@ -7,7 +7,7 @@ import { ProductsGridSkeleton } from './components/ProductsGridSkeleton';
 import { productsGridViewStyles } from './ProductsGridView.styles';
 import { EmptyState } from './components/EmptyState';
 
-export const ProductsGridView = () => {
+export const ProductsGridView = ({ authorized }: { authorized: boolean }) => {
   const { data, isLoading } = useProducts();
 
   if (isLoading) {
@@ -21,7 +21,11 @@ export const ProductsGridView = () => {
   return (
     <Box sx={productsGridViewStyles.cardsContainer}>
       {data.products.map(product => (
-        <ProductsCard key={product.id} product={product} />
+        <ProductsCard
+          key={product.id}
+          product={product}
+          authorized={authorized}
+        />
       ))}
     </Box>
   );

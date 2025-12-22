@@ -1,9 +1,20 @@
-import { Box, Container } from '@mui/material';
+import { Box, Container, SxProps } from '@mui/material';
 import { getProductById } from '@/lib';
 import { ImageCarousel } from '@/components/product-details-page/ImageCarousel';
 import { ProductInfo } from '@/components/product-details-page/ProductInfo';
 import { ProductAdditional } from '@/components/product-details-page/ProductAdditional';
 import { ProductBreadcrumbs } from '@/components/product-details-page/ProductBreadcrumbs';
+import { Theme } from '@emotion/react';
+
+const productsPage = {
+  mainBox: {
+    display: 'flex',
+    gap: 4,
+    flexDirection: { xs: 'column', md: 'row' },
+  },
+  carouselBox: { flex: 1, maxWidth: { md: '50%' } },
+  infoBox: { flex: 1 },
+} satisfies Record<string, SxProps<Theme>>;
 
 interface ProductPageProps {
   params: { id: string };
@@ -21,22 +32,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <Container maxWidth='lg'>
-      <ProductBreadcrumbs
-        productTitle={product.title}
-        sx={{ display: { xs: 'block', md: 'none' }, mb: 4 }}
-      />
-      <Box
-        sx={{
-          display: 'flex',
-          gap: 4,
-          flexDirection: { xs: 'column', md: 'row' },
-        }}
-      >
-        <Box sx={{ flex: 1, maxWidth: { md: '50%' } }}>
+      <ProductBreadcrumbs productTitle={product.title} />
+      <Box sx={productsPage.mainBox}>
+        <Box sx={productsPage.carouselBox}>
           <ImageCarousel images={product.images} title={product.title} />
         </Box>
 
-        <Box sx={{ flex: 1 }}>
+        <Box sx={productsPage.infoBox}>
           <ProductInfo
             title={product.title}
             price={product.price}

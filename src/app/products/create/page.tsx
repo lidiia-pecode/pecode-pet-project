@@ -1,43 +1,45 @@
 import { NewCategoryForm } from '@/components/create/NewCategoryForm';
 import { NewProductForm } from '@/components/create/NewProductForm';
-import { Box, Container, Typography } from '@mui/material';
+import { Theme } from '@emotion/react';
+import { Box, Container, SxProps, Typography } from '@mui/material';
+
+const createProductPage = {
+  title: {
+    textAlign: 'center',
+    mb: 4,
+  },
+  mainBox: {
+    display: 'flex',
+    flexDirection: {
+      xs: 'column',
+      lg: 'row',
+    },
+    justifyContent: 'center',
+    alignItems: {
+      xs: 'center',
+      lg: 'flex-start',
+    },
+    gap: {
+      xs: 4,
+      lg: 6,
+    },
+  },
+  formWrapper: { width: '100%', maxWidth: 800 },
+} satisfies Record<string, SxProps<Theme>>;
 
 export default function CreateProductPage() {
   return (
     <Container maxWidth='xl'>
-      <Typography
-        variant='h4'
-        sx={{
-          textAlign: 'center',
-          mb: 4,
-        }}
-      >
+      <Typography variant='h4' sx={createProductPage.title}>
         Manage Products & Categories
       </Typography>
 
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: {
-            xs: 'column',
-            lg: 'row',
-          },
-          justifyContent: 'center',
-          alignItems: {
-            xs: 'center',
-            lg: 'flex-start',
-          },
-          gap: {
-            xs: 4,
-            lg: 6,
-          },
-        }}
-      >
-        <Box sx={{ width: '100%', maxWidth: 800 }}>
+      <Box sx={createProductPage.mainBox}>
+        <Box sx={createProductPage.formWrapper}>
           <NewProductForm />
         </Box>
 
-        <Box sx={{ width: '100%', maxWidth: 800 }}>
+        <Box sx={createProductPage.formWrapper}>
           <NewCategoryForm />
         </Box>
       </Box>

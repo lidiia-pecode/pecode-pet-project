@@ -5,8 +5,6 @@ import {
   Breadcrumbs,
   Link,
   Typography,
-  SxProps,
-  Theme,
 } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NextLink from 'next/link';
@@ -14,15 +12,13 @@ import { productBreadcrumbsStyles } from './productBreadcrumbs.styles';
 
 interface ProductBreadcrumbsProps {
   productTitle: string;
-  sx?: SxProps<Theme>;
 }
 
 export const ProductBreadcrumbs = ({
   productTitle,
-  sx,
 }: ProductBreadcrumbsProps) => {
   return (
-    <Box sx={{ ...productBreadcrumbsStyles.container, ...sx }}>
+    <Box sx={productBreadcrumbsStyles.container}>
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize='small' />}
         sx={productBreadcrumbsStyles.breadcrumbs}

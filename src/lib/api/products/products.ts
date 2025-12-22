@@ -3,7 +3,7 @@ import { ProductFilters } from '@/types/Filters';
 import { SortOption } from '@/types/Sort';
 import { buildQueryString } from '@/lib/utils/buildQueryString';
 import { generateRandomRating } from '../../utils/generateRandomRating';
-import { apiGet } from '../fetcher';
+import { apiDelete, apiGet } from '../fetcher';
 
 interface GetProductsParams {
   page: number;
@@ -37,4 +37,8 @@ export async function getProductById(id: number): Promise<Product> {
     ...product,
     rating: generateRandomRating(),
   };
+}
+
+export async function deleteProductById(id: number) {
+  await apiDelete(`/products/${id}`);
 }

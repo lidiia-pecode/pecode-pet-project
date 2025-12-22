@@ -6,17 +6,22 @@ import type { Product } from '@/types/Product';
 import { ProductRating } from '../shared/ProductRating';
 import { useRouter } from 'next/navigation';
 import { cardStyles } from './ProductsCard.styles';
+import { DeleteProductButton } from './components/DeleteButton';
+import { useProducts } from '@/hooks/products/useProducts';
 
 interface ProductsCardProps {
   product: Product;
+  authorized: boolean;
 }
-const ProductsCardComponent = ({ product }: ProductsCardProps) => {
+const ProductsCardComponent = ({ product, authorized }: ProductsCardProps) => {
   const image = product.images?.[0] ?? '/placeholder.png';
 
   const router = useRouter();
   const handleOpenProduct = () => {
     router.push(`/products/${product.id}`);
   };
+
+  const refetch = useProducts().refetch;
 
   return (
     <Card
@@ -63,6 +68,8 @@ const ProductsCardComponent = ({ product }: ProductsCardProps) => {
       >
         View
       </Button>
+
+      {authorized && <DeleteProductButton id={product.id} refetch={refetch} />}
     </Card>
   );
 };
