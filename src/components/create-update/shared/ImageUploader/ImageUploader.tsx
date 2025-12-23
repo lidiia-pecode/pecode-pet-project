@@ -3,9 +3,10 @@
 import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useState } from 'react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { uploadImages } from '@/lib/utils/uploadImages';
+import { styles } from './ImageUploader.styles';
 
 interface ImageUploaderProps {
   value: string[];
@@ -51,17 +52,7 @@ export const ImageUploader = ({
     <>
       <Box
         {...getRootProps()}
-        sx={{
-          height: 80,
-          border: '2px dashed #ccc',
-          borderRadius: 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#999',
-          cursor: 'pointer',
-          position: 'relative',
-        }}
+        sx={styles.uploaderContainer}
       >
         <input {...getInputProps()} />
         {isUploading && <CircularProgress size={24} />}
@@ -71,31 +62,31 @@ export const ImageUploader = ({
             : 'Drag & drop image here, or click')}
 
         {error && (
-          <Typography color='error' variant='caption' sx={{position: 'absolute', top: 82, left: 14 }}>
+          <Typography
+            color='error'
+            variant='caption'
+            sx={styles.errorText}
+          >
             {error}
           </Typography>
         )}
       </Box>
 
       {value.length > 0 && (
-        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+        <Box sx={styles.imagesPreviewContainer}>
           {value.map((url, idx) => (
-            <Box key={idx} sx={{ position: 'relative' }}>
-              <Image
+            <Box key={idx} sx={styles.imageWrapper}>
+              {/* <Image
                 src={url}
                 alt='uploaded'
                 width={100}
                 height={100}
                 style={{ borderRadius: 8, objectFit: 'cover' }}
-              />
+              /> */}
+              <img src={url} alt='uploaded' width={100} height={100}/>
               <IconButton
                 size='small'
-                sx={{
-                  position: 'absolute',
-                  top: -10,
-                  right: -10,
-                  backgroundColor: '#fff',
-                }}
+                sx={styles.deleteImageButton}
                 onClick={() => removeImage(idx)}
               >
                 <DeleteIcon fontSize='small' />

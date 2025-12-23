@@ -7,8 +7,8 @@ import { apiPost } from '@/lib/api/fetcher';
 import { useAlert } from '@/hooks/useAlert';
 import { Alerts } from '../shared/FormAlert';
 import { NewCategoryFormData, newCategorySchema } from '@/types/Categories';
-import { FormLayout } from './FormLayout';
-import { ImageUploader } from './ImageUploader';
+import { FormLayout } from './shared/FormLayout';
+import { ImageUploader } from './shared/ImageUploader';
 
 export const NewCategoryForm = () => {
   const alert = useAlert();

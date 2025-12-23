@@ -5,9 +5,11 @@ import { ProductInfo } from '@/components/product-details-page/ProductInfo';
 import { ProductAdditional } from '@/components/product-details-page/ProductAdditional';
 import { ProductBreadcrumbs } from '@/components/product-details-page/ProductBreadcrumbs';
 import { Theme } from '@emotion/react';
+import { UpdateProductButton } from '@/components/product-details-page/UpdateProductButton';
 
 const productsPage = {
   mainBox: {
+    position: 'relative',
     display: 'flex',
     gap: 4,
     flexDirection: { xs: 'column', md: 'row' },
@@ -47,6 +49,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
           />
           <ProductAdditional id={product.id} category={product.category} />
         </Box>
+
+        <UpdateProductButton id={product.id} />
       </Box>
     </Container>
   );

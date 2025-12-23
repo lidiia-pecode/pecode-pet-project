@@ -1,5 +1,5 @@
-import { NewCategoryForm } from '@/components/create/NewCategoryForm';
-import { NewProductForm } from '@/components/create/NewProductForm';
+import { NewCategoryForm } from '@/components/create-update/NewCategoryForm';
+import { NewProductForm } from '@/components/create-update/CreateProductForm';
 import { Theme } from '@emotion/react';
 import { Box, Container, SxProps, Typography } from '@mui/material';
 
