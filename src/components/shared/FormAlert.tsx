@@ -3,7 +3,7 @@
 import { AlertController} from '@/types/Alert';
 import { Snackbar, Alert } from '@mui/material';
 
-export const FormAlerts = ({
+export const Alerts = ({
   successMessage,
   errorMessage,
   showSuccess,

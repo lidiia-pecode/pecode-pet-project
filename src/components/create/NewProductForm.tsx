@@ -9,7 +9,7 @@ import { NewProductFormData, newProductSchema } from '@/types/NewProduct';
 import { apiPost } from '@/lib/api/fetcher';
 import { useAlert } from '@/hooks/useAlert';
 
-import { FormAlerts } from '../shared/FormAlert';
+import { Alerts } from '../shared/FormAlert';
 import { FormLayout } from './FormLayout';
 import { ImageUploader } from './ImageUploader';
 
@@ -144,7 +144,7 @@ export const NewProductForm = () => {
         </Box>
       </FormLayout>
 
-      <FormAlerts {...alert} />
+      <Alerts {...alert} />
     </>
   );
 };

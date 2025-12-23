@@ -62,4 +62,7 @@ export const cardStyles = {
     height: 22,
     width: 22,
   },
+
+  dialogTitle: { display: 'flex', alignItems: 'center', gap: 1 },
+  dialogActions: { px: 3, pb: 3 },
 } satisfies Record<string, SxProps<Theme>>;

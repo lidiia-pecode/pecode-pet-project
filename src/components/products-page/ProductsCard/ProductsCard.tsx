@@ -69,7 +69,7 @@ const ProductsCardComponent = ({ product, authorized }: ProductsCardProps) => {
         View
       </Button>
 
-      {authorized && <DeleteProductButton id={product.id} refetch={refetch} />}
+      {authorized && <DeleteProductButton id={product.id} productTitle={product.title} refetch={refetch} />}
     </Card>
   );
 };

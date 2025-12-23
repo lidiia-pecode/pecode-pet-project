@@ -19,7 +19,7 @@ import {
 } from '@/types/Auth';
 import { useAuthForm } from '@/hooks/auth/useAuthForm';
 import { useAlert } from '@/hooks/useAlert';
-import { FormAlerts } from '../../shared/FormAlert';
+import { Alerts } from '../../shared/FormAlert';
 import { useRouter } from 'next/navigation';
 import ClearIcon from '@mui/icons-material/Clear';
 import Visibility from '@mui/icons-material/Visibility';
@@ -210,7 +210,7 @@ export const AuthForm = () => {
         </Typography>
       </Paper>
 
-      <FormAlerts {...alert} />
+      <Alerts {...alert} />
     </>
   );
 };

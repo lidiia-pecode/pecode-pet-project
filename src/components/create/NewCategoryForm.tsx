@@ -5,7 +5,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { apiPost } from '@/lib/api/fetcher';
 import { useAlert } from '@/hooks/useAlert';
-import { FormAlerts } from '../shared/FormAlert';
+import { Alerts } from '../shared/FormAlert';
 import { NewCategoryFormData, newCategorySchema } from '@/types/Categories';
 import { FormLayout } from './FormLayout';
 import { ImageUploader } from './ImageUploader';
@@ -81,7 +81,7 @@ export const NewCategoryForm = () => {
         </Box>
       </FormLayout>
 
-      <FormAlerts {...alert} />
+      <Alerts {...alert} />
     </>
   );
 };
