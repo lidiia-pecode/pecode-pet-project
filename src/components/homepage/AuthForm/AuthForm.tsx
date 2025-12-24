@@ -1,5 +1,8 @@
 'use client';
 
+import { useState } from 'react';
+import { useForm, FieldErrors, useWatch, Controller } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Box,
   Paper,
@@ -10,24 +13,26 @@ import {
   InputAdornment,
   MenuItem,
 } from '@mui/material';
-import { useForm, FieldErrors, useWatch, Controller } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+
+import ClearIcon from '@mui/icons-material/Clear';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+
+import { useRouter } from 'next/navigation';
+
+import { authFormStyles } from './AuthForm.styles';
 import {
   RegisterFormData,
   schemaLogin,
   schemaRegister,
   AuthFormData,
 } from '@/types/Auth';
+
+import { useProductsStore } from '@/store/productsStore';
 import { useAuthForm } from '@/hooks/auth/useAuthForm';
 import { useAlert } from '@/hooks/useAlert';
-import { Alerts } from '../../shared/FormAlert';
-import { useRouter } from 'next/navigation';
-import ClearIcon from '@mui/icons-material/Clear';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useState } from 'react';
-import { authFormStyles } from './AuthForm.styles';
-import { useProductsStore } from '@/store/productsStore';
+
+import { Alerts } from '../../shared/Alerts';
 
 export const AuthForm = () => {
   const userRole = useProductsStore(state => state.role);
@@ -35,7 +40,6 @@ export const AuthForm = () => {
   const router = useRouter();
 
   const { mode, loading, handleModeSwitch, onSubmit } = useAuthForm(
-    // alert.success,
     alert.error
   );
 
@@ -61,10 +65,7 @@ export const AuthForm = () => {
   const handleFormSubmit = async (data: AuthFormData) => {
     const success = await onSubmit(data, () => reset());
     if (!success) return;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const next = urlParams.get('next') || '/';
-    router.replace(next);
+    router.replace('/');
   };
 
   const nameError =

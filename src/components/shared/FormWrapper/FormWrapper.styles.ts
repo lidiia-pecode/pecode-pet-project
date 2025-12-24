@@ -10,6 +10,7 @@ export const styles = {
     maxWidth: 800,
     position: 'relative',
   },
+
   title: {
     mb: 5,
     mt: {
@@ -22,5 +23,13 @@ export const styles = {
       md: '32px',
     },
   },
+
   formContainer: { display: 'flex', flexDirection: 'column', gap: 3 },
+
+  buttonsContainer: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: 2,
+    mt: 3,
+  },
 } satisfies Record<string, SxProps<Theme>>;

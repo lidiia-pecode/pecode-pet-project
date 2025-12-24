@@ -1,5 +1,5 @@
 import { AppBar, Toolbar, Typography } from '@mui/material';
-import { Navbar } from '@/components/layout/NavBar/Navbar';
+import { Navbar } from '@/components/shared/Layout/NavBar/Navbar';
 import { MobileMenuButton } from './components/MobileMenuButton';
 
 import { header } from './Header.styles';

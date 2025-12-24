@@ -1,9 +1,10 @@
-import { TanstackProvider } from '../providers/TanstackProvider';
 import { ThemeProvider } from '@mui/material/styles';
-import { theme } from '../styles/theme';
 import { CssBaseline } from '@mui/material';
-import { Layout } from '@/components/layout';
+
+import { TanstackProvider } from '../providers/TanstackProvider';
 import { EmotionRegistry } from '@/providers/EmotionRegistry';
+import { theme } from '../styles/theme';
+import { Layout } from '@/components/shared/Layout';
 
 export default function RootLayout({
   children,

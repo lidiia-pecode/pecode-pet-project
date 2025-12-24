@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Box,
   Typography,
@@ -7,20 +8,30 @@ import {
   FormGroup,
   FormControlLabel,
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+
+import { categoryFilterStyles } from '../FiltersBlock.styles';
+
 import { CategorySlug } from '@/types/Categories';
+import { deleteCategory } from '@/lib/api/products/categories';
+
+import { CategoryFilterSkeleton } from './CategoryFilterSkeleton';
+import { CategoryFormWrapper } from './CategoryFormWrapper';
+
 import { useProductsStore } from '@/store/productsStore';
 import { useCategories } from '@/hooks/categories/useCategories';
-import { categoryFilterStyles } from '../FiltersBlock.styles';
-import { CategoryFilterSkeleton } from './CategoryFilterSkeleton';
-import { deleteCategory } from '@/lib/api/products/categories';
 import { useAlert } from '@/hooks/useAlert';
-import { Alerts } from '@/components/shared/FormAlert';
-import { useState } from 'react';
-import { DeleteButton } from '../../../shared/DeleteButton/DeleteButton';
+import { useModalToggle } from '@/hooks/products/useModal';
+
+import { ActionButton } from '@/components/shared/ActionButton';
+import { DeleteButton } from '@/components/shared/DeleteButton';
+import { Alerts } from '@/components/shared/Alerts';
+
 
 export const CategoryFilter = () => {
   const { data: categories, isLoading, refetch } = useCategories();
-  console.log('Categories loaded:', categories);
+  const { isOpen, toggle } = useModalToggle();
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const toggleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -60,23 +71,38 @@ export const CategoryFilter = () => {
 
   return (
     <Box>
-      <Typography
-        variant='subtitle1'
-        sx={categoryFilterStyles.title}
-        gutterBottom
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
       >
-        Categories
-      </Typography>
+        <Typography
+          variant='subtitle1'
+          sx={categoryFilterStyles.title}
+          gutterBottom
+        >
+          Categories
+        </Typography>
+
+        <ActionButton
+          mode='create'
+          entityName='Category'
+          icon={<AddIcon fontSize='small' />}
+          open={isOpen}
+          size='small'
+          onToggle={toggle}
+          form={<CategoryFormWrapper onClose={toggle} />}
+        />
+      </Box>
 
       <FormGroup sx={categoryFilterStyles.formGroup}>
         {isLoading ? (
           <CategoryFilterSkeleton />
         ) : (
           categories?.map(category => (
-            <Box
-              key={category.id}
-              sx={categoryFilterStyles.categoryItem}
-            >
+            <Box key={category.id} sx={categoryFilterStyles.categoryItem}>
               <FormControlLabel
                 control={
                   <Checkbox

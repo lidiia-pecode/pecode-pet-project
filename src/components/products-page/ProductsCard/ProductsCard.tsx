@@ -2,15 +2,20 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent, Box, Typography, Button } from '@mui/material';
-import type { Product } from '@/types/Product';
-import { ProductRating } from '../shared/ProductRating';
 import { useRouter } from 'next/navigation';
+
 import { cardStyles } from './ProductsCard.styles';
-import { DeleteButton } from '../../shared/DeleteButton/DeleteButton';
+import type { Product } from '@/types/Product';
+import { deleteProductById } from '@/lib';
+
+import { ProductRating } from '../shared/ProductRating';
+import { DeleteButton } from '@/components/shared/DeleteButton';
+import { Alerts } from '@/components/shared/Alerts';
+
 import { useProducts } from '@/hooks/products/useProducts';
 import { useAlert } from '@/hooks/useAlert';
-import { deleteProductById } from '@/lib';
-import { Alerts } from '@/components/shared/FormAlert';
+
+
 
 interface ProductsCardProps {
   product: Product;
