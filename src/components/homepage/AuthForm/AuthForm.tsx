@@ -8,8 +8,9 @@ import {
   Typography,
   IconButton,
   InputAdornment,
+  MenuItem,
 } from '@mui/material';
-import { useForm, FieldErrors, useWatch } from 'react-hook-form';
+import { useForm, FieldErrors, useWatch, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   RegisterFormData,
@@ -26,8 +27,10 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
 import { authFormStyles } from './AuthForm.styles';
+import { useProductsStore } from '@/store/productsStore';
 
 export const AuthForm = () => {
+  const userRole = useProductsStore(state => state.role);
   const alert = useAlert();
   const router = useRouter();
 
@@ -48,6 +51,9 @@ export const AuthForm = () => {
   } = useForm<AuthFormData>({
     resolver: zodResolver(schema),
     mode: 'onChange',
+    defaultValues: {
+      role: 'customer',
+    },
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -69,6 +75,10 @@ export const AuthForm = () => {
   const nameValue = useWatch({ control, name: 'name' });
   const emailValue = useWatch({ control, name: 'email' });
   const passwordValue = useWatch({ control, name: 'password' });
+
+  if (userRole) {
+    return null;
+  }
 
   return (
     <>
@@ -135,6 +145,29 @@ export const AuthForm = () => {
               },
             }}
           />
+
+          {mode === 'register' && (
+            <Controller
+              name='role'
+              control={control}
+              defaultValue='customer'
+              render={({ field }) => (
+                <TextField
+                  select
+                  label='Role'
+                  {...field}
+                  error={!!(errors as FieldErrors<RegisterFormData>).role}
+                  helperText={
+                    (errors as FieldErrors<RegisterFormData>).role?.message
+                  }
+                  disabled={loading}
+                >
+                  <MenuItem value='customer'>Customer</MenuItem>
+                  <MenuItem value='admin'>Admin</MenuItem>
+                </TextField>
+              )}
+            />
+          )}
 
           <TextField
             label='Password'

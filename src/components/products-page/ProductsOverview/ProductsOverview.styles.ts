@@ -1,7 +1,7 @@
 import { SxProps } from '@mui/material';
 import { Theme } from '@emotion/react';
 
-export const ProductClientWrapperStyles = {
+export const styles = {
   main: { display: 'flex', gap: 3 },
   list: {
     display: 'flex',

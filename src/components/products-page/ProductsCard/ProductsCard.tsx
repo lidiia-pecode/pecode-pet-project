@@ -1,19 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, Box, Typography, Button } from '@mui/material';
 import type { Product } from '@/types/Product';
 import { ProductRating } from '../shared/ProductRating';
 import { useRouter } from 'next/navigation';
 import { cardStyles } from './ProductsCard.styles';
-import { DeleteProductButton } from './components/DeleteButton';
+import { DeleteButton } from '../../shared/DeleteButton/DeleteButton';
 import { useProducts } from '@/hooks/products/useProducts';
+import { useAlert } from '@/hooks/useAlert';
+import { deleteProductById } from '@/lib';
+import { Alerts } from '@/components/shared/FormAlert';
 
 interface ProductsCardProps {
   product: Product;
-  authorized: boolean;
 }
-const ProductsCardComponent = ({ product, authorized }: ProductsCardProps) => {
+const ProductsCardComponent = ({ product }: ProductsCardProps) => {
   const image = product.images?.[0] ?? '/placeholder.png';
 
   const router = useRouter();
@@ -22,6 +24,30 @@ const ProductsCardComponent = ({ product, authorized }: ProductsCardProps) => {
   };
 
   const refetch = useProducts().refetch;
+  const alert = useAlert();
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const toggleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setOpen(!open);
+  };
+
+  const handleDelete = async () => {
+    try {
+      setLoading(true);
+      await deleteProductById(product.id);
+      alert.success('Product deleted!');
+      refetch();
+      setOpen(false);
+    } catch (err) {
+      alert.error('Failed to delete product');
+      console.log(err);
+      setOpen(false);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card
@@ -69,7 +95,15 @@ const ProductsCardComponent = ({ product, authorized }: ProductsCardProps) => {
         View
       </Button>
 
-      {authorized && <DeleteProductButton id={product.id} productTitle={product.title} refetch={refetch} />}
+      <DeleteButton
+        open={open}
+        loading={loading}
+        toggleOpen={toggleOpen}
+        handleDelete={handleDelete}
+        productTitle={product.title}
+      />
+
+      <Alerts {...alert} />
     </Card>
   );
 };

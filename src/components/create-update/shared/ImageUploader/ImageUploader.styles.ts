@@ -17,6 +17,7 @@ export const styles = {
   imageWrapper: {
     position: 'relative',
   },
+  image: { borderRadius: 8, objectFit: 'cover' },
   deleteImageButton: {
     position: 'absolute',
     top: -10,

@@ -12,6 +12,7 @@ import { FormLayout } from './shared/FormLayout';
 import { Product } from '@/types/Product';
 import { useRouter } from 'next/navigation';
 import { ProductForm } from './shared/ProductForm';
+import { useProductsStore } from '@/store/productsStore';
 
 interface UpdateProductFormProps {
   product: Product;
@@ -20,6 +21,11 @@ interface UpdateProductFormProps {
 export const UpdateProductForm = ({ product }: UpdateProductFormProps) => {
   const alert = useAlert();
   const route = useRouter();
+
+  const userRole = useProductsStore(state => state.role);
+  if (userRole !== 'admin') {
+    route.replace('/');
+  }
 
   const {
     register,

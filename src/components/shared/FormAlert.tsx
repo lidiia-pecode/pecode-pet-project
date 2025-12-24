@@ -17,7 +17,7 @@ export const Alerts = ({
         open={showSuccess}
         autoHideDuration={4000}
         onClose={() => setShowSuccess(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert
           severity='success'
@@ -32,7 +32,7 @@ export const Alerts = ({
         open={showError}
         autoHideDuration={4000}
         onClose={() => setShowError(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert
           severity='error'

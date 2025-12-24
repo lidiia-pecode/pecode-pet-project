@@ -7,7 +7,7 @@ import { ProductsGridSkeleton } from './components/ProductsGridSkeleton';
 import { productsGridViewStyles } from './ProductsGridView.styles';
 import { EmptyState } from './components/EmptyState';
 
-export const ProductsGridView = ({ authorized }: { authorized: boolean }) => {
+export const ProductsGridView = () => {
   const { data, isLoading } = useProducts();
 
   if (isLoading) {
@@ -24,7 +24,6 @@ export const ProductsGridView = ({ authorized }: { authorized: boolean }) => {
         <ProductsCard
           key={product.id}
           product={product}
-          authorized={authorized}
         />
       ))}
     </Box>

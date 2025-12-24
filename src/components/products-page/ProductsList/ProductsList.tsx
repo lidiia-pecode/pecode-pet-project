@@ -6,7 +6,7 @@ import { ProductsGridView } from '../ProductsGridView/ProductsGridView';
 import { ProductTable } from '../TableView/ProductTable';
 import { centeredBox } from '../shared/styles';
 
-export const ProductsList = ({authorized}: {authorized: boolean}) => {
+export const ProductsList = () => {
   const viewMode = useProductsStore(state => state.viewMode);
   const hasHydrated = useProductsStore(state => state._hasHydrated);
 
@@ -23,7 +23,7 @@ export const ProductsList = ({authorized}: {authorized: boolean}) => {
       {viewMode === 'list' ? (
         <ProductTable />
       ) : (
-        <ProductsGridView authorized={authorized} />
+        <ProductsGridView />
       )}
     </Box>
   );

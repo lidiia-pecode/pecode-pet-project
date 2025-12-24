@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { getQueryClient } from '@/lib/utils/getQueryClient';
 import { getProducts } from '@/lib/api/products/products';
-import ProductClientWrapper from '@/components/products-page/ProductsClientWrapper/ProductsClientWrapper';
+import ProductClientWrapper from '@/components/products-page/ProductsOverview/ProductsOverview';
 import { parseFiltersFromSearchParams } from '@/lib/utils/parseFilters';
 import { toUrlSearchParams } from '@/lib/utils/toUrlSearchParams';
 

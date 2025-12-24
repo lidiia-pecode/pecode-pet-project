@@ -42,27 +42,5 @@ export const cardStyles = {
     alignItems: 'center',
     gap: 1,
     mt: 1,
-  },
-
-  deleteButtonWrapper: {
-    position: 'absolute',
-    top: 8,
-    left: 8,
-    border: '1px solid #ff33925f',
-    borderRadius: '4px',
-    backgroundColor: '#ffffff5d',
-    transition: 'background-color 0.3s',
-    '&:hover': {
-      backgroundColor: '#ffffffc2',
-    },
-  },
-
-  deleteIcon: {
-    color: '#ff33928d',
-    height: 22,
-    width: 22,
-  },
-
-  dialogTitle: { display: 'flex', alignItems: 'center', gap: 1 },
-  dialogActions: { px: 3, pb: 3 },
+  }
 } satisfies Record<string, SxProps<Theme>>;

@@ -7,6 +7,7 @@ const baseSchema = z.object({
 
 export const schemaRegister = baseSchema.extend({
   name: z.string().min(2, 'Name must be at least 2 characters'),
+  role: z.enum(['customer', 'admin']),
 });
 
 export const schemaLogin = baseSchema;

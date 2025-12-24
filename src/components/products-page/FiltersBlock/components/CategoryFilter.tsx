@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Box,
   Typography,
@@ -11,9 +12,22 @@ import { useProductsStore } from '@/store/productsStore';
 import { useCategories } from '@/hooks/categories/useCategories';
 import { categoryFilterStyles } from '../FiltersBlock.styles';
 import { CategoryFilterSkeleton } from './CategoryFilterSkeleton';
+import { deleteCategory } from '@/lib/api/products/categories';
+import { useAlert } from '@/hooks/useAlert';
+import { Alerts } from '@/components/shared/FormAlert';
+import { useState } from 'react';
+import { DeleteButton } from '../../../shared/DeleteButton/DeleteButton';
 
 export const CategoryFilter = () => {
-  const { data: categories, isLoading } = useCategories();
+  const { data: categories, isLoading, refetch } = useCategories();
+  console.log('Categories loaded:', categories);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const toggleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setOpen(!open);
+  };
+  const alert = useAlert();
 
   const selectedCategories = useProductsStore(
     state => state.filters.categories
@@ -29,6 +43,21 @@ export const CategoryFilter = () => {
     updateFilters({ categories: updated });
   };
 
+  const handleDelete = async (id: number) => {
+    try {
+      setLoading(true);
+      await deleteCategory(id);
+      refetch();
+      alert.success('Category deleted!');
+    } catch (err) {
+      alert.error('Failed to delete category');
+      console.log(err);
+      setOpen(false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Box>
       <Typography
@@ -40,11 +69,15 @@ export const CategoryFilter = () => {
       </Typography>
 
       <FormGroup sx={categoryFilterStyles.formGroup}>
-        {isLoading
-          ? <CategoryFilterSkeleton />
-          : categories?.map(category => (
+        {isLoading ? (
+          <CategoryFilterSkeleton />
+        ) : (
+          categories?.map(category => (
+            <Box
+              key={category.id}
+              sx={categoryFilterStyles.categoryItem}
+            >
               <FormControlLabel
-                key={category.id}
                 control={
                   <Checkbox
                     size='small'
@@ -54,8 +87,20 @@ export const CategoryFilter = () => {
                 }
                 label={category.name}
               />
-            ))}
+
+              <DeleteButton
+                open={open}
+                loading={loading}
+                productCategory={category.name}
+                toggleOpen={toggleOpen}
+                handleDelete={() => handleDelete(category.id)}
+              />
+            </Box>
+          ))
+        )}
       </FormGroup>
+
+      <Alerts {...alert} />
     </Box>
   );
 };

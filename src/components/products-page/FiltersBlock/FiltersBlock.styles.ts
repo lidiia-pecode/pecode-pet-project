@@ -63,6 +63,7 @@ export const categoryFilterStyles = {
     fontWeight: 600,
   },
   formGroup: { minHeight: 200 },
+  categoryItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
 } satisfies Record<string, SxProps<Theme>>;
 
 export const categoryFilterSkeletonStyles = {

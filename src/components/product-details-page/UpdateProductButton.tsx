@@ -1,5 +1,6 @@
 'use client';
 
+import { useProductsStore } from '@/store/productsStore';
 import { Theme } from '@emotion/react';
 import { Button, SxProps } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -19,10 +20,16 @@ const updateButtonStyles = {
   },
 } satisfies Record<string, SxProps<Theme>>;
 
-
 export const UpdateProductButton = ({ id }: { id: number }) => {
   const router = useRouter();
-  const handleClick = () => router.push(`/?next=/products/${id}/update`);
+  const handleClick = () => router.push(`/products/${id}/update`);
+
+  const userRole = useProductsStore(state => state.role);
+
+  if (userRole !== 'admin') {
+    return null;
+  }
+  
   return (
     <Button sx={updateButtonStyles.button} onClick={handleClick}>
       Update Product

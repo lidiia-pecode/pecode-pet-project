@@ -50,10 +50,7 @@ export const ImageUploader = ({
 
   return (
     <>
-      <Box
-        {...getRootProps()}
-        sx={styles.uploaderContainer}
-      >
+      <Box {...getRootProps()} sx={styles.uploaderContainer}>
         <input {...getInputProps()} />
         {isUploading && <CircularProgress size={24} />}
         {!isUploading &&
@@ -62,11 +59,7 @@ export const ImageUploader = ({
             : 'Drag & drop image here, or click')}
 
         {error && (
-          <Typography
-            color='error'
-            variant='caption'
-            sx={styles.errorText}
-          >
+          <Typography color='error' variant='caption' sx={styles.errorText}>
             {error}
           </Typography>
         )}
@@ -83,7 +76,13 @@ export const ImageUploader = ({
                 height={100}
                 style={{ borderRadius: 8, objectFit: 'cover' }}
               /> */}
-              <img src={url} alt='uploaded' width={100} height={100}/>
+              <img
+                src={url}
+                alt='uploaded'
+                width={100}
+                height={100}
+                style={styles.image}
+              />
               <IconButton
                 size='small'
                 sx={styles.deleteImageButton}
