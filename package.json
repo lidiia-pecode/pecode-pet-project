@@ -24,6 +24,7 @@
     "dayjs": "^1.11.19",
     "framer-motion": "^12.23.25",
     "graphql": "^16.12.0",
+    "lucide-react": "^0.562.0",
     "maplibre-gl": "^5.13.0",
     "next": "^16.0.7",
     "react": "^19.2.1",

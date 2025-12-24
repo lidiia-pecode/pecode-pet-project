@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useState } from 'react';
-// import Image from 'next/image';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { uploadImages } from '@/lib/utils/uploadImages';
 import { styles } from './ImageUploader.styles';
@@ -69,13 +69,6 @@ export const ImageUploader = ({
         <Box sx={styles.imagesPreviewContainer}>
           {value.map((url, idx) => (
             <Box key={idx} sx={styles.imageWrapper}>
-              {/* <Image
-                src={url}
-                alt='uploaded'
-                width={100}
-                height={100}
-                style={{ borderRadius: 8, objectFit: 'cover' }}
-              /> */}
               <img
                 src={url}
                 alt='uploaded'
