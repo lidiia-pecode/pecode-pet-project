@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { Product } from './Product';
 
-export const newProductSchema = z.object({
+export const productSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   price: z.number().positive(),
   description: z.string().min(1, 'Description is required'),
@@ -11,5 +11,5 @@ export const newProductSchema = z.object({
     .min(1, 'At least one image is required'),
 });
 
-export type NewProductFormData = z.infer<typeof newProductSchema>;
-export type NewProductResponse = Omit<Product, 'rating'>
+export type ProductFormData = z.infer<typeof productSchema>;
+export type ProductResponse = Omit<Product, 'rating'>

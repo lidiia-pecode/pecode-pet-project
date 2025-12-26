@@ -6,11 +6,12 @@ export async function apiRequest<TResponse, TBody = undefined>(
   path: string,
   method: HTTPMethod = 'GET',
   body?: TBody,
+  headers?: Record<string, string>
 ): Promise<TResponse> {
 
   const res = await fetch(`${EXTERNAL_API}${path}`, {
     method,
-    headers: {'Content-Type': 'application/json'},
+    headers: {'Content-Type': 'application/json', ...headers },
     body: body ? JSON.stringify(body) : undefined,
     cache: 'no-store',
   });
@@ -27,7 +28,8 @@ export async function apiRequest<TResponse, TBody = undefined>(
   return res.json() as Promise<TResponse>;
 }
 
-export const apiGet = <T>(path: string) => apiRequest<T>(path, 'GET');
+export const apiGet = <T>(path: string, headers?: Record<string, string>) =>
+  apiRequest<T>(path, 'GET', undefined, headers);
 
 export const apiPost = <T, B>(path: string, body: B) =>
   apiRequest<T, B>(path, 'POST', body);

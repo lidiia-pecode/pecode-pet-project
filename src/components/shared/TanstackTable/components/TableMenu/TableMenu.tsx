@@ -22,7 +22,8 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { Dispatch, SetStateAction } from 'react';
-import { TableMenuItem } from './TableMenuItem';
+
+import { TableMenuItem } from './components/TableMenuItem';
 
 interface IColumnMenu<T> {
   table: Table<T>;

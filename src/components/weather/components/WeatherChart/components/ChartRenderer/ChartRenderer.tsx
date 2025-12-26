@@ -1,0 +1,146 @@
+'use client';
+
+import dayjs from 'dayjs';
+import { useState, useMemo } from 'react';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+
+import { styles } from './ChartRenderer.styles';
+import { METRICS } from '../../../../constants';
+import { WeatherData, WeatherMetric } from '@/types/Weather';
+import { useResponsive } from '@/hooks/ui/useResponsive';
+import { getMetricColor } from '@/lib/utils/weather/getMetricColor';
+import { CustomTooltip } from '../CustomTooltip';
+
+interface ChartRendererProps {
+  data: WeatherData;
+  metrics: WeatherMetric[];
+}
+
+export const ChartRenderer = ({ data, metrics }: ChartRendererProps) => {
+  const { isTablet } = useResponsive();
+  const [hoveredMetric, setHoveredMetric] = useState<WeatherMetric | null>(
+    null
+  );
+  const useIndividualTooltips = metrics.length > 5;
+
+  const metricMap = useMemo(() => {
+    const map = new Map<WeatherMetric, string>();
+    METRICS.forEach(m => map.set(m.value, m.label));
+    return map;
+  }, []);
+
+  const chartData = useMemo(
+    () =>
+      data.time.map((time, idx) => {
+        const point: Record<string, string | number> = { time };
+        metrics.forEach(metric => {
+          const value = data[metric]?.[idx];
+          if (value != null) point[metric] = value;
+        });
+        return point;
+      }),
+    [data, metrics]
+  );
+
+  const xAxisTicks = useMemo(() => {
+    const uniqueDays = new Map<string, string | number>();
+    chartData.forEach(point => {
+      const day = dayjs(point.time).format('YYYY-MM-DD');
+      if (!uniqueDays.has(day)) uniqueDays.set(day, point.time);
+    });
+    return Array.from(uniqueDays.values());
+  }, [chartData]);
+
+  const getOpacity = (metric: WeatherMetric) => {
+    if (!useIndividualTooltips) return 1;
+    return hoveredMetric ? (hoveredMetric === metric ? 1 : 0.35) : 0.5;
+  };
+
+  return (
+    <ResponsiveContainer width='100%' height={380}>
+      <LineChart
+        data={chartData}
+        margin={
+          isTablet
+            ? { top: 10, right: 0, left: 0, bottom: 10 }
+            : { top: 10, right: 20, left: 0, bottom: 10 }
+        }
+      >
+        <XAxis
+          dataKey='time'
+          ticks={xAxisTicks}
+          tickFormatter={t => dayjs(t).format('D MMM')}
+          tick={styles.axisTick}
+          stroke='#1e3a8a'
+        />
+        <YAxis tick={styles.axisTick} stroke='#1e3a8a' />
+
+        <Tooltip
+          cursor={!useIndividualTooltips}
+          active={useIndividualTooltips ? !!hoveredMetric : undefined}
+          content={props => (
+            <CustomTooltip
+              {...props}
+              metrics={metrics}
+              hoveredMetric={hoveredMetric}
+              useIndividualTooltips={useIndividualTooltips}
+              metricMap={metricMap}
+            />
+          )}
+        />
+
+        <Legend
+          layout={isTablet ? 'horizontal' : 'vertical'}
+          verticalAlign={isTablet ? 'bottom' : 'top'}
+          align={isTablet ? 'center' : 'right'}
+          wrapperStyle={{
+            ...styles.legendWrapperBase,
+            ...(isTablet
+              ? styles.legendWrapperTablet
+              : styles.legendWrapperDesktop),
+            cursor: useIndividualTooltips ? 'pointer' : 'default',
+          }}
+          formatter={v => metricMap.get(v as WeatherMetric)}
+          onMouseEnter={e =>
+            useIndividualTooltips &&
+            e?.value &&
+            setHoveredMetric(e.value as WeatherMetric)
+          }
+          onMouseLeave={() => useIndividualTooltips && setHoveredMetric(null)}
+        />
+
+        {metrics.map(metric => (
+          <Line
+            key={metric}
+            type='monotone'
+            dataKey={metric}
+            stroke={getMetricColor(metric, metrics)}
+            strokeWidth={2}
+            dot={false}
+            opacity={getOpacity(metric)}
+            activeDot={
+              useIndividualTooltips
+                ? hoveredMetric === metric
+                  ? { r: 5 }
+                  : false
+                : { r: 5 }
+            }
+            onMouseEnter={() =>
+              useIndividualTooltips && setHoveredMetric(metric)
+            }
+            onMouseLeave={() => useIndividualTooltips && setHoveredMetric(null)}
+            style={{ cursor: useIndividualTooltips ? 'pointer' : 'default' }}
+          />
+        ))}
+      </LineChart>
+    </ResponsiveContainer>
+  );
+};

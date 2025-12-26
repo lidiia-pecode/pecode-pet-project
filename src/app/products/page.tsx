@@ -1,9 +1,11 @@
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
+
 import { getQueryClient } from '@/lib/utils/getQueryClient';
 import { getProducts } from '@/lib/api/products/products';
-import ProductClientWrapper from '@/components/products-page/ProductsClientWrapper/ProductsClientWrapper';
 import { parseFiltersFromSearchParams } from '@/lib/utils/parseFilters';
 import { toUrlSearchParams } from '@/lib/utils/toUrlSearchParams';
+
+import { ProductsOverview } from '@/components/products-page';
 
 interface ProductsPageProps {
   searchParams: Record<string, string | string[] | undefined>;
@@ -26,7 +28,7 @@ export default async function ProductsPage({
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <ProductClientWrapper />
+      <ProductsOverview />
     </HydrationBoundary>
   );
 }
