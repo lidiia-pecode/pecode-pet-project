@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material';
 
-export const header = {
+export const styles = {
   appBar: {
     backdropFilter: 'blur(6px)',
     borderBottom: '1px solid rgba(0,0,0,0.1)',

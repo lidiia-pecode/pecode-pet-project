@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/incompatible-library */
 'use client';
 
+import { useEffect, useState } from 'react';
 import {
   getCoreRowModel,
   useReactTable,
@@ -9,22 +10,20 @@ import {
   getSortedRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table';
-import { Box, Pagination, SxProps } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { usePinnedColumns } from '@/hooks/tanstackTable/usePinnedColumns';
-import { useColumnDrag } from '@/hooks/tanstackTable/useColumnDrag';
+import { Box, Pagination} from '@mui/material';
+
+import { styles } from './TanstackTable.styles';
+import { usePinnedColumns } from '@/hooks/tanstackTable';
+import { useColumnDrag } from '@/hooks/tanstackTable';
+import { useEffectiveTableState } from '@/hooks/tanstackTable';
+
 import { TableHeader } from './components/TableHeader';
 import { TableRow } from './components/TableRow';
-import { TableToolbar } from './components/TableToolbar';
+import { TableToolbar } from './components/TableMenu';
 import { ColumnMenu } from './components/TableMenu';
-import { TableSkeletonRow } from './components/TableSkeletonRow';
+import { TableSkeletonRow } from './components/TableRow';
 import { TableStateProps } from '@/types/TanstackTable';
-import { useEffectiveTableState } from '@/hooks/tanstackTable/useEffectiveTableState';
-import { Theme } from '@emotion/react';
 
-export const tableStyles = {
-  container: { overflowX: 'auto', width: '100%', position: 'relative' },
-} satisfies Record<string, SxProps<Theme>>;
 
 type Props<T> = {
   data: T[];
@@ -151,7 +150,7 @@ export function TanstackTable<T>({
         setColumnOrder={setColumnOrder}
       />
 
-      <Box sx={tableStyles.container}>
+      <Box sx={styles.container}>
         <Box sx={{ width: table.getTotalSize() }}>
           <TableHeader table={table} stickyLefts={stickyLefts} />
 

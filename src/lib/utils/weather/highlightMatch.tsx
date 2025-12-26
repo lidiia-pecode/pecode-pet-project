@@ -1,4 +1,3 @@
-import { countryDropdownStyles } from '@/components/weather/LocationPicker/LocationPicker.styles';
 import { Box } from '@mui/material';
 
 export function highlightMatch(text: string, query: string): React.ReactNode {
@@ -14,7 +13,7 @@ export function highlightMatch(text: string, query: string): React.ReactNode {
       {text.slice(0, startIndex)}
       <Box
         component='span'
-        sx={countryDropdownStyles.highlited}
+        sx={{ fontWeight: 'bold', bgcolor: '#c6d4e9ff', borderRadius: 0.5 }}
       >
         {text.slice(startIndex, endIndex)}
       </Box>

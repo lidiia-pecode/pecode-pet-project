@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material';
 
-export const layout = {
+export const styles = {
   root: {
     display: 'flex',
     flexDirection: 'column',

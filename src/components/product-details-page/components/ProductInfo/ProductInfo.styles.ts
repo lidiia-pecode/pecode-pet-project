@@ -1,7 +1,7 @@
 import { Theme } from "@emotion/react";
 import { SxProps } from "@mui/material";
 
-export const productInfoStyles = {
+export const styles = {
   container: {
     display: 'flex',
     flexDirection: 'column',

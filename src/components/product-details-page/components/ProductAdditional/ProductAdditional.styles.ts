@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material';
 
-export const productAdditionalStyles = {
+export const styles = {
   container: {
     mt: 4,
     display: 'flex',

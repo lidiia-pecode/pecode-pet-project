@@ -1,8 +1,8 @@
 import { AppBar, Toolbar, Typography } from '@mui/material';
-import { Navbar } from '@/components/shared/Layout/NavBar/Navbar';
-import { MobileMenuButton } from './components/MobileMenuButton';
+import { Navbar } from '@/components/shared/Layout/NavBar';
+import { MobileMenuButton } from '../MobileMenuButton';
 
-import { header } from './Header.styles';
+import { styles } from './Header.styles';
 
 export const Header = () => {
   return (
@@ -10,10 +10,10 @@ export const Header = () => {
       position='sticky'
       elevation={2}
       color='transparent'
-      sx={header.appBar}
+      sx={styles.appBar}
     >
-      <Toolbar sx={header.toolbar}>
-        <Typography variant='h6' sx={header.title}>
+      <Toolbar sx={styles.toolbar}>
+        <Typography variant='h6' sx={styles.title}>
           Pecode Store
         </Typography>
 

@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material';
 
-export const carouselStyles: Record<string, SxProps<Theme>> = {
+export const styles: Record<string, SxProps<Theme>> = {
   container: {
     width: '100%',
     maxWidth: 450,

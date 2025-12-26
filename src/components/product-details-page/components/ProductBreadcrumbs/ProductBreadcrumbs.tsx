@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NextLink from 'next/link';
-import { productBreadcrumbsStyles } from './productBreadcrumbs.styles';
+import { styles } from './productBreadcrumbs.styles';
 
 interface ProductBreadcrumbsProps {
   productTitle: string;
@@ -18,10 +18,10 @@ export const ProductBreadcrumbs = ({
   productTitle,
 }: ProductBreadcrumbsProps) => {
   return (
-    <Box sx={productBreadcrumbsStyles.container}>
+    <Box sx={styles.container}>
       <Breadcrumbs
         separator={<NavigateNextIcon fontSize='small' />}
-        sx={productBreadcrumbsStyles.breadcrumbs}
+        sx={styles.breadcrumbs}
       >
         <Link
           component={NextLink}
@@ -43,7 +43,7 @@ export const ProductBreadcrumbs = ({
 
         <Typography
           color='text.secondary'
-          sx={productBreadcrumbsStyles.lastItem}
+          sx={styles.lastItem}
           title={productTitle}
           noWrap
         >

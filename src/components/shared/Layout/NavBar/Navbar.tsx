@@ -1,6 +1,8 @@
+
+import { styles } from './Navbar.styles';
+
 import { Stack } from '@mui/material';
-import { NavLink } from './components/NavLink';
-import { navbar } from './Navbar.styles';
+import { NavLink } from '../NavLink';
 
 interface NavbarProps {
   direction?: 'row' | 'column';
@@ -19,7 +21,7 @@ export const Navbar = ({ direction = 'row', spacing = 3 }: NavbarProps) => {
     <Stack
       direction={direction}
       spacing={spacing}
-      sx={direction === 'row' ? navbar.containerRow : navbar.containerColumn}
+      sx={direction === 'row' ? styles.containerRow : styles.containerColumn}
     >
       {navLinks.map(link => (
         <NavLink key={link.href} href={link.href} label={link.label} />

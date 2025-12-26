@@ -17,7 +17,7 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { useResponsive } from '@/hooks/ui/useResponsive';
-import { carouselStyles } from './ImageCarousel.styles';
+import { styles } from './ImageCarousel.styles';
 
 interface ImageCarouselProps {
   images: string[];
@@ -29,7 +29,7 @@ export const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperType | null>(null);
 
   return (
-    <Box sx={carouselStyles.container}>
+    <Box sx={styles.container}>
       <Box sx={{ position: 'relative' }}>
         <Swiper
           modules={[Navigation, Pagination, Thumbs]}
@@ -41,7 +41,7 @@ export const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
         >
           {images.map((img, idx) => (
             <SwiperSlide key={idx}>
-              <Box sx={carouselStyles.mainWrapper}>
+              <Box sx={styles.mainWrapper}>
                 <Image
                   src={img}
                   alt={`${title} ${idx + 1}`}
@@ -55,20 +55,20 @@ export const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
           ))}
         </Swiper>
 
-        {!isMobile && (
+        {!isMobile && images.length > 1 && (
           <>
-            <Box sx={{ ...carouselStyles.decoArrow, left: 5 }}>
+            <Box sx={{ ...styles.decoArrow, left: 5 }}>
               <ArrowBackIosNewIcon fontSize='small' />
             </Box>
 
-            <Box sx={{ ...carouselStyles.decoArrow, right: 5 }}>
+            <Box sx={{ ...styles.decoArrow, right: 5 }}>
               <ArrowForwardIosIcon fontSize='small' />
             </Box>
           </>
         )}
       </Box>
 
-      {!isMobile && (
+      {!isMobile && images.length > 1 && (
         <Swiper
           modules={[Thumbs]}
           onSwiper={setThumbsSwiper}
@@ -79,7 +79,7 @@ export const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
         >
           {images.map((img, idx) => (
             <SwiperSlide key={idx}>
-              <Box sx={carouselStyles.thumbImage}>
+              <Box sx={styles.thumbImage}>
                 <Image
                   src={img}
                   alt={`${title} thumb ${idx + 1}`}

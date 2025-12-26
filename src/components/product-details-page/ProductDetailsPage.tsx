@@ -1,16 +1,17 @@
 'use client';
 
 import { Box, Container } from '@mui/material';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+
+import { styles } from './ProductDetailsPage.styles';
+import { Product } from '@/types/Product';
+import { useModalToggle } from '@/hooks/products/useModal';
+import { ActionButton } from '../shared/ActionButton';
 import { ProductBreadcrumbs } from './components/ProductBreadcrumbs';
 import { ImageCarousel } from './components/ImageCarousel';
 import { ProductInfo } from './components/ProductInfo';
 import { ProductAdditional } from './components/ProductAdditional';
-import { ProductFormWrapper } from '../products-page/ProductsTopBar/components/ProductFormWrapper';
-import { styles } from './ProductDetailsPage.styles';
-import { Product } from '@/types/Product';
-import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import { ActionButton } from '../shared/ActionButton';
-import { useModalToggle } from '@/hooks/products/useModal';
+import { ProductFormWrapper } from '../shared/ProductFormWrapper';
 
 interface ProductDetailsPageProps {
   product: Product;
@@ -45,7 +46,13 @@ export const ProductDetailsPage = ({ product }: ProductDetailsPageProps) => {
           open={isOpen}
           size='large'
           onToggle={toggle}
-          form={<ProductFormWrapper product={product} onClose={toggle} />}
+          form={
+            <ProductFormWrapper
+              product={product}
+              showCategory={false}
+              onClose={toggle}
+            />
+          }
         />
       </Box>
     </Container>

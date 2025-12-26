@@ -1,9 +1,8 @@
 import { Row } from '@tanstack/react-table';
 import { Box } from '@mui/material';
-import { TableCell } from './TableCell';
-import { tableRowStyles } from './TableRow.styles';
 
-
+import { styles } from './TableRow.styles';
+import { TableCell } from './components/TableCell';
 
 interface ITableRow<T> {
   row: Row<T>;
@@ -13,7 +12,7 @@ interface ITableRow<T> {
 
 export function TableRow<T>({ row, columnWidths, stickyLefts }: ITableRow<T>) {
   return (
-    <Box sx={tableRowStyles.container}>
+    <Box sx={styles.container}>
       {row.getVisibleCells().map(cell => (
         <TableCell
           key={cell.id}

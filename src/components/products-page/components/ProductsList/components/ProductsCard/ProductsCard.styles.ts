@@ -1,0 +1,59 @@
+import { Theme } from '@emotion/react';
+import { SxProps } from '@mui/material';
+
+export const styles = {
+  cardGrid: {
+    position: 'relative',
+    cursor: 'pointer',
+    '&:hover': { boxShadow: 6 },
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    borderRadius: '12px',
+  },
+
+  imageGrid: {
+    width: '100%',
+    height: 180,
+    objectFit: 'cover',
+    backgroundColor: 'background.paper',
+  },
+
+  title: {
+    fontWeight: 600,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+
+  description: {
+    minHeight: 72,
+    mt: 0.5,
+    color: 'text.secondary',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    display: '-webkit-box',
+    WebkitLineClamp: 3,
+    WebkitBoxOrient: 'vertical',
+  },
+
+  price: {
+    fontWeight: 500,
+  },
+
+  priceRow: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 1,
+    mt: 1,
+  },
+
+  ratingWrapper: {
+    ml: 1,
+  },
+
+  button: {
+    borderRadius: 0,
+  }
+} satisfies Record<string, SxProps<Theme>>;

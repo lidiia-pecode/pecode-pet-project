@@ -1,6 +1,6 @@
 import { Box, Typography, Button, Divider } from '@mui/material';
-import { ProductRating } from '@/components/products-page/shared/ProductRating';
-import { productInfoStyles } from './ProductInfo.styles';
+import { ProductRating } from '@/components/shared/ProductRating/ProductRating';
+import { styles } from './ProductInfo.styles';
 import { IProductRating } from '@/types/Product';
 
 interface ProductInfoProps {
@@ -17,34 +17,36 @@ export const ProductInfo = ({
   rating,
 }: ProductInfoProps) => {
   return (
-    <Box sx={productInfoStyles.container}>
-      <Typography variant='h1' sx={productInfoStyles.title}>{title}</Typography>
- 
-      <Box sx={productInfoStyles.ratingContainer}>
+    <Box sx={styles.container}>
+      <Typography variant='h1' sx={styles.title}>
+        {title}
+      </Typography>
+
+      <Box sx={styles.ratingContainer}>
         <ProductRating value={rating.rate} size='large' showCount={false} />
         <Typography variant='body2' color='text.secondary'>
           {rating.count} reviews
         </Typography>
       </Box>
 
-      <Typography variant='h4' sx={productInfoStyles.price}>${price}</Typography>
+      <Typography variant='h4' sx={styles.price}>
+        ${price}
+      </Typography>
 
       <Button
         variant='contained'
         color='primary'
         size='large'
-        sx={productInfoStyles.addToCartButton}
+        sx={styles.addToCartButton}
       >
         Add to Cart
       </Button>
 
-      <Divider sx={productInfoStyles.divider} />
+      <Divider sx={styles.divider} />
 
-      <Box sx={productInfoStyles.descriptionContainer}>
-        <Typography sx={productInfoStyles.descriptionTitle}>
-          Description
-        </Typography>
-        <Typography variant='h6' sx={productInfoStyles.descriptionText}>
+      <Box sx={styles.descriptionContainer}>
+        <Typography sx={styles.descriptionTitle}>Description</Typography>
+        <Typography variant='h6' sx={styles.descriptionText}>
           {description}
         </Typography>
       </Box>

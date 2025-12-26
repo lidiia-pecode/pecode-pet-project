@@ -1,6 +1,6 @@
 import { SxProps, Theme } from '@mui/material';
 
-export const productBreadcrumbsStyles = {
+export const styles = {
   container: {
     overflow: 'hidden',
     display: { xs: 'block', md: 'none' },
