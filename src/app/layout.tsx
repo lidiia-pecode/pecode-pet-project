@@ -5,6 +5,7 @@ import { TanstackProvider } from '../providers/TanstackProvider';
 import { EmotionRegistry } from '@/providers/EmotionRegistry';
 import { theme } from '../styles/theme';
 import { Layout } from '@/components/shared/Layout';
+import { Alerts } from '@/components/shared/Alerts';
 
 export default function RootLayout({
   children,
@@ -18,7 +19,10 @@ export default function RootLayout({
           <TanstackProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <Layout>{children}</Layout>
+              <Layout>
+                {children}
+                <Alerts />
+              </Layout>
             </ThemeProvider>
           </TanstackProvider>
         </EmotionRegistry>

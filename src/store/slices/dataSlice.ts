@@ -6,7 +6,7 @@ import {
   FilterKey,
 } from '@/types/Filters';
 import { SortOption, SORT_OPTIONS } from '@/types/Sort';
-import { buildQueryString } from '@/lib/utils/buildQueryString';
+import { buildQueryString } from '@/lib/utils/products';
 
 export interface DataState {
   filters: ProductFilters;
@@ -17,6 +17,7 @@ export interface DataState {
   removeFilter: (key: FilterKey) => void;
   clearFilters: () => void;
 
+  syncCategories: (existingSlugs: string[]) => void;
   setSortOption: (option: SortOption) => void;
   setSearchQuery: (query: string) => void;
   setPage: (page: number) => void;
@@ -74,6 +75,19 @@ export const createDataSlice: StateCreator<DataState> = (set, get) => {
     },
 
     clearFilters: () => get().updateFilters(defaultFilters),
+
+    syncCategories: (existingSlugs: string[]) => {
+      const { filters } = get();
+      const validCategories = filters.categories.filter(c =>
+        existingSlugs.includes(c)
+      );
+
+      if (validCategories.length !== filters.categories.length) {
+        set({
+          filters: { ...filters, categories: validCategories },
+        });
+      }
+    },
 
     setSortOption: option => {
       const { sortOption, currentPage } = get();

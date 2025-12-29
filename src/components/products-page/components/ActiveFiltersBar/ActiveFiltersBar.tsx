@@ -3,8 +3,8 @@
 import { Box, Button, Chip } from '@mui/material';
 
 import { styles } from './ActiveFiltersBar.styles';
-import { getActiveFilters } from '@/lib/utils/getActiveFilters';
 import { useProductsStore } from '@/store/productsStore';
+import { getActiveFilters } from '@/lib/utils/products';
 
 
 export const ActiveFiltersBar = () => {

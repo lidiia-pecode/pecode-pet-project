@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Delete } from '@mui/icons-material';
 import {
   Box,
@@ -13,45 +14,65 @@ import {
   CircularProgress,
 } from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+
 import { styles } from './DeleteButton.styles';
 import { useProductsStore } from '@/store/productsStore';
 
+type EntityType = 'product' | 'category';
 
 interface DeleteButtonProps {
-  open: boolean;
-  loading: boolean;
-  productTitle?: string;
-  productCategory?: string;
-  toggleOpen: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  handleDelete: () => Promise<void>;
+  entityName: string;
+  entityType: EntityType;
+  loading?: boolean;
+  usedInTable?: boolean;
+  onConfirm: (e: React.MouseEvent<Element, MouseEvent>) => Promise<void>;
 }
 
 export const DeleteButton = ({
-  open,
-  loading,
-  productTitle,
-  productCategory,
-  toggleOpen,
-  handleDelete,
+  entityName,
+  entityType,
+  loading = false,
+  usedInTable = false,
+  onConfirm,
 }: DeleteButtonProps) => {
   const userRole = useProductsStore(state => state.role);
-  if (userRole !== 'admin') {
-    return null;
-  }
+  const [open, setOpen] = useState(false);
+
+  if (userRole !== 'admin') return null;
+
+  const handleOpen = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(true);
+  };
+
+  const handleClose = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen(false);
+  };
+
+  const handleConfirm = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await onConfirm(e);
+    setOpen(false);
+  };
 
   return (
     <>
       <Box
         sx={{
           ...styles.wrapper,
-          ...(productTitle ? styles.wrapperCard : styles.wrapperCategory),
+          ...(usedInTable
+            ? styles.wrapperTable
+            : entityType === 'product'
+            ? styles.wrapperCard
+            : styles.wrapperCategory),
         }}
       >
-        <IconButton onClick={toggleOpen} aria-label='Delete Product'>
+        <IconButton onClick={handleOpen} aria-label='Delete'>
           <Delete
             sx={{
               ...styles.deleteIcon,
-              ...(productTitle
+              ...(entityType === 'product'
                 ? styles.deleteIconCard
                 : styles.deleteIconCategory),
             }}
@@ -59,28 +80,25 @@ export const DeleteButton = ({
         </IconButton>
       </Box>
 
-      <Dialog
-        open={open}
-        onClose={toggleOpen}
-        onClick={e => e.stopPropagation()}
-        disableRestoreFocus
-      >
+      <Dialog open={open} onClose={handleClose} disableRestoreFocus>
         <DialogTitle sx={styles.dialogTitle}>
           <WarningAmberIcon color='error' />
-          {` Delete ${productTitle || productCategory}`}
+          {` Delete ${entityName}`}
         </DialogTitle>
+
         <DialogContent>
-          <Typography>{`Are you sure you want to delete this ${
-            productTitle ? 'product' : 'category'
-          } ?`}</Typography>
+          <Typography>
+            Are you sure you want to delete this {entityType}?
+          </Typography>
         </DialogContent>
 
         <DialogActions sx={styles.dialogActions}>
-          <Button onClick={toggleOpen} disabled={loading}>
+          <Button onClick={handleClose} disabled={loading}>
             Cancel
           </Button>
+
           <Button
-            onClick={handleDelete}
+            onClick={handleConfirm}
             color='error'
             variant='contained'
             disabled={loading}

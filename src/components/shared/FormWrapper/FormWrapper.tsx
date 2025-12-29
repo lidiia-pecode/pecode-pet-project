@@ -2,8 +2,7 @@
 
 import { ReactNode } from 'react';
 import { Box, Button, Paper, Typography } from '@mui/material';
-import { useAlert } from '@/hooks/useAlert';
-import { Alerts } from '../Alerts/Alerts';
+
 import { styles } from './FormWrapper.styles';
 
 interface FormWrapperProps {
@@ -21,7 +20,6 @@ export const FormWrapper = ({
   children,
   isSubmitting = false,
 }: FormWrapperProps) => {
-  const alert = useAlert();
 
   return (
     <>
@@ -44,7 +42,6 @@ export const FormWrapper = ({
           </Box>
         </Box>
       </Paper>
-      <Alerts {...alert} />
     </>
   );
 };

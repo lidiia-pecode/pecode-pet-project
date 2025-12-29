@@ -1,19 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, Box, Typography, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 import { styles } from './ProductsCard.styles';
 import type { Product } from '@/types/Product';
-import { deleteProductById } from '@/lib';
-import { useProducts } from '@/hooks/products/useProducts';
-import { useAlert } from '@/hooks/useAlert';
-
+import { useDeleteProduct } from '@/hooks/products/useProducts';
 import { DeleteButton } from '@/components/shared/DeleteButton';
-import { Alerts } from '@/components/shared/Alerts';
 import { ProductRating } from '@/components/shared/ProductRating';
-import { useModalToggle } from '@/hooks/products/useModal';
 
 interface ProductsCardProps {
   product: Product;
@@ -25,32 +20,7 @@ const ProductsCardComponent = ({ product }: ProductsCardProps) => {
   const handleOpenProduct = () => {
     router.push(`/products/${product.id}`);
   };
-
-  const refetch = useProducts().refetch;
-  const alert = useAlert();
-  const { isOpen, toggle } = useModalToggle();
-  const [loading, setLoading] = useState(false);
-
-  const toggleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    toggle();
-  };
-
-  const handleDelete = async () => {
-    try {
-      setLoading(true);
-      await deleteProductById(product.id);
-      alert.success('Product deleted!');
-      refetch();
-      toggle();
-    } catch (err) {
-      alert.error('Failed to delete product');
-      console.log(err);
-      toggle();
-    } finally {
-      setLoading(false);
-    }
-  };
+  const deleteMutation = useDeleteProduct();
 
   return (
     <Card
@@ -92,14 +62,13 @@ const ProductsCardComponent = ({ product }: ProductsCardProps) => {
       </Button>
 
       <DeleteButton
-        open={isOpen}
-        loading={loading}
-        toggleOpen={toggleOpen}
-        handleDelete={handleDelete}
-        productTitle={product.title}
+        entityName={product.title}
+        entityType='product'
+        loading={deleteMutation.isPending}
+        onConfirm={async () => {
+          await deleteMutation.mutateAsync(product.id);
+        }}
       />
-
-      <Alerts {...alert} />
     </Card>
   );
 };

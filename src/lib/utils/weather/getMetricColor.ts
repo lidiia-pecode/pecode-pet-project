@@ -1,4 +1,4 @@
-import { COLORS } from "@/components/weather/constants";
+import { COLORS } from '@/lib/utils/weather/constants';
 
 export const getMetricColor = (metric: string, metrics: string[]) => {
   const idx = metrics.indexOf(metric);

@@ -1,9 +1,9 @@
 import { PaginatedResponse, Product } from '@/types/Product';
 import { ProductFilters } from '@/types/Filters';
 import { SortOption } from '@/types/Sort';
-import { buildQueryString } from '@/lib/utils/buildQueryString';
-import { generateRandomRating } from '../../utils/generateRandomRating';
-import { apiDelete, apiGet } from '../fetcher';
+import { apiDelete, apiGet, apiPost, apiPut } from '../fetcher';
+import { buildQueryString, generateRandomRating } from '@/lib/utils/products';
+import { ProductFormData } from '@/types/NewProduct';
 
 interface GetProductsParams {
   page: number;
@@ -41,4 +41,14 @@ export async function getProductById(id: number): Promise<Product> {
 
 export async function deleteProductById(id: number) {
   await apiDelete(`/products/${id}`);
+}
+
+
+export async function updateProductById(id: number, data: ProductFormData) {
+  await apiPut(`/products/${id}`, data);
+}
+
+
+export async function createProduct(data: ProductFormData) {
+  await apiPost(`/products/`, data);
 }

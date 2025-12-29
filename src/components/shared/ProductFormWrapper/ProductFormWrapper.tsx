@@ -5,10 +5,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, MenuItem, TextField } from '@mui/material';
 
 import { styles } from './ProductFormWrapper.styles';
-import { apiPost, apiPut } from '@/lib/api/fetcher';
-import { ProductFormData, productSchema } from '@/types/NewProduct';
 import { Product } from '@/types/Product';
+import { ProductFormData, productSchema } from '@/types/NewProduct';
 import { useCategories } from '@/hooks/categories/useCategories';
+import {
+  useCreateProduct,
+  useUpdateProduct,
+} from '@/hooks/products/useProducts';
 import { FormWrapper } from '@/components/shared/FormWrapper';
 import { ImageUploader } from '../ImageUploader';
 
@@ -16,15 +19,19 @@ interface ProductFormWrapperProps {
   product?: Product;
   showCategory: boolean;
   onClose: () => void;
+  refetch?: () => void;
 }
 
 export const ProductFormWrapper = ({
   product,
   showCategory,
   onClose,
+  refetch,
 }: ProductFormWrapperProps) => {
   const isUpdate = !!product;
   const { data: categories, isLoading } = useCategories();
+  const updateMutation = useUpdateProduct();
+  const createMutation = useCreateProduct();
 
   const {
     register,
@@ -47,17 +54,15 @@ export const ProductFormWrapper = ({
   });
 
   const onSubmit = async (data: ProductFormData) => {
-    try {
-      if (isUpdate) {
-        await apiPut(`/products/${product!.id}`, data);
-      } else {
-        await apiPost('/products/', data);
-      }
-      reset();
-      onClose();
-    } catch (err) {
-      console.error(err);
+    if (isUpdate) {
+      await updateMutation.mutateAsync({ id: product!.id, ...data });
+    } else {
+      await createMutation.mutateAsync(data);
     }
+
+    reset();
+    onClose();
+    refetch?.();
   };
 
   return (

@@ -29,17 +29,14 @@ import {
 } from '@/types/Auth';
 
 import { useAuthForm } from '@/hooks/auth/useAuthForm';
-import { useAlert } from '@/hooks/useAlert';
-
-import { Alerts } from '../../../shared/Alerts';
+import { useProductsStore } from '@/store/productsStore';
 
 export const AuthForm = () => {
-  const alert = useAlert();
   const router = useRouter();
+  const setError = useProductsStore(state => state.setError);
+  const setSuccess = useProductsStore(state => state.setSuccess);
 
-  const { mode, loading, handleModeSwitch, onSubmit } = useAuthForm(
-    alert.error
-  );
+  const { mode, loading, handleModeSwitch, onSubmit } = useAuthForm(setError, setSuccess);
 
   const schema = mode === 'login' ? schemaLogin : schemaRegister;
 
@@ -237,8 +234,6 @@ export const AuthForm = () => {
           </Button>
         </Typography>
       </Paper>
-
-      <Alerts {...alert} />
     </>
   );
 };

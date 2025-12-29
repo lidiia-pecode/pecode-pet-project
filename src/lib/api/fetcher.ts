@@ -1,4 +1,4 @@
-import { EXTERNAL_API } from '@/lib/constants';
+const API = 'https://api.escuelajs.co/api/v1';
 
 export type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -8,10 +8,9 @@ export async function apiRequest<TResponse, TBody = undefined>(
   body?: TBody,
   headers?: Record<string, string>
 ): Promise<TResponse> {
-
-  const res = await fetch(`${EXTERNAL_API}${path}`, {
+  const res = await fetch(`${API}${path}`, {
     method,
-    headers: {'Content-Type': 'application/json', ...headers },
+    headers: { 'Content-Type': 'application/json', ...headers },
     body: body ? JSON.stringify(body) : undefined,
     cache: 'no-store',
   });

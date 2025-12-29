@@ -1,12 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { useCallback, useState } from 'react';
+import { Box, CircularProgress, IconButton, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { uploadImages } from '@/lib/utils/uploadImages';
+
 import { styles } from './ImageUploader.styles';
+import { uploadImages } from '@/lib/utils/products';
 
 interface ImageUploaderProps {
   value: string[];

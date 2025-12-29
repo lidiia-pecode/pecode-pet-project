@@ -4,10 +4,10 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TextField } from '@mui/material';
 
-import { apiPost } from '@/lib/api/fetcher';
 import { NewCategoryFormData, newCategorySchema } from '@/types/Categories';
 import { FormWrapper } from '@/components/shared/FormWrapper';
 import { ImageUploader } from '@/components/shared/ImageUploader';
+import { useCreateCategory } from '@/hooks/categories/useCategories';
 
 interface CategoryFormWrapperProps {
   onClose: () => void;
@@ -25,14 +25,12 @@ export const CategoryFormWrapper = ({ onClose }: CategoryFormWrapperProps) => {
     defaultValues: { image: '' },
   });
 
+  const createCategory = useCreateCategory();
+
   const onSubmit = async (data: NewCategoryFormData) => {
-    try {
-      await apiPost('/categories/', data);
-      reset();
-      onClose();
-    } catch (err) {
-      console.error(err);
-    }
+    await createCategory.mutateAsync(data);
+    reset();
+    onClose();
   };
 
   return (

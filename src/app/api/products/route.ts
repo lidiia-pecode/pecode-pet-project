@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+
 import { Product } from '@/types/Product';
-import { generateRandomRating } from '@/lib/utils/generateRandomRating';
-import { getPreparedProducts } from '@/lib/utils/getPreparedProducts';
-import { parseFiltersFromSearchParams } from '@/lib/utils/parseFilters';
 import { apiGet } from '@/lib/api/fetcher';
+import {
+  generateRandomRating,
+  getPreparedProducts,
+  parseFiltersFromSearchParams,
+} from '@/lib/utils/products';
 
 const DEFAULT_LIMIT = 6;
 

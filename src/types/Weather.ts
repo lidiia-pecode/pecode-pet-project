@@ -1,4 +1,4 @@
-import { METRICS } from "@/components/weather/constants";
+import { METRICS } from '@/lib/utils/weather/constants';
 
 export type MetricItem = (typeof METRICS)[number];
 export type WeatherMetric = MetricItem['value'];
@@ -42,7 +42,6 @@ export interface ICurrentWeather {
   is_day: number;
   weather_code: number;
 }
-
 
 export interface Country {
   code: string;

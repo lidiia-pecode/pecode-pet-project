@@ -2,6 +2,7 @@
 
 import { Box, Container } from '@mui/material';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import { useRouter } from 'next/navigation';
 
 import { styles } from './ProductDetailsPage.styles';
 import { Product } from '@/types/Product';
@@ -19,6 +20,7 @@ interface ProductDetailsPageProps {
 
 export const ProductDetailsPage = ({ product }: ProductDetailsPageProps) => {
   const { isOpen, toggle } = useModalToggle();
+  const router = useRouter();
 
   return (
     <Container maxWidth='lg'>
@@ -51,6 +53,7 @@ export const ProductDetailsPage = ({ product }: ProductDetailsPageProps) => {
               product={product}
               showCategory={false}
               onClose={toggle}
+              refetch={router.refresh}
             />
           }
         />

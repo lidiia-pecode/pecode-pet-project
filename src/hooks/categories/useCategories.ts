@@ -1,5 +1,8 @@
-import { getCategories } from "@/lib/api/products/categories";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { createCategory, deleteCategory, getCategories } from '@/lib/api/products/categories';
+import { alertMessages } from '@/lib/utils/constants';
+import { useProductsStore } from '@/store/productsStore';
 
 export const useCategories = () => {
 return useQuery({
@@ -8,3 +11,37 @@ return useQuery({
     staleTime: 1000 * 60 * 60,
   });
 }
+
+export const useDeleteCategory = () => {
+  const queryClient = useQueryClient();
+  const setSuccess = useProductsStore(state => state.setSuccess);
+  const setError = useProductsStore(state => state.setError);
+
+  return useMutation({
+    mutationFn: (id: number) => deleteCategory(id),
+    onSuccess: () => {
+      setSuccess(alertMessages.category.delete.success);
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+    onError: () => {
+      setError(alertMessages.category.delete.error);
+    },
+  });
+};
+
+export const useCreateCategory = () => {
+  const queryClient = useQueryClient();
+  const setSuccess = useProductsStore(state => state.setSuccess);
+  const setError = useProductsStore(state => state.setError);
+
+  return useMutation({
+    mutationFn: createCategory,
+    onSuccess: () => {
+      setSuccess(alertMessages.category.create.success);
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+    },
+    onError: () => {
+      setError(alertMessages.category.create.error);
+    },
+  });
+};

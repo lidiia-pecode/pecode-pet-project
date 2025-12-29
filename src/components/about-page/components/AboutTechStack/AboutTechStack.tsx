@@ -1,7 +1,8 @@
 import { Typography } from '@mui/material';
 import { Box, Card } from '@mui/material';
-import { technologies } from '../../constants';
+
 import { styles } from './AboutTechStack.styles';
+import { technologies } from '@/lib/utils/about/constants';
 
 export const AboutTeckStack = () => {
   return (

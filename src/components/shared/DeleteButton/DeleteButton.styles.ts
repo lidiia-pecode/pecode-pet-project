@@ -18,6 +18,12 @@ export const styles = {
     left: 8,
   },
 
+  wrapperTable: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   wrapperCategory: {
     height: 24,
     width: 24,

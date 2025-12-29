@@ -1,11 +1,13 @@
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
-import { getQueryClient } from '@/lib/utils/getQueryClient';
 import { getProducts } from '@/lib/api/products/products';
-import { parseFiltersFromSearchParams } from '@/lib/utils/parseFilters';
-import { toUrlSearchParams } from '@/lib/utils/toUrlSearchParams';
+import { getQueryClient } from '@/lib/utils';
 
 import { ProductsOverview } from '@/components/products-page';
+import {
+  parseFiltersFromSearchParams,
+  toUrlSearchParams,
+} from '@/lib/utils/products';
 
 interface ProductsPageProps {
   searchParams: Record<string, string | string[] | undefined>;

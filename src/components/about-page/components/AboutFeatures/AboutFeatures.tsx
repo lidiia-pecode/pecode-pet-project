@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import { styles } from './AboutFeatures.styles';
-import { features } from '../../constants';
+import { features } from '@/lib/utils/about/constants';
 
 export const AboutFeatures = () => {
   return (
@@ -8,7 +8,6 @@ export const AboutFeatures = () => {
       {features.map((feature, index) => (
         <Card key={index} sx={styles.cardContainer}>
           <CardContent sx={styles.cardContent}>
-
             <Typography variant='h5' sx={styles.featureTitle}>
               <Box sx={styles.iconWrapper}>{feature.icon}</Box>
               {feature.title}
