@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -12,29 +12,23 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { styles } from './CategoryFilter.styles';
 import { CategorySlug } from '@/types/Categories';
-import { deleteCategory } from '@/lib/api/products/categories';
 import { useProductsStore } from '@/store/productsStore';
-import { useCategories } from '@/hooks/categories/useCategories';
-import { useAlert } from '@/hooks/useAlert';
+import {
+  useCategories,
+  useDeleteCategory,
+} from '@/hooks/categories/useCategories';
 import { useModalToggle } from '@/hooks/products/useModal';
-
 import { CategoryFormWrapper } from '../CategoryFormWrapper';
 import { CategoryFilterSkeleton } from '../CategoryFilterSkeleton';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { DeleteButton } from '@/components/shared/DeleteButton';
-import { Alerts } from '@/components/shared/Alerts';
 
 export const CategoryFilter = () => {
-  const { data: categories, isLoading, refetch } = useCategories();
-  const { isOpen, toggle } = useModalToggle();
+  const { data: categories, isLoading } = useCategories();
+  const syncCategories = useProductsStore(state => state.syncCategories);
 
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const toggleOpen = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setOpen(!open);
-  };
-  const alert = useAlert();
+  const { isOpen, toggle } = useModalToggle();
+  const deleteMutation = useDeleteCategory();
 
   const selectedCategories = useProductsStore(
     state => state.filters.categories
@@ -50,20 +44,12 @@ export const CategoryFilter = () => {
     updateFilters({ categories: updated });
   };
 
-  const handleDelete = async (id: number) => {
-    try {
-      setLoading(true);
-      await deleteCategory(id);
-      refetch();
-      alert.success('Category deleted!');
-    } catch (err) {
-      alert.error('Failed to delete category');
-      console.log(err);
-      setOpen(false);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (categories) {
+      const slugs = categories.map(c => c.slug);
+      syncCategories(slugs);
     }
-  };
+  }, [categories, syncCategories]);
 
   return (
     <Box>
@@ -101,18 +87,17 @@ export const CategoryFilter = () => {
               />
 
               <DeleteButton
-                open={open}
-                loading={loading}
-                productCategory={category.name}
-                toggleOpen={toggleOpen}
-                handleDelete={() => handleDelete(category.id)}
+                entityName={category.name}
+                entityType='category'
+                loading={deleteMutation.isPending}
+                onConfirm={async () => {
+                  await deleteMutation.mutateAsync(category.id);
+                }}
               />
             </Box>
           ))
         )}
       </FormGroup>
-
-      <Alerts {...alert} />
     </Box>
   );
 };

@@ -1,7 +1,7 @@
-import { MAP_CONFIG } from '@/components/weather/constants';
-import { NominatimResult } from '@/types/Weather';
 import { useState, useEffect, useCallback } from 'react';
 
+import { MAP_CONFIG } from '@/lib/utils/weather/constants';
+import { NominatimResult } from '@/types/Weather';
 
 export const useLocationSearch = (query: string) => {
   const [suggestions, setSuggestions] = useState<NominatimResult[]>([]);

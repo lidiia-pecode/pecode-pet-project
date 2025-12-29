@@ -14,7 +14,6 @@ import { ViewModeSwitcher } from './components/ViewModeSwitcher';
 import { ProductFormWrapper } from '@/components/shared/ProductFormWrapper';
 import { ActionButton } from '@/components/shared/ActionButton';
 
-
 export const ProductsTopBar = () => {
   const openFilters = useProductsStore(state => state.openFilters);
   const { isOpen, toggle } = useModalToggle();
@@ -42,7 +41,12 @@ export const ProductsTopBar = () => {
             icon={<AddIcon fontSize='small' />}
             open={isOpen}
             onToggle={toggle}
-            form={<ProductFormWrapper onClose={toggle} showCategory />}
+            form={
+              <ProductFormWrapper
+                onClose={toggle}
+                showCategory
+              />
+            }
           />
 
           <Box sx={styles.activeFiltersBarContainer}>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+
 import { LocationData } from '@/types/Weather';
 import { fetchNominatimReverse } from '@/lib/api/weather/location';
 

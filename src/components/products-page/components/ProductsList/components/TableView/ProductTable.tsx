@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { SortingState } from '@tanstack/react-table';
 
-import { useProducts } from '@/hooks/products/useProducts';
-import { useProductColumns } from './components/ProductColumns';
-import { TanstackTable } from '../../../../../shared/TanstackTable';
 import { useProductsStore } from '@/store/productsStore';
+import { useProducts } from '@/hooks/products/useProducts';
+import { useProductColumns } from './components/ProductColumns/ProductColumns';
+import { TanstackTable } from '@/components/shared/TanstackTable';
+import { EmptyState } from '@/components/shared/EmptyState';
 
 export const ProductTable = () => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -30,6 +31,15 @@ export const ProductTable = () => {
 
   const pageSelections = useProductsStore(state => state.pageSelections);
   const setPageSelection = useProductsStore(state => state.setPageSelection);
+
+  if (!data?.products?.length) {
+    return (
+      <EmptyState
+        title='No products found'
+        subtitle='Try adjusting your filters or search query'
+      />
+    );
+  }
 
   return (
     <TanstackTable

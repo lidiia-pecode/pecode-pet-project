@@ -1,4 +1,4 @@
-import { WeatherOverview } from '@/components/weather';
+import { WeatherOverview } from '@/components/weather-page';
 
 export default function WeatherPage() {
   return (

@@ -1,11 +1,12 @@
 'use client';
 
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 
 import { styles } from './ProductsGridView.styles';
 import { useProducts } from '@/hooks/products/useProducts';
 import { ProductsCard } from '../ProductsCard';
 import { ProductsGridSkeleton } from '../ProductsGridSkeleton';
+import { EmptyState } from '@/components/shared/EmptyState';
 
 export const ProductsGridView = () => {
   const { data, isLoading } = useProducts();
@@ -16,15 +17,10 @@ export const ProductsGridView = () => {
 
   if (!data?.products?.length) {
     return (
-      <Box sx={styles.emptyContainer}>
-        <Typography variant='h6' sx={styles.emptyTitle}>
-          No products found
-        </Typography>
-
-        <Typography variant='body2' sx={styles.emptySubtitle}>
-          Try adjusting your filters or search query
-        </Typography>
-      </Box>
+      <EmptyState
+        title='No products found'
+        subtitle='Try adjusting your filters or search query'
+      />
     );
   }
 

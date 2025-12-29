@@ -1,11 +1,13 @@
 import { useState } from 'react';
+
 import { getProfile, loginWithTokenResponse, registerUser } from '@/lib/api/auth/registerUser';
-// import { loginUser } from '@/lib/api/auth/loginUser';
 import { AuthMode, AuthFormData, RegisterFormData } from '@/types/Auth';
 import { useProductsStore } from '@/store/productsStore';
+import { alertMessages } from '@/lib/utils/constants';
 
 export const useAuthForm = (
-  error: (msg: string) => void
+  onError: (msg: string) => void,
+  onSuccess: (msg: string) => void
 ) => {
   const [mode, setMode] = useState<AuthMode>('login');
   const [loading, setLoading] = useState(false);
@@ -18,32 +20,28 @@ export const useAuthForm = (
 
   const onSubmit = async (
     data: AuthFormData,
-    onSuccess: () => void
+    onClear: () => void
   ): Promise<boolean> => {
     setLoading(true);
 
     try {
       if (mode === 'register') {
         const { name, role, email, password } = data as RegisterFormData;
-        const res = await registerUser({ name, role, email, password });
-        console.log('Registration response:', res);
-        // await loginUser({ email, password });
+        await registerUser({ name, role, email, password });
         const token = await loginWithTokenResponse({ email, password });
-        console.log('Login response after registration:', token);
         const user = await getProfile(token.access_token);
         setRole(user.role);
-
       } else {
-        // await loginUser(data);
-        const token  = await loginWithTokenResponse(data);
+        const token = await loginWithTokenResponse(data);
         const user = await getProfile(token.access_token);
         setRole(user.role);
       }
-      onSuccess();
+      onClear();
+      onSuccess(alertMessages.auth.success);
       return true;
     } catch (err) {
-      console.error(err);
-      error('Something went wrong');
+      console.log(err);
+      onError(alertMessages.auth.error);
       return false;
     } finally {
       setLoading(false);
