@@ -26,18 +26,20 @@ import {
   schemaLogin,
   schemaRegister,
   AuthFormData,
-} from '@/types/Auth';
+} from '@/types/User';
 
 import { useAuthForm } from '@/hooks/auth/useAuthForm';
-import { useProductsStore } from '@/store/productsStore';
+import { useGlobalStore } from '@/store/globalStore';
 
 export const AuthForm = () => {
   const router = useRouter();
-  const setError = useProductsStore(state => state.setError);
-  const setSuccess = useProductsStore(state => state.setSuccess);
+  const setError = useGlobalStore(state => state.setError);
+  const setSuccess = useGlobalStore(state => state.setSuccess);
 
-  const { mode, loading, handleModeSwitch, onSubmit } = useAuthForm(setError, setSuccess);
-
+  const { mode, loading, handleModeSwitch, onSubmit } = useAuthForm(
+    setError,
+    setSuccess
+  );
   const schema = mode === 'login' ? schemaLogin : schemaRegister;
 
   const {

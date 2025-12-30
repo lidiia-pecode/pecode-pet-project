@@ -1,11 +1,22 @@
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { SortingState } from '@tanstack/react-table';
 
-import { createProduct, deleteProductById, getProducts, updateProductById } from '@/lib/api/products';
-import { useProductsStore } from '@/store/productsStore';
+import {
+  createProduct,
+  deleteProductById,
+  getProducts,
+  updateProductById,
+} from '@/lib/api/products';
 import { mapColumnSortToSortOption } from '@/lib/utils/products';
 import { alertMessages } from '@/lib/utils/constants';
 import { ProductFormData } from '@/types/NewProduct';
+import { useProductsStore } from '@/store/productsStore';
+import { useGlobalStore } from '@/store/globalStore';
 
 export const useProducts = (sorting?: SortingState) => {
   const currentPage = useProductsStore(state => state.currentPage);
@@ -25,8 +36,8 @@ export const useProducts = (sorting?: SortingState) => {
 
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
-  const setSuccess = useProductsStore(state => state.setSuccess);
-  const setError = useProductsStore(state => state.setError);
+  const setSuccess = useGlobalStore(state => state.setSuccess);
+  const setError = useGlobalStore(state => state.setError);
 
   return useMutation({
     mutationFn: (id: number) => deleteProductById(id),
@@ -44,8 +55,8 @@ export const useDeleteProduct = () => {
 
 export const useCreateProduct = () => {
   const queryClient = useQueryClient();
-  const setSuccess = useProductsStore(state => state.setSuccess);
-  const setError = useProductsStore(state => state.setError);
+  const setSuccess = useGlobalStore(state => state.setSuccess);
+  const setError = useGlobalStore(state => state.setError);
 
   return useMutation({
     mutationFn: createProduct,
@@ -59,11 +70,10 @@ export const useCreateProduct = () => {
   });
 };
 
-
 export const useUpdateProduct = () => {
   const queryClient = useQueryClient();
-  const setSuccess = useProductsStore(state => state.setSuccess);
-  const setError = useProductsStore(state => state.setError);
+  const setSuccess = useGlobalStore(state => state.setSuccess);
+  const setError = useGlobalStore(state => state.setError);
 
   return useMutation({
     mutationFn: ({ id, ...data }: { id: number } & ProductFormData) =>
@@ -80,4 +90,3 @@ export const useUpdateProduct = () => {
     },
   });
 };
-

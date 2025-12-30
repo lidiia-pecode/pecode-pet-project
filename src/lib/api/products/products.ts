@@ -43,11 +43,9 @@ export async function deleteProductById(id: number) {
   await apiDelete(`/products/${id}`);
 }
 
-
 export async function updateProductById(id: number, data: ProductFormData) {
   await apiPut(`/products/${id}`, data);
 }
-
 
 export async function createProduct(data: ProductFormData) {
   await apiPost(`/products/`, data);

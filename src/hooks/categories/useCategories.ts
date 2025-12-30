@@ -1,21 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { createCategory, deleteCategory, getCategories } from '@/lib/api/products/categories';
+import {
+  createCategory,
+  deleteCategory,
+  getCategories,
+} from '@/lib/api/products/categories';
 import { alertMessages } from '@/lib/utils/constants';
-import { useProductsStore } from '@/store/productsStore';
+import { useGlobalStore } from '@/store/globalStore';
 
 export const useCategories = () => {
-return useQuery({
+  return useQuery({
     queryKey: ['categories'],
     queryFn: getCategories,
     staleTime: 1000 * 60 * 60,
   });
-}
+};
 
 export const useDeleteCategory = () => {
   const queryClient = useQueryClient();
-  const setSuccess = useProductsStore(state => state.setSuccess);
-  const setError = useProductsStore(state => state.setError);
+  const setSuccess = useGlobalStore(state => state.setSuccess);
+  const setError = useGlobalStore(state => state.setError);
 
   return useMutation({
     mutationFn: (id: number) => deleteCategory(id),
@@ -31,8 +35,8 @@ export const useDeleteCategory = () => {
 
 export const useCreateCategory = () => {
   const queryClient = useQueryClient();
-  const setSuccess = useProductsStore(state => state.setSuccess);
-  const setError = useProductsStore(state => state.setError);
+  const setSuccess = useGlobalStore(state => state.setSuccess);
+  const setError = useGlobalStore(state => state.setError);
 
   return useMutation({
     mutationFn: createCategory,

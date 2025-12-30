@@ -16,7 +16,7 @@ import {
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 
 import { styles } from './DeleteButton.styles';
-import { useProductsStore } from '@/store/productsStore';
+import { useGlobalStore } from '@/store/globalStore';
 
 type EntityType = 'product' | 'category';
 
@@ -35,7 +35,7 @@ export const DeleteButton = ({
   usedInTable = false,
   onConfirm,
 }: DeleteButtonProps) => {
-  const userRole = useProductsStore(state => state.role);
+  const userRole = useGlobalStore(state => state.user?.role);
   const [open, setOpen] = useState(false);
 
   if (userRole !== 'admin') return null;

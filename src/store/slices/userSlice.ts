@@ -1,12 +1,13 @@
 import { StateCreator } from 'zustand';
+import { User } from '@/types/User';
 
 export interface UserState {
-  role: 'customer' | 'admin' | null;
-  setRole: (role: 'customer' | 'admin' | null) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
 }
 
 export const createUserSlice: StateCreator<UserState> = set => ({
-  role: null,
+  user: null,
 
-  setRole: role => set({ role }),
+  setUser: user => set({ user }),
 });

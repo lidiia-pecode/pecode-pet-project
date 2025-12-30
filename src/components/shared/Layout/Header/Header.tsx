@@ -1,8 +1,9 @@
-import { AppBar, Toolbar, Typography } from '@mui/material';
-import { Navbar } from '@/components/shared/Layout/NavBar';
-import { MobileMenuButton } from '../MobileMenuButton';
+import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 
 import { styles } from './Header.styles';
+import { Navbar } from '@/components/shared/Layout/NavBar';
+import { MobileMenuButton } from '../MobileMenuButton';
+import { ProfileButton } from '../ProfileButton';
 
 export const Header = () => {
   return (
@@ -19,7 +20,10 @@ export const Header = () => {
 
         <Navbar />
 
-        <MobileMenuButton />
+        <Box sx={styles.buttonsContainer}>
+          <ProfileButton />
+          <MobileMenuButton />
+        </Box>
       </Toolbar>
     </AppBar>
   );

@@ -1,3 +1,5 @@
+const WEATHER_API = 'https://api.open-meteo.com/v1/forecast?';
+
 import {
   ICurrentWeather,
   WeatherMetric,
@@ -18,7 +20,7 @@ export async function fetchWeather(
   });
   params.append(`${mode}`, metrics.join(','));
 
-  const url = `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+  const url = `${WEATHER_API}${params.toString()}`;
   const res = await fetch(url);
 
   if (!res.ok) {
@@ -52,7 +54,7 @@ export async function fetchCurrentWeather(
     ].join(','),
   });
 
-  const url = `https://api.open-meteo.com/v1/forecast?${params.toString()}`;
+  const url = `${WEATHER_API}${params.toString()}`;
   const res = await fetch(url);
 
   if (!res.ok) {

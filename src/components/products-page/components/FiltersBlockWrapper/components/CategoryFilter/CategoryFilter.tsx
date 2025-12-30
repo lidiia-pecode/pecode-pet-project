@@ -17,7 +17,7 @@ import {
   useCategories,
   useDeleteCategory,
 } from '@/hooks/categories/useCategories';
-import { useModalToggle } from '@/hooks/products/useModal';
+import { useModalToggle } from '@/hooks/ui/useModal';
 import { CategoryFormWrapper } from '../CategoryFormWrapper';
 import { CategoryFilterSkeleton } from '../CategoryFilterSkeleton';
 import { ActionButton } from '@/components/shared/ActionButton';

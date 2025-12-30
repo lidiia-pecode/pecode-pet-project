@@ -1,14 +1,14 @@
 'use client';
 
-import { useProductsStore } from '@/store/productsStore';
 import { Button } from '@mui/material';
 import { styles } from './LogoutButton.styles';
+import { useGlobalStore } from '@/store/globalStore';
 
 export const LogoutButton = () => {
-  const setRole = useProductsStore(state => state.setRole);
+  const setUser = useGlobalStore(state => state.setUser);
 
   const handleLogout = () => {
-    setRole(null);
+    setUser(null);
   };
 
   return (

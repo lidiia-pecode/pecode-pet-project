@@ -3,6 +3,7 @@ import { SxProps } from "@mui/material";
 
 export const styles = {
   base: {
+    pb: 0.5,
     textDecoration: 'none',
     fontWeight: 500,
     color: 'text.primary',

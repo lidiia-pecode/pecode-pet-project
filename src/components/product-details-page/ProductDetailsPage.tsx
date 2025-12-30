@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import { styles } from './ProductDetailsPage.styles';
 import { Product } from '@/types/Product';
-import { useModalToggle } from '@/hooks/products/useModal';
+import { useModalToggle } from '@/hooks/ui/useModal';
 import { ActionButton } from '../shared/ActionButton';
 import { ProductBreadcrumbs } from './components/ProductBreadcrumbs';
 import { ImageCarousel } from './components/ImageCarousel';

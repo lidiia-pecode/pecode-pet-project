@@ -2,7 +2,7 @@ import { SxProps, Theme } from '@mui/material';
 
 export const styles = {
   container: {
-    width: 280,
+    width: 300,
     p: 2,
     display: 'flex',
     flexDirection: 'column',
@@ -16,6 +16,7 @@ export const styles = {
   },
   title: {
     fontWeight: 600,
+    color: 'primary.main'
   },
   divider: {
     mb: 2,

@@ -8,8 +8,8 @@ import {
   Typography,
 } from '@mui/material';
 import { ReactElement } from 'react';
-import { useProductsStore } from '@/store/productsStore';
 import { styles } from './ActionButton.styles';
+import { useGlobalStore } from '@/store/globalStore';
 
 type ActionButtonMode = 'create' | 'edit';
 
@@ -34,7 +34,7 @@ export const ActionButton = ({
   size = 'medium',
   onToggle,
 }: ActionButtonProps) => {
-  const userRole = useProductsStore(state => state.role);
+  const userRole = useGlobalStore(state => state.user?.role);
 
   if (userRole !== 'admin') return null;
 

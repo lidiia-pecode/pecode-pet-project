@@ -2,8 +2,9 @@ import { SxProps, Theme } from '@mui/material';
 
 export const styles = {
   appBar: {
+    backgroundColor: '#ffffff96',
     backdropFilter: 'blur(6px)',
-    borderBottom: '1px solid rgba(0,0,0,0.1)',
+    borderBottom: '1px solid #0000001a',
   },
   toolbar: {
     justifyContent: 'space-between',
@@ -12,33 +13,10 @@ export const styles = {
   title: {
     fontWeight: 600,
   },
-} satisfies Record<string, SxProps<Theme>>;
 
-export const mobileMenu = {
-  container: {
-    width: 280,
-    p: 2,
+  buttonsContainer: {
     display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    mb: 1,
-  },
-  title: {
-    fontWeight: 600,
-  },
-  divider: {
-    mb: 2,
-  },
-  buttonWrapper: {
-    display: { xs: 'block', md: 'none' },
-  },
-
-  closeButton: {
-    color: 'text.primary',
-  },
+    gap: 2,
+    alignItems: 'center'
+  }
 } satisfies Record<string, SxProps<Theme>>;
