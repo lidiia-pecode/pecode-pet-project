@@ -10,13 +10,13 @@ export const styles = {
     justifyContent: 'space-between',
     gap: 2,
   },
-  title: {
-    fontWeight: 600,
+  logo: {
+    display: 'flex',
   },
 
   buttonsContainer: {
     display: 'flex',
     gap: 2,
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 } satisfies Record<string, SxProps<Theme>>;

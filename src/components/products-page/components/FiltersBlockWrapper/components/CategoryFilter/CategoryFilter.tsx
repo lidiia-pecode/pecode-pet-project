@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import {
   Box,
   Typography,
@@ -22,34 +22,66 @@ import { CategoryFormWrapper } from '../CategoryFormWrapper';
 import { CategoryFilterSkeleton } from '../CategoryFilterSkeleton';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { DeleteButton } from '@/components/shared/DeleteButton';
+import { BulkDeleteButton } from '@/components/shared/BulkDeleteButton';
 
 export const CategoryFilter = () => {
   const { data: categories, isLoading } = useCategories();
   const syncCategories = useProductsStore(state => state.syncCategories);
-
-  const { isOpen, toggle } = useModalToggle();
-  const deleteMutation = useDeleteCategory();
-
   const selectedCategories = useProductsStore(
     state => state.filters.categories
   );
   const updateFilters = useProductsStore(state => state.updateFilters);
 
-  const handleChange = (category: CategorySlug) => {
-    const isSelected = selectedCategories.includes(category);
-    const updated = isSelected
-      ? selectedCategories.filter(c => c !== category)
-      : [...selectedCategories, category];
-
-    updateFilters({ categories: updated });
-  };
+  const { isOpen, toggle } = useModalToggle();
+  const deleteMutation = useDeleteCategory();
 
   useEffect(() => {
     if (categories) {
-      const slugs = categories.map(c => c.slug);
-      syncCategories(slugs);
+      syncCategories(categories.map(c => c.slug));
     }
   }, [categories, syncCategories]);
+
+  const toggleCategorySelection = useCallback(
+    (slug: CategorySlug) => {
+      const updatedSelection = selectedCategories.includes(slug)
+        ? selectedCategories.filter(s => s !== slug)
+        : [...selectedCategories, slug];
+
+      updateFilters({ categories: updatedSelection });
+    },
+    [selectedCategories, updateFilters]
+  );
+
+  const handleDeleteCategory = async (id: number, slug: CategorySlug) => {
+    await deleteMutation.mutateAsync(id);
+    updateFilters({
+      categories: selectedCategories.filter(s => s !== slug),
+    });
+  };
+
+  const handleBulkDelete = async () => {
+    if (!categories?.length || !selectedCategories.length) return;
+
+    const selected = categories.filter(c =>
+      selectedCategories.includes(c.slug)
+    );
+
+    if (!selected.length) return;
+
+    const results = await Promise.allSettled(
+      selected.map(c => deleteMutation.mutateAsync(c.id))
+    );
+
+    const succeededSlugs = results
+      .map((r, i) => (r.status === 'fulfilled' ? selected[i].slug : null))
+      .filter(Boolean) as string[];
+
+    updateFilters({
+      categories: selectedCategories.filter(
+        slug => !succeededSlugs.includes(slug)
+      ),
+    });
+  };
 
   return (
     <Box>
@@ -80,7 +112,7 @@ export const CategoryFilter = () => {
                   <Checkbox
                     size='small'
                     checked={selectedCategories.includes(category.slug)}
-                    onChange={() => handleChange(category.slug)}
+                    onChange={() => toggleCategorySelection(category.slug)}
                   />
                 }
                 label={category.name}
@@ -90,14 +122,20 @@ export const CategoryFilter = () => {
                 entityName={category.name}
                 entityType='category'
                 loading={deleteMutation.isPending}
-                onConfirm={async () => {
-                  await deleteMutation.mutateAsync(category.id);
-                }}
+                onConfirm={() =>
+                  handleDeleteCategory(category.id, category.slug)
+                }
               />
             </Box>
           ))
         )}
       </FormGroup>
+
+      {selectedCategories.length > 0 && (
+        <Box sx={{ mt: 2 }}>
+          <BulkDeleteButton onBulkDelete={handleBulkDelete} />
+        </Box>
+      )}
     </Box>
   );
 };

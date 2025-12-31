@@ -10,7 +10,7 @@ import {
   getSortedRowModel,
   getPaginationRowModel,
 } from '@tanstack/react-table';
-import { Box, Pagination} from '@mui/material';
+import { Box, Pagination } from '@mui/material';
 
 import { styles } from './TanstackTable.styles';
 import { usePinnedColumns } from '@/hooks/tanstackTable';
@@ -23,9 +23,9 @@ import { TableToolbar } from './components/TableMenu';
 import { ColumnMenu } from './components/TableMenu';
 import { TableSkeletonRow } from './components/TableRow';
 import { TableStateProps } from '@/types/TanstackTable';
+import { useDeleteProduct } from '@/hooks/products/useProducts';
 
-
-type Props<T> = {
+type Props<T extends { id: number }> = {
   data: T[];
   isLoading?: boolean;
   totalCount: number;
@@ -33,7 +33,7 @@ type Props<T> = {
   stateProps?: TableStateProps;
 };
 
-export function TanstackTable<T>({
+export function TanstackTable<T extends { id: number }>({
   data,
   columns,
   isLoading = false,
@@ -55,6 +55,7 @@ export function TanstackTable<T>({
   } = useEffectiveTableState(stateProps);
 
   const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null);
+  const { mutateAsync: deleteProduct } = useDeleteProduct();
   const handleOpenMenu = (e: React.MouseEvent<HTMLElement>) =>
     setMenuAnchor(e.currentTarget);
   const handleCloseMenu = () => setMenuAnchor(null);
@@ -130,6 +131,25 @@ export function TanstackTable<T>({
     }
   };
 
+  const handleBulkDelete = async () => {
+    const selectedRowIds = table
+      .getSelectedRowModel()
+      .flatRows.map(row => (row.original as T).id);
+
+    if (!selectedRowIds.length) return;
+
+    const results = await Promise.allSettled(
+      selectedRowIds.map(id => deleteProduct(id))
+    );
+
+    const succeeded = results.filter(r => r.status === 'fulfilled').length;
+    const failed = results.filter(r => r.status === 'rejected').length;
+
+    console.log(`${succeeded} products deleted, ${failed} failed`);
+
+    handleClearSelection();
+  };
+
   return (
     <Box>
       <TableToolbar
@@ -137,6 +157,7 @@ export function TanstackTable<T>({
         totalRowsCount={totalCount}
         onOpenColumnMenu={handleOpenMenu}
         onClearRowSelection={handleClearSelection}
+        onBulkDelete={handleBulkDelete}
       />
 
       <ColumnMenu

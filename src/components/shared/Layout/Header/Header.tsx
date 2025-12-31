@@ -1,4 +1,5 @@
-import { AppBar, Box, Toolbar, Typography } from '@mui/material';
+import Image from 'next/image';
+import { AppBar, Box, Toolbar } from '@mui/material';
 
 import { styles } from './Header.styles';
 import { Navbar } from '@/components/shared/Layout/NavBar';
@@ -14,9 +15,14 @@ export const Header = () => {
       sx={styles.appBar}
     >
       <Toolbar sx={styles.toolbar}>
-        <Typography variant='h6' sx={styles.title}>
-          Pecode Store
-        </Typography>
+        <Box component='a' href={'/'} sx={styles.logo}>
+          <Image
+            src='/logo-pet-project.webp'
+            alt='logo'
+            width={100}
+            height={60}
+          />
+        </Box>
 
         <Navbar />
 
