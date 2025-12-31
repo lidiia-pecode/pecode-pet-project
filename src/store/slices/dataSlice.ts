@@ -14,7 +14,7 @@ export interface DataState {
   sortOption: SortOption;
 
   updateFilters: (changed: Partial<ProductFilters>) => void;
-  removeFilter: (key: FilterKey) => void;
+  removeFilter: (key: FilterKey, value: string) => void;
   clearFilters: () => void;
 
   syncCategories: (existingSlugs: string[]) => void;
@@ -56,8 +56,9 @@ export const createDataSlice: StateCreator<DataState> = (set, get) => {
       updateURL();
     },
 
-    removeFilter: key => {
+    removeFilter: (key: FilterKey, value?: string) => {
       const updated = { ...get().filters };
+
       switch (key) {
         case 'price':
           updated.price = BASE_FILTERS.price;
@@ -66,11 +67,16 @@ export const createDataSlice: StateCreator<DataState> = (set, get) => {
           updated.rating = BASE_FILTERS.rating;
           break;
         case 'categories':
-          updated.categories = [];
+          if (value) {
+            updated.categories = updated.categories.filter(c => c !== value);
+          } else {
+            updated.categories = [];
+          }
           break;
         default:
           break;
       }
+
       get().updateFilters(updated);
     },
 

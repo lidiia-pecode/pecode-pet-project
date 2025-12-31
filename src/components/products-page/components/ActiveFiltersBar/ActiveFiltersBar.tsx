@@ -27,7 +27,7 @@ export const ActiveFiltersBar = () => {
           size='small'
           key={`${filter.type}-${filter.label}`}
           label={filter.label}
-          onDelete={() => removeFilter(filter.type)}
+          onDelete={() => removeFilter(filter.type, filter.value ?? '')}
         />
       ))}
     </Box>

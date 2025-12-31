@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 import { styles } from './ProductsTopBar.styles';
 import { useProductsStore } from '@/store/productsStore';
-import { useModalToggle } from '@/hooks/products/useModal';
+import { useModalToggle } from '@/hooks/ui/useModal';
 
 import { ActiveFiltersBar } from '../ActiveFiltersBar';
 import { SearchBar } from './components/SearchBar';
@@ -41,12 +41,7 @@ export const ProductsTopBar = () => {
             icon={<AddIcon fontSize='small' />}
             open={isOpen}
             onToggle={toggle}
-            form={
-              <ProductFormWrapper
-                onClose={toggle}
-                showCategory
-              />
-            }
+            form={<ProductFormWrapper onClose={toggle} showCategory />}
           />
 
           <Box sx={styles.activeFiltersBarContainer}>

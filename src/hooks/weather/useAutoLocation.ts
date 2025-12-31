@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { LocationData } from '@/types/Weather';
-import { fetchNominatimReverse } from '@/lib/api/weather/location';
+import { getCountryNameByCoordinates } from '@/lib/utils/weather/getCountryNameByCoordinates';
 
 export function useAutoLocation() {
   const [autoLocation, setAutoLocation] = useState<LocationData | null>(null);
@@ -24,7 +24,7 @@ export function useAutoLocation() {
         );
 
         const { latitude, longitude } = position.coords;
-        const displayName = await fetchNominatimReverse(latitude, longitude);
+        const displayName = await getCountryNameByCoordinates(latitude, longitude);
 
         if (displayName) {
           setAutoLocation({

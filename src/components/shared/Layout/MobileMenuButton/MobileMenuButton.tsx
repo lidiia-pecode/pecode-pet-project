@@ -7,8 +7,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { styles } from './MobileMenuButton.styles';
 import { MobileMenu } from '../MobileMenu';
 
-
-
 export const MobileMenuButton = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -16,7 +14,7 @@ export const MobileMenuButton = () => {
 
   return (
     <Box sx={styles.buttonWrapper}>
-      <IconButton color='inherit' onClick={toggleDrawer}>
+      <IconButton sx={styles.button} color='inherit' onClick={toggleDrawer}>
         <MenuIcon />
       </IconButton>
       <MobileMenu open={drawerOpen} onClose={toggleDrawer} />

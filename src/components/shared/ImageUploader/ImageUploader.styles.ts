@@ -3,6 +3,7 @@ import { SxProps, Theme } from '@mui/material';
 export const styles = {
   uploaderContainer: {
     height: 80,
+    width: '100%',
     border: '2px dashed #ccc',
     borderRadius: 2,
     display: 'flex',

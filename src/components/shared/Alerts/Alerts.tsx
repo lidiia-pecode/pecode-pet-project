@@ -1,14 +1,14 @@
 'use client';
 
+import { useGlobalStore } from '@/store/globalStore';
 import { Snackbar, Alert } from '@mui/material';
-import { useProductsStore } from '@/store/productsStore';
 
 export const Alerts = () => {
-  const successMessage = useProductsStore(state => state.successMessage);
-  const errorMessage = useProductsStore(state => state.errorMessage);
-  const showSuccess = useProductsStore(state => state.showSuccess);
-  const showError = useProductsStore(state => state.showError);
-  const reset = useProductsStore(state => state.reset);
+  const successMessage = useGlobalStore(state => state.successMessage);
+  const errorMessage = useGlobalStore(state => state.errorMessage);
+  const showSuccess = useGlobalStore(state => state.showSuccess);
+  const showError = useGlobalStore(state => state.showError);
+  const reset = useGlobalStore(state => state.reset);
 
   return (
     <>

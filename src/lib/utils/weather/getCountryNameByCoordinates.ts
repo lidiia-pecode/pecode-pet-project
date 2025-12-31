@@ -1,4 +1,4 @@
-export async function fetchNominatimReverse(
+export async function getCountryNameByCoordinates(
   lat: number,
   lon: number
 ): Promise<string | null> {

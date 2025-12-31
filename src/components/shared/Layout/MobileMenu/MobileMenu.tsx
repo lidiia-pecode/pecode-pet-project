@@ -21,7 +21,7 @@ export const MobileMenu = ({ open, onClose }: MobileMenuProps) => {
             Menu
           </Typography>
 
-          <IconButton onClick={onClose} sx={styles.closeButton}>
+          <IconButton onClick={onClose}>
             <CloseIcon />
           </IconButton>
         </Box>

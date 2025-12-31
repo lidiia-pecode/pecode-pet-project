@@ -3,6 +3,7 @@ import { FilterKey, ProductFilters } from '@/types/Filters';
 interface ActiveFilterItem {
   type: FilterKey;
   label: string;
+  value?: string;
 }
 
 export const getActiveFilters = (
@@ -11,7 +12,7 @@ export const getActiveFilters = (
   const active: ActiveFilterItem[] = [];
 
   filters.categories.forEach(cat => {
-    active.push({ type: 'categories', label: cat });
+    active.push({ type: 'categories', label: cat, value: cat });
   });
 
   if (filters.price.min !== 0 || filters.price.max !== 1000) {
@@ -30,3 +31,4 @@ export const getActiveFilters = (
 
   return active;
 };
+
