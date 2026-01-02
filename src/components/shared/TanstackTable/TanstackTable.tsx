@@ -24,6 +24,8 @@ import { ColumnMenu } from './components/TableMenu';
 import { TableSkeletonRow } from './components/TableRow';
 import { TableStateProps } from '@/types/TanstackTable';
 import { useDeleteProduct } from '@/hooks/products/useProducts';
+import { useProductsStore } from '@/store/productsStore';
+import { Product } from '@/types/Product';
 
 type Props<T extends { id: number }> = {
   data: T[];
@@ -150,6 +152,17 @@ export function TanstackTable<T extends { id: number }>({
     handleClearSelection();
   };
 
+  
+  const addToCart = useProductsStore(s => s.addToCart);
+
+  const selectedRows = table
+    .getSelectedRowModel()
+    .flatRows.map(row => row.original as unknown as Product);
+
+  const handleBulkAddToCart = () => {
+    selectedRows.forEach(p => addToCart({ ...p, quantity: 1 }));
+  };
+
   return (
     <Box>
       <TableToolbar
@@ -158,6 +171,7 @@ export function TanstackTable<T extends { id: number }>({
         onOpenColumnMenu={handleOpenMenu}
         onClearRowSelection={handleClearSelection}
         onBulkDelete={handleBulkDelete}
+        onBulkAddToCart={handleBulkAddToCart}
       />
 
       <ColumnMenu

@@ -9,6 +9,7 @@ import type { Product } from '@/types/Product';
 import { useDeleteProduct } from '@/hooks/products/useProducts';
 import { DeleteButton } from '@/components/shared/DeleteButton';
 import { ProductRating } from '@/components/shared/ProductRating';
+import { AddToCartButton } from '@/components/shared/AddToCartButton';
 
 interface ProductsCardProps {
   product: Product;
@@ -69,6 +70,10 @@ const ProductsCardComponent = ({ product }: ProductsCardProps) => {
           await deleteMutation.mutateAsync(product.id);
         }}
       />
+
+      <Box sx={styles.addToCartWrapper}>
+        <AddToCartButton variant='icon' product={{ ...product, quantity: 1 }} />
+      </Box>
     </Card>
   );
 };

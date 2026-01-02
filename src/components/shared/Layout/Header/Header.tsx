@@ -5,6 +5,7 @@ import { styles } from './Header.styles';
 import { Navbar } from '@/components/shared/Layout/NavBar';
 import { MobileMenuButton } from '../MobileMenuButton';
 import { ProfileButton } from '../ProfileButton';
+import { CartButton } from '../CartButton';
 
 export const Header = () => {
   return (
@@ -27,8 +28,9 @@ export const Header = () => {
         <Navbar />
 
         <Box sx={styles.buttonsContainer}>
-          <ProfileButton />
           <MobileMenuButton />
+          <ProfileButton />
+          <CartButton />
         </Box>
       </Toolbar>
     </AppBar>

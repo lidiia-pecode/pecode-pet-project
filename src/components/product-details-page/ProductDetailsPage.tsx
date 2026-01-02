@@ -7,12 +7,12 @@ import { useRouter } from 'next/navigation';
 import { styles } from './ProductDetailsPage.styles';
 import { Product } from '@/types/Product';
 import { useModalToggle } from '@/hooks/ui/useModal';
-import { ActionButton } from '../shared/ActionButton';
 import { ProductBreadcrumbs } from './components/ProductBreadcrumbs';
 import { ImageCarousel } from './components/ImageCarousel';
 import { ProductInfo } from './components/ProductInfo';
 import { ProductAdditional } from './components/ProductAdditional';
 import { ProductFormWrapper } from '../shared/ProductFormWrapper';
+import { ActionButton } from '../shared/ActionButton';
 
 interface ProductDetailsPageProps {
   product: Product;
@@ -32,10 +32,7 @@ export const ProductDetailsPage = ({ product }: ProductDetailsPageProps) => {
 
         <Box sx={styles.infoBox}>
           <ProductInfo
-            title={product.title}
-            price={product.price}
-            description={product.description}
-            rating={product.rating}
+            product={product}
           />
           <ProductAdditional id={product.id} category={product.category} />
         </Box>

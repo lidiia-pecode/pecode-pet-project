@@ -20,7 +20,6 @@
     "@tanstack/react-query": "^5.90.7",
     "@tanstack/react-query-devtools": "^5.90.2",
     "@tanstack/react-table": "^8.21.3",
-    "axios": "^1.13.2",
     "dayjs": "^1.11.19",
     "framer-motion": "^12.23.25",
     "graphql": "^16.12.0",

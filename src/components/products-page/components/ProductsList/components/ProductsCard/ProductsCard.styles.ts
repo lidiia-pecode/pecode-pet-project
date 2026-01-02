@@ -55,5 +55,11 @@ export const styles = {
 
   button: {
     borderRadius: 0,
-  }
+  },
+
+  addToCartWrapper: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+  },
 } satisfies Record<string, SxProps<Theme>>;

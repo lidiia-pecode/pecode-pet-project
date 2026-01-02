@@ -16,7 +16,7 @@ export const styles = {
   },
   title: {
     fontWeight: 600,
-    color: 'primary.main'
+    color: 'primary.main',
   },
   divider: {
     mb: 2,
