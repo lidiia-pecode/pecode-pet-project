@@ -10,6 +10,7 @@ import { useDeleteProduct } from '@/hooks/products/useProducts';
 import { ProductRating } from '@/components/shared/ProductRating';
 import { DeleteButton } from '@/components/shared/DeleteButton';
 import { styles } from './ProductColumns.styles';
+import { AddToCartButton } from '@/components/shared/AddToCartButton';
 
 export const useProductColumns = (): ColumnDef<Product>[] => {
   const router = useRouter();
@@ -132,9 +133,7 @@ export const useProductColumns = (): ColumnDef<Product>[] => {
       meta: { align: 'center' },
       cell: ({ row }) => {
         return (
-          <Box
-            sx={styles.actionCell}
-          >
+          <Box sx={styles.actionCell}>
             <Button
               variant='contained'
               onClick={e => {
@@ -153,6 +152,11 @@ export const useProductColumns = (): ColumnDef<Product>[] => {
               onConfirm={async () => {
                 await deleteMutation.mutateAsync(row.original.id);
               }}
+            />
+
+            <AddToCartButton
+              variant='icon'
+              product={{ ...row.original, quantity: 1 }}
             />
           </Box>
         );

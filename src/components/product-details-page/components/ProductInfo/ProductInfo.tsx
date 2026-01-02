@@ -1,21 +1,17 @@
-import { Box, Typography, Button, Divider } from '@mui/material';
-import { ProductRating } from '@/components/shared/ProductRating/ProductRating';
+import { Box, Typography, Divider } from '@mui/material';
+
 import { styles } from './ProductInfo.styles';
-import { IProductRating } from '@/types/Product';
+import { Product } from '@/types/Product';
+import { ProductRating } from '@/components/shared/ProductRating';
+import { AddToCartButton } from '@/components/shared/AddToCartButton';
 
 interface ProductInfoProps {
-  title: string;
-  price: number;
-  description: string;
-  rating: IProductRating;
+  product: Product;
 }
 
-export const ProductInfo = ({
-  title,
-  price,
-  description,
-  rating,
-}: ProductInfoProps) => {
+export const ProductInfo = ({ product }: ProductInfoProps) => {
+  const { title, price, description, rating } = product;
+
   return (
     <Box sx={styles.container}>
       <Typography variant='h1' sx={styles.title}>
@@ -33,14 +29,7 @@ export const ProductInfo = ({
         ${price}
       </Typography>
 
-      <Button
-        variant='contained'
-        color='primary'
-        size='large'
-        sx={styles.addToCartButton}
-      >
-        Add to Cart
-      </Button>
+      <AddToCartButton product={{...product, quantity: 1}}/>
 
       <Divider sx={styles.divider} />
 
