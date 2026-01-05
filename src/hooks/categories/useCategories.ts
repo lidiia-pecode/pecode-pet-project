@@ -16,19 +16,28 @@ export const useCategories = () => {
   });
 };
 
+type DeleteCategoryVars = {
+  id: number;
+  showGlobalAlerts?: boolean;
+};
+
 export const useDeleteCategory = () => {
   const queryClient = useQueryClient();
   const setSuccess = useGlobalStore(state => state.setSuccess);
   const setError = useGlobalStore(state => state.setError);
 
   return useMutation({
-    mutationFn: (id: number) => deleteCategory(id),
-    onSuccess: () => {
-      setSuccess(alertMessages.category.delete.success);
+    mutationFn: ({ id }: DeleteCategoryVars) => deleteCategory(id),
+    onSuccess: (_, { showGlobalAlerts }) => {
+      if (showGlobalAlerts !== false) {
+        setSuccess(alertMessages.category.delete.success);
+      }
       queryClient.invalidateQueries({ queryKey: ['categories'] });
     },
-    onError: () => {
-      setError(alertMessages.category.delete.error);
+    onError: (_, { showGlobalAlerts }) => {
+      if (showGlobalAlerts !== false) {
+        setError(alertMessages.category.delete.error);
+      }
     },
   });
 };

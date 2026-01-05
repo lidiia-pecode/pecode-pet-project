@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { Box, Typography, FormGroup } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 import { styles } from './CategoryFilter.styles';
-import { CategorySlug } from '@/types/Categories';
+import { Category, CategorySlug } from '@/types/Categories';
 import { useProductsStore } from '@/store/productsStore';
 import {
   useCategories,
@@ -17,6 +17,7 @@ import { CategoryFilterSkeleton } from '../CategoryFilterSkeleton';
 import { ActionButton } from '@/components/shared/ActionButton';
 import { BulkDeleteButton } from '@/components/shared/BulkDeleteButton';
 import { CategoryItem } from './components/CategoryItem';
+import { useGlobalStore } from '@/store/globalStore';
 
 export const CategoryFilter = () => {
   const { data: categories, isLoading } = useCategories();
@@ -28,6 +29,11 @@ export const CategoryFilter = () => {
 
   const { isOpen, toggle } = useModalToggle();
   const deleteMutation = useDeleteCategory();
+  const setError = useGlobalStore(state => state.setError);
+  const setSuccess = useGlobalStore(state => state.setSuccess);
+  const [deletingCategoryIds, setDeletingCategoryIds] = useState(
+    new Set<number>()
+  );
 
   useEffect(() => {
     if (categories) {
@@ -48,10 +54,19 @@ export const CategoryFilter = () => {
 
   const handleDeleteCategory = useCallback(
     async (id: number, slug: CategorySlug) => {
-      await deleteMutation.mutateAsync(id);
-      updateFilters({
-        categories: selectedCategories.filter(s => s !== slug),
-      });
+      setDeletingCategoryIds(prev => new Set(prev).add(id));
+      try {
+        await deleteMutation.mutateAsync({ id });
+        updateFilters({
+          categories: selectedCategories.filter(s => s !== slug),
+        });
+      } finally {
+        setDeletingCategoryIds(prev => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
+      }
     },
     [deleteMutation, updateFilters, selectedCategories]
   );
@@ -65,19 +80,47 @@ export const CategoryFilter = () => {
 
     if (!selected.length) return;
 
+    setDeletingCategoryIds(prev => new Set([...prev, ...selected.map(c => c.id)]));
+
     const results = await Promise.allSettled(
-      selected.map(c => deleteMutation.mutateAsync(c.id))
+      selected.map(c => deleteMutation.mutateAsync({ id: c.id, showGlobalAlerts: false }))
     );
 
-    const succeededSlugs = results
-      .map((r, i) => (r.status === 'fulfilled' ? selected[i].slug : null))
-      .filter(Boolean) as string[];
+    const successfulCategories: Category[] = [];
+    const failedCategories: Category[] = [];
 
-    const succeededSlugsSet = new Set(succeededSlugs);
-
-    updateFilters({
-      categories: selectedCategories.filter(slug => !succeededSlugsSet.has(slug)),
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        successfulCategories.push(selected[index]);
+      } else {
+        failedCategories.push(selected[index]);
+      }
     });
+    
+    if (successfulCategories.length > 0) {
+      setSuccess(
+        `Deleted categories: ${successfulCategories
+          .map(c => `"${c.name}"`)
+          .join(', ')}`
+      );
+    }
+
+    if (failedCategories.length > 0) {
+      setError(
+        `Could not delete categories: ${failedCategories
+          .map(c => `"${c.name}"`)
+          .join(', ')}. They may contain products.`
+      );
+    }
+
+    const succeededSlugsSet = new Set(successfulCategories.map(c => c.slug));
+    updateFilters({
+      categories: selectedCategories.filter(
+        slug => !succeededSlugsSet.has(slug)
+      ),
+    });
+
+    setDeletingCategoryIds(new Set());
   };
 
   return (
@@ -107,7 +150,7 @@ export const CategoryFilter = () => {
               key={category.id}
               category={category}
               isSelected={selectedCategories.includes(category.slug)}
-              isDeleting={deleteMutation.isPending}
+              isDeleting={deletingCategoryIds.has(category.id)}
               onToggle={toggleCategorySelection}
               onDelete={handleDeleteCategory}
             />
