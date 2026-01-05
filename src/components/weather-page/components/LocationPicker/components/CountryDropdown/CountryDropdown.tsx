@@ -38,17 +38,14 @@ export const CountryDropdown: React.FC<CountryDropdownProps> = ({
 
   const { data, loading, error } = useQuery<GetCountriesData>(GET_COUNTRIES);
 
-  const handleCountrySelect = useCallback(
-    async (country: Country) => {
-      setCountry(country);
-      setSearchQuery('');
-      setIsOpen(false);
+  const handleCountrySelect = async (country: Country) => {
+    setCountry(country);
+    setSearchQuery('');
+    setIsOpen(false);
 
-      const coordinates = await getCountryCoordinates(country.name);
-      if (coordinates) setSelectedLocation(coordinates);
-    },
-    [setCountry, setSelectedLocation]
-  );
+    const coordinates = await getCountryCoordinates(country.name);
+    if (coordinates) setSelectedLocation(coordinates);
+  };
 
   const sortedCountries = useMemo(
     () => getSortedCountriesByQuery(data?.countries ?? [], searchQuery),

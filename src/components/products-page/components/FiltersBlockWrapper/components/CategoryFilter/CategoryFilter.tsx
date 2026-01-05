@@ -1,13 +1,7 @@
 'use client';
 
 import { useEffect, useCallback } from 'react';
-import {
-  Box,
-  Typography,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-} from '@mui/material';
+import { Box, Typography, FormGroup } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 import { styles } from './CategoryFilter.styles';
@@ -21,8 +15,8 @@ import { useModalToggle } from '@/hooks/ui/useModal';
 import { CategoryFormWrapper } from '../CategoryFormWrapper';
 import { CategoryFilterSkeleton } from '../CategoryFilterSkeleton';
 import { ActionButton } from '@/components/shared/ActionButton';
-import { DeleteButton } from '@/components/shared/DeleteButton';
 import { BulkDeleteButton } from '@/components/shared/BulkDeleteButton';
+import { CategoryItem } from './components/CategoryItem';
 
 export const CategoryFilter = () => {
   const { data: categories, isLoading } = useCategories();
@@ -52,12 +46,15 @@ export const CategoryFilter = () => {
     [selectedCategories, updateFilters]
   );
 
-  const handleDeleteCategory = async (id: number, slug: CategorySlug) => {
-    await deleteMutation.mutateAsync(id);
-    updateFilters({
-      categories: selectedCategories.filter(s => s !== slug),
-    });
-  };
+  const handleDeleteCategory = useCallback(
+    async (id: number, slug: CategorySlug) => {
+      await deleteMutation.mutateAsync(id);
+      updateFilters({
+        categories: selectedCategories.filter(s => s !== slug),
+      });
+    },
+    [deleteMutation, updateFilters, selectedCategories]
+  );
 
   const handleBulkDelete = async () => {
     if (!categories?.length || !selectedCategories.length) return;
@@ -76,10 +73,10 @@ export const CategoryFilter = () => {
       .map((r, i) => (r.status === 'fulfilled' ? selected[i].slug : null))
       .filter(Boolean) as string[];
 
+    const succeededSlugsSet = new Set(succeededSlugs);
+
     updateFilters({
-      categories: selectedCategories.filter(
-        slug => !succeededSlugs.includes(slug)
-      ),
+      categories: selectedCategories.filter(slug => !succeededSlugsSet.has(slug)),
     });
   };
 
@@ -106,27 +103,14 @@ export const CategoryFilter = () => {
           <CategoryFilterSkeleton />
         ) : (
           categories?.map(category => (
-            <Box key={category.id} sx={styles.categoryItem}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    size='small'
-                    checked={selectedCategories.includes(category.slug)}
-                    onChange={() => toggleCategorySelection(category.slug)}
-                  />
-                }
-                label={category.name}
-              />
-
-              <DeleteButton
-                entityName={category.name}
-                entityType='category'
-                loading={deleteMutation.isPending}
-                onConfirm={() =>
-                  handleDeleteCategory(category.id, category.slug)
-                }
-              />
-            </Box>
+            <CategoryItem
+              key={category.id}
+              category={category}
+              isSelected={selectedCategories.includes(category.slug)}
+              isDeleting={deleteMutation.isPending}
+              onToggle={toggleCategorySelection}
+              onDelete={handleDeleteCategory}
+            />
           ))
         )}
       </FormGroup>

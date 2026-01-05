@@ -145,22 +145,21 @@ export function TanstackTable<T extends { id: number }>({
     );
 
     const succeeded = results.filter(r => r.status === 'fulfilled').length;
-    const failed = results.filter(r => r.status === 'rejected').length;
+    const failed = results.length - succeeded;
 
     console.log(`${succeeded} products deleted, ${failed} failed`);
 
     handleClearSelection();
   };
 
-  
-  const addToCart = useProductsStore(s => s.addToCart);
+  const addMultipleToCart = useProductsStore(s => s.addMultipleToCart);
 
   const selectedRows = table
     .getSelectedRowModel()
     .flatRows.map(row => row.original as unknown as Product);
 
   const handleBulkAddToCart = () => {
-    selectedRows.forEach(p => addToCart({ ...p, quantity: 1 }));
+    addMultipleToCart(selectedRows);
   };
 
   return (
