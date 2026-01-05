@@ -26,6 +26,7 @@ import { TableStateProps } from '@/types/TanstackTable';
 import { useDeleteProduct } from '@/hooks/products/useProducts';
 import { useProductsStore } from '@/store/productsStore';
 import { Product } from '@/types/Product';
+import { useGlobalStore } from '@/store/globalStore'; // Add this import
 
 type Props<T extends { id: number }> = {
   data: T[];
@@ -35,7 +36,7 @@ type Props<T extends { id: number }> = {
   stateProps?: TableStateProps;
 };
 
-export function TanstackTable<T extends { id: number }>({
+export function TanstackTable<T extends { id: number }> ({
   data,
   columns,
   isLoading = false,
@@ -134,20 +135,47 @@ export function TanstackTable<T extends { id: number }>({
   };
 
   const handleBulkDelete = async () => {
-    const selectedRowIds = table
+    const selectedRowData = table
       .getSelectedRowModel()
-      .flatRows.map(row => (row.original as T).id);
+      .flatRows.map(row => row.original as unknown as Product); // Cast to Product for name access
 
-    if (!selectedRowIds.length) return;
+    if (!selectedRowData.length) return;
+
+    const setSuccess = useGlobalStore.getState().setSuccess;
+    const setError = useGlobalStore.getState().setError;
 
     const results = await Promise.allSettled(
-      selectedRowIds.map(id => deleteProduct(id))
+      selectedRowData.map(product =>
+        deleteProduct({ id: product.id, showGlobalAlerts: false })
+      )
     );
 
-    const succeeded = results.filter(r => r.status === 'fulfilled').length;
-    const failed = results.length - succeeded;
+    const successfulDeletes: Product[] = [];
+    const failedDeletes: Product[] = [];
 
-    console.log(`${succeeded} products deleted, ${failed} failed`);
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        successfulDeletes.push(selectedRowData[index]);
+      } else {
+        failedDeletes.push(selectedRowData[index]);
+      }
+    });
+
+    if (successfulDeletes.length > 0) {
+      setSuccess(
+        `${successfulDeletes.length} products deleted successfully.` +
+          (successfulDeletes.length === selectedRowData.length
+            ? ''
+            : ` Deleted: ${successfulDeletes.map(p => `"${p.title}"`).join(', ')}`)
+      );
+    }
+
+    if (failedDeletes.length > 0) {
+      setError(
+        `${failedDeletes.length} products could not be deleted. They might be in use.` +
+          ` Failed: ${failedDeletes.map(p => `"${p.title}"`).join(', ')}`
+      );
+    }
 
     handleClearSelection();
   };

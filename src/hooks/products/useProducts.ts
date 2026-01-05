@@ -17,6 +17,7 @@ import { alertMessages } from '@/lib/utils/constants';
 import { ProductFormData } from '@/types/NewProduct';
 import { useProductsStore } from '@/store/productsStore';
 import { useGlobalStore } from '@/store/globalStore';
+import { APIError } from '@/lib/api/fetcher'; // Import APIError
 
 export const useProducts = (sorting?: SortingState) => {
   const currentPage = useProductsStore(state => state.currentPage);
@@ -34,21 +35,34 @@ export const useProducts = (sorting?: SortingState) => {
   });
 };
 
+type DeleteProductVars = {
+  id: number;
+  showGlobalAlerts?: boolean;
+};
+
 export const useDeleteProduct = () => {
   const queryClient = useQueryClient();
   const setSuccess = useGlobalStore(state => state.setSuccess);
   const setError = useGlobalStore(state => state.setError);
 
   return useMutation({
-    mutationFn: (id: number) => deleteProductById(id),
-    onSuccess: () => {
-      setSuccess(alertMessages.product.delete.success);
+    mutationFn: ({ id }: DeleteProductVars) => deleteProductById(id),
+    onSuccess: (_, { showGlobalAlerts }) => {
+      if (showGlobalAlerts !== false) {
+        setSuccess(alertMessages.product.delete.success);
+      }
       queryClient.invalidateQueries({
         queryKey: ['products'],
       });
     },
-    onError: () => {
-      setError(alertMessages.product.delete.error);
+    onError: (error, { showGlobalAlerts }) => {
+      const errorMessage =
+        error instanceof APIError
+          ? error.message
+          : alertMessages.product.delete.error;
+      if (showGlobalAlerts !== false) {
+        setError(errorMessage);
+      }
     },
   });
 };
@@ -64,7 +78,8 @@ export const useCreateProduct = () => {
       setSuccess(alertMessages.product.create.success);
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
-    onError: () => {
+    onError: error => {
+      console.log(error.message);
       setError(alertMessages.product.create.error);
     },
   });
@@ -85,7 +100,8 @@ export const useUpdateProduct = () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
 
-    onError: () => {
+    onError: error => {
+      console.log(error.message);
       setError(alertMessages.product.update.error);
     },
   });

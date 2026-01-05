@@ -7,6 +7,7 @@ import {
 } from '@/lib/api/products/categories';
 import { alertMessages } from '@/lib/utils/constants';
 import { useGlobalStore } from '@/store/globalStore';
+import { APIError } from '@/lib/api/fetcher';
 
 export const useCategories = () => {
   return useQuery({
@@ -34,9 +35,11 @@ export const useDeleteCategory = () => {
       }
       queryClient.invalidateQueries({ queryKey: ['categories'] });
     },
-    onError: (_, { showGlobalAlerts }) => {
+    onError: (error, { showGlobalAlerts }) => {
+      const errorMessage =
+        error instanceof APIError ? error.message : alertMessages.category.delete.error;
       if (showGlobalAlerts !== false) {
-        setError(alertMessages.category.delete.error);
+        setError(errorMessage);
       }
     },
   });
@@ -53,8 +56,10 @@ export const useCreateCategory = () => {
       setSuccess(alertMessages.category.create.success);
       queryClient.invalidateQueries({ queryKey: ['categories'] });
     },
-    onError: () => {
-      setError(alertMessages.category.create.error);
+    onError: error => {
+      const errorMessage =
+        error instanceof APIError ? error.message : alertMessages.category.create.error;
+      setError(errorMessage);
     },
   });
 };
