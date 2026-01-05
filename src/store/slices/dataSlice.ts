@@ -6,7 +6,6 @@ import {
   FilterKey,
 } from '@/types/Filters';
 import { SortOption, SORT_OPTIONS } from '@/types/Sort';
-import { buildQueryString } from '@/lib/utils/products';
 
 export interface DataState {
   filters: ProductFilters;
@@ -36,12 +35,6 @@ function filtersChanged(a: ProductFilters, b: ProductFilters) {
 }
 
 export const createDataSlice: StateCreator<DataState> = (set, get) => {
-  const updateURL = () => {
-    const { filters, sortOption, currentPage } = get();
-    const url = buildQueryString({ filters, sortOption, page: currentPage });
-    window.history.replaceState(null, '', `?${url}`);
-  };
-
   return {
     filters: defaultFilters,
     currentPage: 1,
@@ -53,7 +46,6 @@ export const createDataSlice: StateCreator<DataState> = (set, get) => {
       const shouldResetPage = filtersChanged(filters, merged);
 
       set({ filters: merged, currentPage: shouldResetPage ? 1 : currentPage });
-      updateURL();
     },
 
     removeFilter: (key: FilterKey, value?: string) => {
@@ -103,14 +95,12 @@ export const createDataSlice: StateCreator<DataState> = (set, get) => {
         sortOption: option,
         currentPage: shouldResetPage ? 1 : currentPage,
       });
-      updateURL();
     },
 
     setSearchQuery: query => get().updateFilters({ searchQuery: query }),
 
     setPage: page => {
       set({ currentPage: page });
-      updateURL();
     },
   };
 };
