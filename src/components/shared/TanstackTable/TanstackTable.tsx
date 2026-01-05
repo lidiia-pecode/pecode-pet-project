@@ -160,6 +160,7 @@ export function TanstackTable<T extends { id: number }>({
 
   const handleBulkAddToCart = () => {
     addMultipleToCart(selectedRows);
+    handleClearSelection();
   };
 
   return (

@@ -8,6 +8,7 @@ export interface UIState {
   setViewMode: (mode: ViewMode) => void;
   openFilters: () => void;
   closeFilters: () => void;
+  setHasHydrated: (hasHydrated: boolean) => void;
 }
 
 export const createUISlice: StateCreator<UIState> = set => ({
@@ -18,4 +19,5 @@ export const createUISlice: StateCreator<UIState> = set => ({
   setViewMode: mode => set({ viewMode: mode }),
   openFilters: () => set({ filtersOpened: true }),
   closeFilters: () => set({ filtersOpened: false }),
+  setHasHydrated: hasHydrated => set({ _hasHydrated: hasHydrated }),
 });

@@ -20,7 +20,7 @@ export const useProductsStore = create<ProductsStore>()(
       name: 'products-store',
       storage: createJSONStorage(() => sessionStorage),
       onRehydrateStorage: () => state => {
-        if (state) state._hasHydrated = true;
+        if (state) state.setHasHydrated(true);
       },
     }
   )
