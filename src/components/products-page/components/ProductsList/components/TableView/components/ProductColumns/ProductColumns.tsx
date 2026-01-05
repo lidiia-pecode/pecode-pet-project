@@ -5,11 +5,11 @@ import { useRouter } from 'next/navigation';
 import { ColumnDef } from '@tanstack/react-table';
 import { Box, Button, Checkbox, Typography } from '@mui/material';
 
+import { styles } from './ProductColumns.styles';
 import { Product } from '@/types/Product';
 import { useDeleteProduct } from '@/hooks/products/useProducts';
 import { ProductRating } from '@/components/shared/ProductRating';
 import { DeleteButton } from '@/components/shared/DeleteButton';
-import { styles } from './ProductColumns.styles';
 import { AddToCartButton } from '@/components/shared/AddToCartButton';
 
 export const useProductColumns = (): ColumnDef<Product>[] => {
@@ -150,7 +150,9 @@ export const useProductColumns = (): ColumnDef<Product>[] => {
               loading={deleteMutation.isPending}
               usedInTable={true}
               onConfirm={async () => {
-                await deleteMutation.mutateAsync(row.original.id);
+                await deleteMutation.mutateAsync({
+                  id: row.original.id,
+                });
               }}
             />
 

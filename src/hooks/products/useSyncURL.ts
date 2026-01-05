@@ -9,20 +9,15 @@ export const useSyncURL = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const searchParamsString = searchParams.toString();
 
-  const state = useProductsStore(state => ({
-    filters: state.filters,
-    sortOption: state.sortOption,
-    currentPage: state.currentPage,
-    _hasHydrated: state._hasHydrated,
-  }));
-
-  const { filters, sortOption, currentPage, _hasHydrated } = state;
+  const filters = useProductsStore(state => state.filters);
+  const sortOption = useProductsStore(state => state.sortOption);
+  const currentPage = useProductsStore(state => state.currentPage);
+  const _hasHydrated = useProductsStore(state => state._hasHydrated);
 
   useEffect(() => {
-    if (!_hasHydrated) {
-      return;
-    }
+    if (!_hasHydrated) return;
 
     const newQueryString = buildQueryString({
       filters,
@@ -30,7 +25,7 @@ export const useSyncURL = () => {
       page: currentPage,
     });
 
-    if (newQueryString !== searchParams.toString()) {
+    if (newQueryString !== searchParamsString) {
       router.replace(`${pathname}?${newQueryString}`);
     }
   }, [
@@ -39,7 +34,7 @@ export const useSyncURL = () => {
     currentPage,
     router,
     pathname,
-    searchParams,
+    searchParamsString,
     _hasHydrated,
   ]);
 };

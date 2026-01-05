@@ -67,7 +67,9 @@ const ProductsCardComponent = ({ product }: ProductsCardProps) => {
         entityType='product'
         loading={deleteMutation.isPending}
         onConfirm={async () => {
-          await deleteMutation.mutateAsync(product.id);
+          await deleteMutation.mutateAsync({
+            id: product.id,
+          });
         }}
       />
 

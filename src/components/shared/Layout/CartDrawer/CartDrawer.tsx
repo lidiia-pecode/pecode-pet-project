@@ -57,6 +57,7 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                 size='small'
                 onClick={() => remove(item.id)}
                 sx={styles.removeBtn}
+                aria-label='Remove product'
               >
                 <ClearIcon />
               </IconButton>
@@ -66,6 +67,7 @@ export const CartDrawer = ({ open, onClose }: Props) => {
                   src={item.images?.[0]}
                   alt={item.title}
                   style={styles.image}
+                  loading='lazy'
                 />
               </Link>
 
