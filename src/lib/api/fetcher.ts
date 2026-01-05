@@ -13,17 +13,14 @@ export class APIError extends Error {
   constructor(
     message: string,
     response: Response,
-    responseData: APIErrorResponse | null = null,
-    options?: ErrorOptions
+    responseData: APIErrorResponse | null = null
   ) {
-    super(message, options);
+    super(message);
     this.name = 'APIError';
     this.status = response.status;
     this.statusText = response.statusText;
     this.url = response.url;
     this.responseData = responseData;
-
-    Object.setPrototypeOf(this, APIError.prototype);
   }
 }
 
@@ -49,7 +46,7 @@ export async function apiRequest<TResponse, TBody = undefined>(
     try {
       errorData = await res.json();
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
 
     const message =
