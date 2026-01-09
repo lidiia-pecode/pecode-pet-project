@@ -14,6 +14,7 @@ const navLinks = [
   { label: 'Products', href: '/products' },
   { label: 'Weather', href: '/weather' },
   { label: 'About', href: '/about' },
+  { label: 'Market-dashboard', href: '/market-dashboard' },
 ];
 
 export const Navbar = ({ direction = 'row', spacing = 3 }: NavbarProps) => {
