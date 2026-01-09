@@ -18,10 +18,9 @@ import { styles } from './CountryDropdown.styles';
 import { Country, GetCountriesData, LocationData } from '@/types/Weather';
 import { GET_COUNTRIES } from '@/lib/graphql/query/getCountries';
 import { getCountryCoordinates } from '@/lib/utils/weather';
-import { getSortedCountriesByQuery } from '@/lib/utils/weather';
 import { highlightMatch } from '@/lib/utils/weather';
 import { useWeatherStore } from '@/store/weatherStore';
-
+import { getSortedItemsByQuery } from '@/lib/utils';
 
 interface CountryDropdownProps {
   setSelectedLocation: (location: LocationData | null) => void;
@@ -48,7 +47,7 @@ export const CountryDropdown: React.FC<CountryDropdownProps> = ({
   };
 
   const sortedCountries = useMemo(
-    () => getSortedCountriesByQuery(data?.countries ?? [], searchQuery),
+    () => getSortedItemsByQuery(data?.countries ?? [], searchQuery),
     [data?.countries, searchQuery]
   );
 
